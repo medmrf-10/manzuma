@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="../../icons/icon-192.png">
 <title>قارئ الرسالة — ابن أبي زيد القيرواني</title>
 <style>
-  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--line:#2a3440}
+  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--line:#2a3440}
   *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
@@ -60,6 +60,7 @@
   .seg button{flex:1;height:42px;border:none;background:transparent;color:var(--dim);font-size:.9rem;font-family:inherit;cursor:pointer}
   .seg button.on[data-l=m]{background:var(--acc);color:#10151a;font-weight:700}
   .seg button.on[data-l=s]{background:var(--acc2);color:#fff;font-weight:700}
+  .seg button.on[data-l=h]{background:var(--acc3);color:#fff;font-weight:700}
 
   /* ── desktop enhancement ──────────────────────────── */
   @media(min-width:860px){
@@ -90,8 +91,9 @@
 
 <div class="bnav">
   <div class="seg">
-    <button id="mMatn" data-l="m" class="on">المتن — الرسالة</button>
-    <button id="mShrh" data-l="s">الشرح — الثمر الداني</button>
+    <button id="mMatn" data-l="m" class="on">المتن</button>
+    <button id="mShrh" data-l="s">الشرح</button>
+    <button id="mHash" data-l="h">الحاشية</button>
   </div>
   <div class="row">
     <button id="prev">← السابق</button>
@@ -117,11 +119,13 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   document.getElementById('tocn').textContent=toc.length;
   const nav=document.getElementById('toc'),art=document.getElementById('art'),posEl=document.getElementById('pos');
   const prevB=document.getElementById('prev'),nextB=document.getElementById('next');
-  const segM=document.getElementById('mMatn'),segS=document.getElementById('mShrh');
-  let cur=0, mode='matn', sharh=null, sharhPend=null;
-  const fetchSharh=()=>sharhPend ||= fetch('sharh.json').then(r=>r.json()).then(sd=>sharh=sd);
-  function setMode(m){mode=m;segM.classList.toggle('on',m==='matn');segS.classList.toggle('on',m==='sharh');show(cur)}
-  segM.onclick=()=>setMode('matn'); segS.onclick=()=>setMode('sharh');
+  const segB={matn:document.getElementById('mMatn'),sharh:document.getElementById('mShrh'),hashiya:document.getElementById('mHash')};
+  const L={sharh:{f:'sharh.json',label:'الشرح'},hashiya:{f:'hashiya.json',label:'الحاشية'}};
+  const store={},pend={};
+  const fetchL=k=>pend[k] ||= fetch(L[k].f).then(r=>r.json()).then(x=>store[k]=x);
+  let cur=0, mode='matn';
+  function setMode(m){mode=m;for(const k in segB)segB[k].classList.toggle('on',k===m);show(cur)}
+  segB.matn.onclick=()=>setMode('matn'); segB.sharh.onclick=()=>setMode('sharh'); segB.hashiya.onclick=()=>setMode('hashiya');
 
   function drawNav(q){
     nav.innerHTML=secs.map((s,i)=>({s,i})).filter(({s})=>!q||s.t.includes(q))
@@ -134,31 +138,33 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
     let title=s.t, meta=`${d.meta.t} — ${d.meta.a} (ت. ${d.meta.d}) · الباب ${i+1} من ${secs.length} · ص ${s.first}${s.last!==s.first?'–'+s.last:''} من ${d.meta.pages}`,
         src=pages, a=s.a, b=s.b;
-    if(mode==='sharh'){
-      if(!sharh){
-        art.innerHTML='<p class="loading">يحمّل الشرح…</p>';
-        fetchSharh().then(()=>{if(mode==='sharh')show(i)});
+    if(mode!=='matn'){
+      const ld=store[mode], mm=mode;
+      if(!ld){
+        art.innerHTML='<p class="loading">يحمّل '+L[mm].label+'…</p>';
+        fetchL(mm).then(()=>{if(mode===mm)show(i)});
         posEl.textContent=(i+1)+' / '+secs.length;
         prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
         return;
       }
-      const m=sharh.map[i];
-      meta=`الشرح: ${sharh.meta.t} — ${sharh.meta.a} (ت. ${sharh.meta.d})${!m?'':(m.t!==s.t?' · عنوانه «'+m.t+'»':'')} · ص ${m?sharh.pages[m.a].n+'–'+sharh.pages[m.b-1].n+' من '+sharh.meta.pages:''}`;
-      if(!m){src=[];}else{src=sharh.pages; a=m.a; b=m.b;}
+      const m=ld.map[i];
+      meta=`${L[mm].label}: ${ld.meta.t} — ${ld.meta.a} (ت. ${ld.meta.d})${!m?'':(m.t!==s.t?' · عنوانه «'+m.t+'»':'')} · ص ${m?ld.pages[m.a].n+'–'+ld.pages[m.b-1].n+' من '+ld.meta.pages:''}`;
+      if(!m){src=[];}else{src=ld.pages; a=m.a; b=m.b;}
     }
     art.innerHTML=`<h2 class="sec-title">${title}</h2>
       <div class="meta-card">${meta}</div>
       <div class="matn">${src.length?src.slice(a,b).map(p=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+p.b).join('\n'):'<p class="loading">لا شرح مطابق لهذا الباب في المصدر الحالي.</p>'}</div>`;
     posEl.textContent=(i+1)+' / '+secs.length;
     prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
-    art.scrollTop=0; history.replaceState(null,'','#'+i+(mode==='sharh'?'s':''));
+    art.scrollTop=0; history.replaceState(null,'','#'+i+(mode==='sharh'?'s':mode==='hashiya'?'h':''));
     if(innerWidth<860) close();
   }
   nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
   prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<secs.length-1)show(cur+1)};
   addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
-  const hm=(location.hash.slice(1).match(/^(\d+)(s?)$/)||[]);
-  if(hm[2]==='s'){mode='sharh';segS.classList.add('on');segM.classList.remove('on');}
+  const hm=(location.hash.slice(1).match(/^(\d+)([sh]?)$/)||[]);
+  if(hm[2]==='s')mode='sharh'; else if(hm[2]==='h')mode='hashiya';
+  if(mode!=='matn'){segB[mode].classList.add('on');segB.matn.classList.remove('on');}
   show(hm[1]?Math.min(+hm[1],secs.length-1):0);
 }catch(e){document.getElementById('art').innerHTML='<p class="loading" style="color:#e08080">خطأ: '+e.message+'</p>';}});
 </script>
