@@ -12,18 +12,52 @@
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
 <title>بوابة المركزي للتعلم — المنظومة</title>
 <style>
-  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
-  h1 { color: #d4af37; font-size: 2rem; margin-bottom: 16px; }
-  .desc { color: #9a958c; max-width: 560px; line-height: 1.8; }
-  .badge { display: inline-block; margin-top: 24px; font-size: .85rem; padding: 6px 18px; border-radius: 999px; background: #2a2410; color: #d4af37; border: 1px solid #4a4020; }
-  a.back { margin-top: 36px; color: #8f8a80; font-size: .85rem; text-decoration: none; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; margin: 0; padding: 32px 18px 48px; }
+  .wrap { max-width: 640px; margin: 0 auto; }
+  h1 { color: #d4af37; font-size: 1.7rem; margin: 8px 0 6px; }
+  .desc { color: #9a958c; line-height: 1.8; font-size: .95rem; margin-bottom: 26px; }
+  .entry { display: block; text-decoration: none; color: inherit; background: #171a21; border: 1px solid #2a2e38; border-radius: 14px; padding: 18px 20px; margin-bottom: 14px; transition: border-color .15s; }
+  .entry:hover { border-color: #d4af37; }
+  .entry .t { color: #e8e6e3; font-weight: 600; font-size: 1.05rem; margin-bottom: 5px; }
+  .entry .s { color: #8f8a80; font-size: .85rem; line-height: 1.6; }
+  .entry .tag { display: inline-block; font-size: .72rem; padding: 3px 10px; border-radius: 999px; margin-top: 10px; }
+  .tag.ready { background: #1d2a16; color: #a5d66f; border: 1px solid #39512a; }
+  .tag.soon { background: #2a2410; color: #d4af37; border: 1px solid #4a4020; }
+  a.back { display: inline-block; margin-top: 22px; color: #8f8a80; font-size: .85rem; text-decoration: none; }
   a.back:hover { color: #d4af37; }
 </style>
 </head>
 <body>
+<div class="wrap">
 <h1>بوابة المركزي للتعلم</h1>
-<p class="desc">المشروع المركزي لإدارة التعلم عابر المجالات: ملف متعلم موحد · خوارزمية تكرار متباعد للاستدعاء والحفظ والمراجعة · نقطة الالتقاء المشتركة بين الأبواب الخمسة. المالك: الناقد (المدير).</p>
-<span class="badge">قيد البناء</span>
+<p class="desc">المشروع المركزي لإدارة التعلم عابر المجالات: ملف متعلم موحد، خوارزمية تكرار متباعد للاستدعاء والحفظ والمراجعة، ومبادئ علم الأعصاب المثبتة محركاً لكل خدمة. كل مشروع هنا مدخل مستقل — لا شيء في الجذر.</p>
+
+<a class="entry" href="design/">
+  <div class="t">مبادئ تصميم المركز — تقطير «الفروق الفردية في التعلم»</div>
+  <div class="s">سبع ذرات تصميمية مستخلصة من أول تقرير بحث عميق واصل لباب المركزي: نموذج متعلم بالمعرفة السابقة، سقالات بعتبات تمكن، حاكم عبء معرفي، محرك دافع، وسيط ببنية المعرفة لا بالأنماط — مع سجل الخرافات المردودة.</div>
+  <span class="tag ready">جاهز — تقطير الناقد</span>
+</a>
+
+<a class="entry" href="../research/9a267a4525f19561-%D8%A7%D9%84%D9%81%D8%B1%D9%88%D9%82-%D8%A7%D9%84%D9%81%D8%B1%D8%AF%D9%8A%D8%A9-%D9%81%D9%8A-%D8%A7%D9%84%D8%AA%D8%B9%D9%84%D9%85.html">
+  <div class="t">التقرير الكامل: محددات الفروق الفردية في التعلم الذاتي</div>
+  <div class="s">البحث العميق الأصلي كاملاً — مصفوفة قوة الدليل، الحدود الكمية، وترجمة الخدمات عبر الأبواب الخمسة.</div>
+  <span class="tag ready">تقرير 13/15</span>
+</a>
+
+<div class="entry" style="opacity:.55">
+  <div class="t">تقارير الأبحاث الباقية (14)</div>
+  <div class="s">الاستدعاء النشط، التكرار المتباعد، التداخل، العبء المعرفي، التفصيل، الأمثلة المحلولة، التمارين، الأسئلة، المشاريع، المفردات، التخطيط، نمذجة المتعلم، النوم، الدافع — تُفتتح مداخلها فور وصول كل تقرير.</div>
+  <span class="tag soon">قيد الوصول</span>
+</div>
+
+<div class="entry" style="opacity:.55">
+  <div class="t">خدمات المركز التعليمية</div>
+  <div class="s">ملف المتعلم الموحد وجدولة المراجعة المتباعدة — تُبنى فوق المبادئ المثبتة فور اكتمال القاعدة البحثية.</div>
+  <span class="tag soon">قيد البناء</span>
+</div>
+
 <a class="back" href="../">← العودة إلى البوابة الأم</a>
+</div>
 </body>
 </html>
