@@ -48,6 +48,14 @@
   .matn span[data-type=title]{display:block;color:var(--acc2);font-weight:700;margin-top:20px;font-size:1.02rem}
   .pg{color:var(--dim);font-size:.68rem;display:block;border-top:1px dashed #2a344055;margin-top:16px;padding-top:4px;text-align:start}
   .loading{color:var(--dim);text-align:center;padding:60px 20px}
+  u.fn{text-decoration:none;color:#7fb3d8;border-bottom:1px dotted #7fb3d8;cursor:pointer;padding:2px 1px;border-radius:4px}
+  u.fn:active{background:#22303d}
+  span.fnm{color:var(--acc3);font-size:.75rem;cursor:pointer}
+  #fnc{position:fixed;inset-inline:0;bottom:140px;background:#16202a;border:1px solid var(--acc3);border-radius:14px;margin:0 10px;padding:14px 16px;max-height:38vh;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:60;box-shadow:0 -8px 30px #000a;display:none}
+  #fnc.open{display:block}
+  #fnc b{color:#7fb3d8;font-size:.8rem;display:block;margin-bottom:8px}
+  #fnc p{font-size:.98rem;line-height:2.1;text-align:justify}
+  #fnc .x{position:absolute;top:8px;inset-inline-end:8px;width:38px;height:38px;border:none;background:transparent;color:var(--dim);font-size:1.2rem;cursor:pointer}
 
   /* ── bottom thumb nav ─────────────────────────────── */
   .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:#0f1419f2;border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
@@ -88,6 +96,7 @@
 </aside>
 
 <main id="art"><p class="loading">جارٍ التحميل…</p></main>
+<div id="fnc"><button class="x" id="fncX" aria-label="إغلاق">✕</button><b id="fncT"></b><p id="fncB"></p></div>
 
 <div class="bnav">
   <div class="seg">
@@ -123,7 +132,11 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   const L={sharh:{f:'sharh.json',label:'الشرح'},hashiya:{f:'hashiya.json',label:'الحاشية'}};
   const store={},pend={};
   const fetchL=k=>pend[k] ||= fetch(L[k].f).then(r=>r.json()).then(x=>store[k]=x);
-  let cur=0, mode='matn';
+  let cur=0, mode='matn', curPages=[];
+  const fnc=document.getElementById('fnc');
+  const fnify=(b,ri)=>b.replace(/([^\s<>()]+)\s*\(¬([0-9٠-٩]+)\)/g,'<u class="fn" data-p="'+ri+'" data-n="$2">$1</u><span class="fnm" data-p="'+ri+'" data-n="$2">¬$2</span>');
+  const fnNote=(pg,n)=>((pg.f||'').split(/[\r\n]+/).find(l=>l.startsWith('(¬'+n+')'))||'').trim();
+  document.getElementById('fncX').onclick=()=>fnc.classList.remove('open');
   function setMode(m){mode=m;for(const k in segB)segB[k].classList.toggle('on',k===m);show(cur)}
   segB.matn.onclick=()=>setMode('matn'); segB.sharh.onclick=()=>setMode('sharh'); segB.hashiya.onclick=()=>setMode('hashiya');
 
@@ -151,15 +164,23 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
       meta=`${L[mm].label}: ${ld.meta.t} — ${ld.meta.a} (ت. ${ld.meta.d})${!m?'':(m.t!==s.t?' · عنوانه «'+m.t+'»':'')} · ص ${m?ld.pages[m.a].n+'–'+ld.pages[m.b-1].n+' من '+ld.meta.pages:''}`;
       if(!m){src=[];}else{src=ld.pages; a=m.a; b=m.b;}
     }
+    curPages=src.length?src.slice(a,b):[];
     art.innerHTML=`<h2 class="sec-title">${title}</h2>
       <div class="meta-card">${meta}</div>
-      <div class="matn">${src.length?src.slice(a,b).map(p=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+p.b).join('\n'):'<p class="loading">لا شرح مطابق لهذا الباب في المصدر الحالي.</p>'}</div>`;
+      <div class="matn">${curPages.length?curPages.map((p,ri)=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+fnify(p.b,ri)).join('\n'):'<p class="loading">لا شرح مطابق لهذا الباب في المصدر الحالي.</p>'}</div>`;
+    fnc.classList.remove('open');
     posEl.textContent=(i+1)+' / '+secs.length;
     prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
     art.scrollTop=0; history.replaceState(null,'','#'+i+(mode==='sharh'?'s':mode==='hashiya'?'h':''));
     if(innerWidth<860) close();
   }
   nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
+  art.onclick=e=>{const u=e.target.closest('u.fn,span.fnm');if(!u)return;
+    const pg=curPages[+u.dataset.p]; if(!pg)return;
+    const note=fnNote(pg,u.dataset.n);
+    document.getElementById('fncT').textContent='فائدة التتائي (¬'+u.dataset.n+') — ص '+pg.n;
+    document.getElementById('fncB').textContent=note||'لا نص محفوظاً لهذه الفائدة في هذه الصفحة.';
+    fnc.classList.add('open');fnc.scrollTop=0;};
   prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<secs.length-1)show(cur+1)};
   addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
   const hm=(location.hash.slice(1).match(/^(\d+)([sh]?)$/)||[]);
