@@ -53,24 +53,24 @@
   <article id="art"><p style="color:var(--dim)">جارٍ التحميل…</p></article>
 </div>
 <script>
-fetch('data.json').then(r=>r.json()).then(d=>{
+fetch('data.json').then(r=>r.json()).then(d=>{try{
   document.getElementById('meta').textContent = d.meta.a+' — ت. '+d.meta.d+' | '+d.meta.betaka;
   document.getElementById('tocn').textContent = d.toc.length;
   const pages=d.pages, toc=d.toc;
-  // sections: muqaddima (pages before first toc title) + one section per toc title
-  const secs=[{t:'مقدمة الرسالة (العقيدة والتهذيب)',pid:pages[0].id}];
-  toc.forEach(x=>secs.push({t:x.t,pid:x.pid}));
-  // compute each section's page range
-  secs.forEach((s,i)=>{ const start=pages.findIndex(p=>p.id===s.pid);
-    const end=i<secs.length-1 ? pages.findIndex(p=>p.id===secs[i+1].pid) : pages.length;
-    s.a=start; s.b=end; s.first=pages[start].n; s.last=pages[end-1].n; });
+  // toc order != page order in this edition — sort titles by their page position
+  const pos=new Map(pages.map((p,i)=>[p.id,i]));
+  const secs=toc.map(x=>({t:x.t,pid:x.pid,a:pos.get(x.pid)})).filter(s=>s.a!==undefined);
+  secs.sort((x,y)=>x.a-y.a);
+  // optional intro section if any pages precede the first title
+  if(secs[0].a>0) secs.unshift({t:'ما قبل الفهرس',pid:pages[0].id,a:0});
+  secs.forEach((s,i)=>{ s.b=i<secs.length-1?secs[i+1].a:pages.length; s.first=pages[s.a].n; s.last=pages[s.b-1].n; });
   const nav=document.getElementById('toc'), art=document.getElementById('art');
   nav.innerHTML=secs.map((s,i)=>`<a class="ti" href="#" data-i="${i}">${s.t}<small>ص ${s.first}${s.last!==s.first?'–'+s.last:''}</small></a>`).join('');
   function show(i){
     const s=secs[i];
     nav.querySelectorAll('a.ti').forEach((el,j)=>el.classList.toggle('on',j===i));
     art.innerHTML=`<h2 class="sec-title">${s.t}</h2>
-      <div class="meta-card">${d.meta.t} — ${d.meta.a} (ت. ${d.meta.d}) · الباب ${i===0?'مقدمة':i+' من '+toc.length} · ص ${s.first}${s.last!==s.first?'–'+s.last:''} من ${d.meta.pages}</div>
+      <div class="meta-card">${d.meta.t} — ${d.meta.a} (ت. ${d.meta.d}) · الباب ${i+1} من ${secs.length} · ص ${s.first}${s.last!==s.first?'–'+s.last:''} من ${d.meta.pages}</div>
       <div class="matn">${pages.slice(s.a,s.b).map(p=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+p.b).join('\n')}</div>
       <div class="navsec">
         <a href="#" id="prev" class="${i===0?'dis':''}">← الباب السابق</a>
@@ -83,7 +83,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{
   }
   nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
   show(location.hash?Math.min(+location.hash.slice(1)||0,secs.length-1):0);
-});
+}catch(e){art.innerHTML='<p style="color:#e08080">خطأ: '+e.message+'<br><small>'+(e.stack||'').slice(0,300)+'</small></p>';}});
 </script>
 </body>
 </html>
