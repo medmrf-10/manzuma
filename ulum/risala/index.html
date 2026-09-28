@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f1419">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,77 +13,123 @@
 <title>قارئ الرسالة — ابن أبي زيد القيرواني</title>
 <style>
   :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--line:#2a3440}
-  *{box-sizing:border-box;margin:0}
-  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:2;height:100vh;display:flex;flex-direction:column;overflow:hidden}
-  header{padding:14px 18px;border-bottom:2px solid var(--acc);display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-  header h1{font-size:1.25rem;color:var(--acc)}
-  header .sub{color:var(--dim);font-size:.85rem}
-  header .nav{margin-inline-start:auto;font-size:.8rem}
-  header .nav a{color:var(--dim);text-decoration:none;margin-inline-start:12px}
-  header .nav a:hover{color:var(--acc)}
-  .main{flex:1;display:flex;overflow:hidden}
-  aside{width:300px;min-width:240px;border-inline-end:1px solid var(--line);overflow-y:auto;background:#11171d}
-  aside .toc-head{padding:12px 14px;color:var(--acc);font-weight:700;border-bottom:1px solid var(--line);position:sticky;top:0;background:#11171d;z-index:5}
-  aside a.ti{display:block;padding:9px 14px;color:var(--ink);text-decoration:none;font-size:.88rem;border-bottom:1px solid #1b232c;line-height:1.7}
-  aside a.ti small{color:var(--dim);display:block;font-size:.72rem}
-  aside a.ti:hover{background:#1a222b}
-  aside a.ti.on{background:#22303d;border-inline-start:3px solid var(--acc);color:var(--acc)}
-  article{flex:1;overflow-y:auto;padding:22px 26px}
-  .sec-title{font-size:1.4rem;color:var(--acc);margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:8px}
-  .matn{font-size:1.12rem;line-height:2.3;white-space:pre-wrap}
-  .matn span[data-type=title]{display:block;color:var(--acc2);font-weight:700;margin-top:18px;font-size:1.05rem}
-  .matn a{color:var(--acc)}
-  .pg{color:var(--dim);font-size:.72rem;text-align:left;display:block;border-top:1px dashed #2a344055;margin-top:12px;padding-top:3px}
-  .navsec{display:flex;justify-content:space-between;margin:26px 0 10px}
-  .navsec a{color:var(--acc);text-decoration:none;border:1px solid var(--line);border-radius:8px;padding:6px 16px;font-size:.85rem}
-  .navsec a:hover{border-color:var(--acc)}
-  .navsec a.dis{opacity:.3;pointer-events:none}
-  .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin-bottom:18px;font-size:.85rem;color:var(--dim)}
-  @media(max-width:720px){aside{width:150px}aside a.ti{font-size:.72rem}}
+  *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+
+  /* ── top bar (mobile-first) ───────────────────────── */
+  .top{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:2px solid var(--acc);background:var(--bg);padding-top:calc(10px + env(safe-area-inset-top))}
+  .top h1{font-size:1rem;color:var(--acc);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .top .sub{display:none}
+  .icon-btn{width:44px;height:44px;flex:none;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:10px;font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit}
+  .icon-btn:active{border-color:var(--acc)}
+
+  /* ── TOC drawer (mobile-first) ────────────────────── */
+  .scrim{position:fixed;inset:0;background:#000a;opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+  .scrim.open{opacity:1;pointer-events:auto}
+  aside.toc{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(320px,88vw);background:#11171d;z-index:50;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .28s ease;box-shadow:-8px 0 30px #0008}
+  aside.toc.open{transform:none}
+  .toc-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  .toc-head b{color:var(--acc);flex:1;font-size:.95rem}
+  .toc-head .x{width:38px;height:38px;border:none;background:transparent;color:var(--dim);font-size:1.3rem;cursor:pointer;border-radius:8px}
+  .toc-search{padding:10px 14px;border-bottom:1px solid var(--line)}
+  .toc-search input{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.95rem;font-family:inherit}
+  nav.toc-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  a.ti{display:block;padding:13px 16px;color:var(--ink);text-decoration:none;font-size:.95rem;border-bottom:1px solid #1b232c;line-height:1.75;min-height:48px}
+  a.ti small{color:var(--dim);display:block;font-size:.74rem;margin-top:2px}
+  a.ti:active,a.ti.on{background:#22303d}
+  a.ti.on{border-inline-start:4px solid var(--acc);color:var(--acc)}
+
+  /* ── reader pane ──────────────────────────────────── */
+  main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 90px}
+  .sec-title{font-size:1.35rem;color:var(--acc);margin-bottom:10px;line-height:1.6}
+  .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:.78rem;color:var(--dim);line-height:1.8}
+  .matn{font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify}
+  .matn span[data-type=title]{display:block;color:var(--acc2);font-weight:700;margin-top:20px;font-size:1.02rem}
+  .pg{color:var(--dim);font-size:.68rem;display:block;border-top:1px dashed #2a344055;margin-top:16px;padding-top:4px;text-align:start}
+  .loading{color:var(--dim);text-align:center;padding:60px 20px}
+
+  /* ── bottom thumb nav ─────────────────────────────── */
+  .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;gap:10px;padding:10px 12px;background:#0f1419f2;border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
+  .bnav button{flex:1;height:50px;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:12px;font-size:.95rem;font-family:inherit;cursor:pointer}
+  .bnav button:active{border-color:var(--acc);background:#22303d}
+  .bnav button.dis{opacity:.3;pointer-events:none}
+  .bnav .pos{flex:none;align-self:center;color:var(--dim);font-size:.72rem;min-width:52px;text-align:center}
+
+  /* ── desktop enhancement ──────────────────────────── */
+  @media(min-width:860px){
+    body{flex-direction:row}
+    .top{display:none}
+    aside.toc{position:static;transform:none;width:320px;min-width:280px;box-shadow:none;border-inline-end:1px solid var(--line);flex:none}
+    .scrim{display:none}
+    .bnav{inset-inline-start:320px}
+    main{max-width:780px;margin:0 auto;padding:28px 30px 90px}
+  }
 </style>
 </head>
 <body>
-<header>
+
+<header class="top">
+  <button class="icon-btn" id="openToc" aria-label="الفهرس">☰</button>
   <h1>رسالة ابن أبي زيد القيرواني</h1>
-  <span class="sub" id="meta"></span>
-  <span class="nav"><a href="../">مداخل البوابة</a><a href="../../">البوابة الأم</a></span>
 </header>
-<div class="main">
-  <aside><div class="toc-head">الفهرس — <span id="tocn"></span> باباً</div><nav id="toc"></nav></aside>
-  <article id="art"><p style="color:var(--dim)">جارٍ التحميل…</p></article>
+
+<div class="scrim" id="scrim"></div>
+<aside class="toc" id="tocPane">
+  <div class="toc-head"><b>الفهرس — <span id="tocn">…</span> باباً</b><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
+  <div class="toc-search"><input type="search" id="tq" placeholder="ابحث في الأبواب…"></div>
+  <nav class="toc-list" id="toc"></nav>
+</aside>
+
+<main id="art"><p class="loading">جارٍ التحميل…</p></main>
+
+<div class="bnav">
+  <button id="prev">← السابق</button>
+  <span class="pos" id="pos"></span>
+  <button id="next">التالي →</button>
 </div>
+
 <script>
+const pane=document.getElementById('tocPane'),scrim=document.getElementById('scrim');
+document.getElementById('openToc').onclick=()=>{pane.classList.add('open');scrim.classList.add('open')};
+const close=()=>{pane.classList.remove('open');scrim.classList.remove('open')};
+document.getElementById('closeToc').onclick=close; scrim.onclick=close;
+
 fetch('data.json').then(r=>r.json()).then(d=>{try{
-  document.getElementById('meta').textContent = d.meta.a+' — ت. '+d.meta.d+' | '+d.meta.betaka;
-  document.getElementById('tocn').textContent = d.toc.length;
   const pages=d.pages, toc=d.toc;
-  // toc order != page order in this edition — sort titles by their page position
   const pos=new Map(pages.map((p,i)=>[p.id,i]));
-  const secs=toc.map(x=>({t:x.t,pid:x.pid,a:pos.get(x.pid)})).filter(s=>s.a!==undefined);
+  const secs=toc.map(x=>({t:x.t,a:pos.get(x.pid)})).filter(s=>s.a!==undefined);
   secs.sort((x,y)=>x.a-y.a);
-  // optional intro section if any pages precede the first title
-  if(secs[0].a>0) secs.unshift({t:'ما قبل الفهرس',pid:pages[0].id,a:0});
-  secs.forEach((s,i)=>{ s.b=i<secs.length-1?secs[i+1].a:pages.length; s.first=pages[s.a].n; s.last=pages[s.b-1].n; });
-  const nav=document.getElementById('toc'), art=document.getElementById('art');
-  nav.innerHTML=secs.map((s,i)=>`<a class="ti" href="#" data-i="${i}">${s.t}<small>ص ${s.first}${s.last!==s.first?'–'+s.last:''}</small></a>`).join('');
+  if(secs[0].a>0) secs.unshift({t:'ما قبل الفهرس',a:0});
+  secs.forEach((s,i)=>{s.b=i<secs.length-1?secs[i+1].a:pages.length;s.first=pages[s.a].n;s.last=pages[s.b-1].n;});
+
+  document.getElementById('tocn').textContent=toc.length;
+  const nav=document.getElementById('toc'),art=document.getElementById('art'),posEl=document.getElementById('pos');
+  const prevB=document.getElementById('prev'),nextB=document.getElementById('next');
+  let cur=0;
+
+  function drawNav(q){
+    nav.innerHTML=secs.map((s,i)=>({s,i})).filter(({s})=>!q||s.t.includes(q))
+      .map(({s,i})=>`<a class="ti" data-i="${i}" href="#">${s.t}<small>ص ${s.first}${s.last!==s.first?'–'+s.last:''}</small></a>`).join('');
+  }
+  drawNav(); document.getElementById('tq').oninput=e=>drawNav(e.target.value.trim());
+
   function show(i){
-    const s=secs[i];
-    nav.querySelectorAll('a.ti').forEach((el,j)=>el.classList.toggle('on',j===i));
+    cur=i; const s=secs[i];
+    nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
     art.innerHTML=`<h2 class="sec-title">${s.t}</h2>
       <div class="meta-card">${d.meta.t} — ${d.meta.a} (ت. ${d.meta.d}) · الباب ${i+1} من ${secs.length} · ص ${s.first}${s.last!==s.first?'–'+s.last:''} من ${d.meta.pages}</div>
-      <div class="matn">${pages.slice(s.a,s.b).map(p=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+p.b).join('\n')}</div>
-      <div class="navsec">
-        <a href="#" id="prev" class="${i===0?'dis':''}">← الباب السابق</a>
-        <a href="#" id="next" class="${i===secs.length-1?'dis':''}">الباب التالي →</a>
-      </div>`;
-    art.scrollTop=0;
-    document.getElementById('prev').onclick=e=>{e.preventDefault();if(i>0)show(i-1)};
-    document.getElementById('next').onclick=e=>{e.preventDefault();if(i<secs.length-1)show(i+1)};
-    history.replaceState(null,'','#'+i);
+      <div class="matn">${pages.slice(s.a,s.b).map(p=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+p.b).join('\n')}</div>`;
+    posEl.textContent=(i+1)+' / '+secs.length;
+    prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
+    art.scrollTop=0; history.replaceState(null,'','#'+i);
+    if(innerWidth<860) close();
   }
   nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
+  prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<secs.length-1)show(cur+1)};
+  addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
   show(location.hash?Math.min(+location.hash.slice(1)||0,secs.length-1):0);
-}catch(e){art.innerHTML='<p style="color:#e08080">خطأ: '+e.message+'<br><small>'+(e.stack||'').slice(0,300)+'</small></p>';}});
+}catch(e){document.getElementById('art').innerHTML='<p class="loading" style="color:#e08080">خطأ: '+e.message+'</p>';}});
 </script>
 </body>
 </html>
