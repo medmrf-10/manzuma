@@ -41,7 +41,7 @@
   a.ti.on{border-inline-start:4px solid var(--acc);color:var(--acc)}
 
   /* ── reader pane ──────────────────────────────────── */
-  main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 90px}
+  main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 150px}
   .sec-title{font-size:1.35rem;color:var(--acc);margin-bottom:10px;line-height:1.6}
   .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:.78rem;color:var(--dim);line-height:1.8}
   .matn{font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify}
@@ -50,11 +50,16 @@
   .loading{color:var(--dim);text-align:center;padding:60px 20px}
 
   /* ── bottom thumb nav ─────────────────────────────── */
-  .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;gap:10px;padding:10px 12px;background:#0f1419f2;border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
-  .bnav button{flex:1;height:50px;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:12px;font-size:.95rem;font-family:inherit;cursor:pointer}
+  .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:#0f1419f2;border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
+  .bnav .row{display:flex;gap:10px}
+  .bnav .row button{flex:1;height:50px;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:12px;font-size:.95rem;font-family:inherit;cursor:pointer}
   .bnav button:active{border-color:var(--acc);background:#22303d}
   .bnav button.dis{opacity:.3;pointer-events:none}
   .bnav .pos{flex:none;align-self:center;color:var(--dim);font-size:.72rem;min-width:52px;text-align:center}
+  .seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
+  .seg button{flex:1;height:42px;border:none;background:transparent;color:var(--dim);font-size:.9rem;font-family:inherit;cursor:pointer}
+  .seg button.on[data-l=m]{background:var(--acc);color:#10151a;font-weight:700}
+  .seg button.on[data-l=s]{background:var(--acc2);color:#fff;font-weight:700}
 
   /* ── desktop enhancement ──────────────────────────── */
   @media(min-width:860px){
@@ -63,7 +68,7 @@
     aside.toc{position:static;transform:none;width:320px;min-width:280px;box-shadow:none;border-inline-end:1px solid var(--line);flex:none}
     .scrim{display:none}
     .bnav{inset-inline-start:320px}
-    main{max-width:780px;margin:0 auto;padding:28px 30px 90px}
+    main{max-width:780px;margin:0 auto;padding:28px 30px 150px}
   }
 </style>
 </head>
@@ -84,9 +89,15 @@
 <main id="art"><p class="loading">جارٍ التحميل…</p></main>
 
 <div class="bnav">
-  <button id="prev">← السابق</button>
-  <span class="pos" id="pos"></span>
-  <button id="next">التالي →</button>
+  <div class="seg">
+    <button id="mMatn" data-l="m" class="on">المتن — الرسالة</button>
+    <button id="mShrh" data-l="s">الشرح — الثمر الداني</button>
+  </div>
+  <div class="row">
+    <button id="prev">← السابق</button>
+    <span class="pos" id="pos"></span>
+    <button id="next">التالي →</button>
+  </div>
 </div>
 
 <script>
@@ -106,7 +117,11 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   document.getElementById('tocn').textContent=toc.length;
   const nav=document.getElementById('toc'),art=document.getElementById('art'),posEl=document.getElementById('pos');
   const prevB=document.getElementById('prev'),nextB=document.getElementById('next');
-  let cur=0;
+  const segM=document.getElementById('mMatn'),segS=document.getElementById('mShrh');
+  let cur=0, mode='matn', sharh=null, sharhPend=null;
+  const fetchSharh=()=>sharhPend ||= fetch('sharh.json').then(r=>r.json()).then(sd=>sharh=sd);
+  function setMode(m){mode=m;segM.classList.toggle('on',m==='matn');segS.classList.toggle('on',m==='sharh');show(cur)}
+  segM.onclick=()=>setMode('matn'); segS.onclick=()=>setMode('sharh');
 
   function drawNav(q){
     nav.innerHTML=secs.map((s,i)=>({s,i})).filter(({s})=>!q||s.t.includes(q))
@@ -117,18 +132,34 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   function show(i){
     cur=i; const s=secs[i];
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
-    art.innerHTML=`<h2 class="sec-title">${s.t}</h2>
-      <div class="meta-card">${d.meta.t} — ${d.meta.a} (ت. ${d.meta.d}) · الباب ${i+1} من ${secs.length} · ص ${s.first}${s.last!==s.first?'–'+s.last:''} من ${d.meta.pages}</div>
-      <div class="matn">${pages.slice(s.a,s.b).map(p=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+p.b).join('\n')}</div>`;
+    let title=s.t, meta=`${d.meta.t} — ${d.meta.a} (ت. ${d.meta.d}) · الباب ${i+1} من ${secs.length} · ص ${s.first}${s.last!==s.first?'–'+s.last:''} من ${d.meta.pages}`,
+        src=pages, a=s.a, b=s.b;
+    if(mode==='sharh'){
+      if(!sharh){
+        art.innerHTML='<p class="loading">يحمّل الشرح…</p>';
+        fetchSharh().then(()=>{if(mode==='sharh')show(i)});
+        posEl.textContent=(i+1)+' / '+secs.length;
+        prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
+        return;
+      }
+      const m=sharh.map[i];
+      meta=`الشرح: ${sharh.meta.t} — ${sharh.meta.a} (ت. ${sharh.meta.d})${!m?'':(m.t!==s.t?' · عنوانه «'+m.t+'»':'')} · ص ${m?sharh.pages[m.a].n+'–'+sharh.pages[m.b-1].n+' من '+sharh.meta.pages:''}`;
+      if(!m){src=[];}else{src=sharh.pages; a=m.a; b=m.b;}
+    }
+    art.innerHTML=`<h2 class="sec-title">${title}</h2>
+      <div class="meta-card">${meta}</div>
+      <div class="matn">${src.length?src.slice(a,b).map(p=>`<span class="pg">— ص ${p.n}${p.part?' · جزء '+p.part:''} —</span>`+p.b).join('\n'):'<p class="loading">لا شرح مطابق لهذا الباب في المصدر الحالي.</p>'}</div>`;
     posEl.textContent=(i+1)+' / '+secs.length;
     prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
-    art.scrollTop=0; history.replaceState(null,'','#'+i);
+    art.scrollTop=0; history.replaceState(null,'','#'+i+(mode==='sharh'?'s':''));
     if(innerWidth<860) close();
   }
   nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
   prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<secs.length-1)show(cur+1)};
   addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
-  show(location.hash?Math.min(+location.hash.slice(1)||0,secs.length-1):0);
+  const hm=(location.hash.slice(1).match(/^(\d+)(s?)$/)||[]);
+  if(hm[2]==='s'){mode='sharh';segS.classList.add('on');segM.classList.remove('on');}
+  show(hm[1]?Math.min(+hm[1],secs.length-1):0);
 }catch(e){document.getElementById('art').innerHTML='<p class="loading" style="color:#e08080">خطأ: '+e.message+'</p>';}});
 </script>
 </body>
