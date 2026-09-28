@@ -1,4 +1,4 @@
-const CACHE = 'manzuma-v1';
+const CACHE = 'manzuma-v2';
 const ASSETS = [
   '/manzuma/',
   '/manzuma/index.html',
@@ -25,13 +25,14 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET' || !e.request.url.startsWith(self.location.origin)) return;
   e.respondWith(
-    caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
-      if (e.request.method === 'GET' && res.status === 200 && e.request.url.startsWith(self.location.origin)) {
+    fetch(e.request).then(res => {
+      if (res.status === 200) {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy));
       }
       return res;
-    }).catch(() => caches.match('/manzuma/')))
+    }).catch(() => caches.match(e.request).then(hit => hit || caches.match('/manzuma/')))
   );
 });
