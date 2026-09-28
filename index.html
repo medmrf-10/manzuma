@@ -3,6 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f1115">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="المنظومة">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>المنظومة — البوابة الأم</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -92,5 +100,10 @@
   </a>
 </nav>
 <footer>منظومة الوثيقة التأسيسية — manzuma</footer>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/manzuma/sw.js', { scope: '/manzuma/' });
+}
+</script>
 </body>
 </html>
