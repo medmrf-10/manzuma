@@ -1,29 +1,125 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f1115">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f1419">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<title>بوابة العلوم الشرعية — المنظومة</title>
+<title>المكتبة العملاقة — تعرّف على مشروع العلوم الشرعية بفهرسها</title>
 <style>
-  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
-  h1 { color: #d4af37; font-size: 2rem; margin-bottom: 16px; }
-  .desc { color: #9a958c; max-width: 560px; line-height: 1.8; }
-  .badge { display: inline-block; margin-top: 24px; font-size: .85rem; padding: 6px 18px; border-radius: 999px; background: #2a2410; color: #d4af37; border: 1px solid #4a4020; }
-  a.back { margin-top: 36px; color: #8f8a80; font-size: .85rem; text-decoration: none; }
-  a.back:hover { color: #d4af37; }
+  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--line:#2a3440}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9;padding-bottom:60px}
+  header{text-align:center;padding:48px 16px 24px;border-bottom:2px solid var(--acc)}
+  h1{font-size:2.1rem;color:var(--acc);margin-bottom:8px}
+  .sub{color:var(--dim);font-size:1.05rem}
+  .wrap{max-width:960px;margin:0 auto;padding:0 16px}
+  section{margin-top:40px}
+  h2{font-size:1.35rem;color:var(--acc);border-right:4px solid var(--acc);padding-right:12px;margin-bottom:6px}
+  .explain{color:var(--dim);font-size:.95rem;margin-bottom:14px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+  .stat b{display:block;font-size:1.5rem;color:var(--acc)}
+  .stat span{font-size:.8rem;color:var(--dim)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:14px}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px;font-size:.82rem}
+  .tag{background:#243040;border:1px solid var(--line);border-radius:20px;padding:3px 12px;color:var(--dim)}
+  .tag.matn{border-color:var(--acc);color:var(--acc)}
+  .tag.sharh{border-color:var(--acc2);color:#7fd4ab}
+  table{width:100%;border-collapse:collapse;font-size:.88rem}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right}
+  th{color:var(--acc);font-weight:600;position:sticky;top:0;background:var(--card)}
+  .scrolly{max-height:340px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+  .tree{font-size:.95rem}
+  .tree li{margin:6px 0;list-style:none}
+  .tree li::before{content:"◈ ";color:var(--acc)}
+  .tree small{color:var(--dim)}
+  input[type=search]{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1rem;margin-bottom:10px}
+  .note{border:1px dashed var(--acc);border-radius:10px;padding:14px;background:#1e2833;font-size:.92rem}
+  footer{text-align:center;color:var(--dim);font-size:.8rem;margin-top:50px;border-top:1px solid var(--line);padding-top:16px}
+  footer a{color:var(--dim)}
 </style>
 </head>
 <body>
-<h1>بوابة العلوم الشرعية</h1>
-<p class="desc">العلم الشرعي بفهرسه: فهرس موحد يخدم المتن والشرح والحاشية — سلسلة متن ← شرح ← حاشية بقصّ دقيق مسبق من مصادره. المالك: المؤرشف.</p>
-<span class="badge">قيد البناء</span>
-<a class="back" href="../">← العودة إلى البوابة الأم</a>
+<header>
+  <h1>المكتبة العملاقة — مشروع العلوم الشرعية بفهرسها</h1>
+  <p class="sub">موقع تجريبي تعريفي: ما الذي نزّلناه فعلاً، وماذا فيه، وكيف سنتعامل معه — بأمثلة حية حقيقية من بياناته</p>
+</header>
+<div class="wrap">
+
+<section>
+  <h2>١. ما هذه المكتبة؟</h2>
+  <p class="explain">قاعدة مفتوحة لنصوص المكتبة الشاملة التراثية، نظيفة ومفهرسة: كل كتاب له نصه كاملاً مقسّماً إلى صفحات، وفهرس عناوينه الأصلي، وبطاقته (المؤلف ووفاته والطبعة). لا صور ولا مسح ضوئي: نصوص قابلة للسؤال والربط — وهي منزّلة محلياً كاملة.</p>
+  <div class="stats" id="stats"></div>
+</section>
+
+<section>
+  <h2>٢. الفهرس: ما هي الكتب الموجودة؟</h2>
+  <p class="explain">8,589 كتاباً في 40 فئة — من الفقه والتفسير إلى اللغة والتاريخ. عرضنا هنا عيّنة: الأضخم 15 كتاباً في كل فئة (589 كتاباً)، كلها بيانات حقيقية من القاعدة. جرّب البحث في الجدول:</p>
+  <input type="search" id="bq" placeholder="ابحث باسم كتاب أو مؤلف أو فئة… (مثال: خليل / صحيح / نحو)">
+  <div class="scrolly"><table><thead><tr><th>الكتاب</th><th>المؤلف</th><th>الفئة</th><th>صفحات</th><th>عناوين</th></tr></thead><tbody id="btb"></tbody></table></div>
+</section>
+
+<section>
+  <h2>٣. كتاب حقيقي من الداخل — مختصر خليل</h2>
+  <p class="explain">كل كتاب يحمل فهرس عناوينه الأصلي كما وضعه المحقق/المؤلف — هذا أساس «الفهرس الموحد» الذي يخدمه بابنا. هذه أول 60 عنواناً حقيقية من مختصر خليل (174 عنواناً)، كل عنوان مربوط بموضعه في الصفحات:</p>
+  <div class="card">
+    <div class="meta-row"><b style="color:var(--acc)">مختصر خليل</b><span class="tag">خليل بن إسحاق الجندي — ت. 776</span><span class="tag">334 صفحة</span><span class="tag">174 عنواناً</span></div>
+    <ul class="tree" id="ktoc" style="margin-top:10px"></ul>
+  </div>
+</section>
+
+<section>
+  <h2>٤. المتن وشرحه وحاشيته — ثلاثي بابنا</h2>
+  <p class="explain">فكرة الباب: الفهرس الموحد يربط المتن بشرحه بحاشيته عنواناً بعنوان. هذه الكتب الأربعة المرشحة لذلك — كلها حقيقية من القاعدة، بشروحها وحواشيها المجموعة في مجلدات:</p>
+  <div id="trio"></div>
+</section>
+
+<section>
+  <h2>٥. الفئات الأربعون</h2>
+  <p class="explain">توزيع المكتبة كاملاً على فئاتها — كل عدد حقيقي محسوب من المجلدات المنزّلة:</p>
+  <div class="scrolly"><table><thead><tr><th>الفئة</th><th>الكتب</th></tr></thead><tbody id="ctb"></tbody></table></div>
+</section>
+
+<section>
+  <h2>٦. كيف سنتعامل معها لباب «علم شرعي بفهرسه»؟</h2>
+  <div class="note">
+    <b>١.</b> الباب يخدم فهرساً موحداً إنسانياً: المتن ← شرحه ← حاشيته، بحدود العناوين من مصادرها نفسها — بلا قص آلي ولا توليد.<br>
+    <b>٢.</b> الفقه المالكي أولاً: 89 كتاباً مالكياً في القاعدة، والمرشح للتجربة ثلاثي خليل (المتن 174 عنواناً، والشرحان بالحاشيتين).<br>
+    <b>٣.</b> كتاب الطهارة تجريبي للطريقة قبل التعميم — العقيدة والتصوف خارج الباب.
+  </div>
+</section>
+
+</div>
+<footer>صفحة تجريبية تعريفية — البيانات المعروضة حقيقية من المكتبة المنزّلة محلياً (8,589 كتاباً، عيّنة محدودة منها) · <a href="../">← البوابة الأم</a></footer>
+<script>
+fetch('data.json').then(r=>r.json()).then(d=>{
+  const S=d.stats;
+  document.getElementById('stats').innerHTML=[
+    [S.books,'كتاب'],[S.categories,'فئة'],[S.pages,'صفحة نصية'],[S.titles,'عنوان فهرسي'],[S.gb,'غيغابايت من النصوص']
+  ].map(([v,l])=>`<div class="stat"><b>${v.toLocaleString('en')}</b><span>${l}</span></div>`).join('');
+
+  const tb=document.getElementById('btb');
+  const draw=q=>{tb.innerHTML=d.books.filter(b=>!q||b.t.includes(q)||b.a.includes(q)||b.c.includes(q)).slice(0,200)
+    .map(b=>`<tr><td>${b.t}</td><td>${b.a} <small style="color:var(--dim)">ت. ${b.d}</small></td><td>${b.c}</td><td>${b.p.toLocaleString('en')}</td><td>${b.h.toLocaleString('en')}</td></tr>`).join('');};
+  draw(); document.getElementById('bq').oninput=e=>draw(e.target.value.trim());
+
+  document.getElementById('ktoc').innerHTML=d.khalil_toc.map(t=>`<li>${t.t} <small>(ص ${t.p})</small></li>`).join('');
+
+  document.getElementById('trio').innerHTML=d.trio.map(b=>`
+    <div class="card"><div class="meta-row"><b style="color:var(--acc)">${b.t}</b>
+    <span class="tag ${b.kind==='متن'?'matn':'sharh'}">${b.kind}</span></div>
+    <div class="meta-row" style="margin-top:8px"><span class="tag">${b.a} — ت. ${b.d}</span>
+    <span class="tag">${b.p.toLocaleString('en')} صفحة</span><span class="tag">${b.h.toLocaleString('en')} عنواناً</span>
+    <span class="tag">${b.betaka}</span></div></div>`).join('');
+
+  document.getElementById('ctb').innerHTML=d.categories.map(c=>`<tr><td>${c.name}</td><td>${c.count.toLocaleString('en')}</td></tr>`).join('');
+});
+</script>
 </body>
 </html>
