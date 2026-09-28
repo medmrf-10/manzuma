@@ -1,4 +1,4 @@
-const CACHE = 'manzuma-v2';
+const CACHE = 'manzuma-v3';
 const ASSETS = [
   '/manzuma/',
   '/manzuma/index.html',
@@ -6,7 +6,7 @@ const ASSETS = [
   '/manzuma/icons/icon-192.png',
   '/manzuma/icons/icon-512.png',
   '/manzuma/tafsir/',
-  '/manzuma/hadith/',
+  '/manzuma/hadith/','/manzuma/hadith/muqaddima/',
   '/manzuma/english/',
   '/manzuma/ulum/',
   '/manzuma/core/'
