@@ -30,9 +30,16 @@
   .v:hover { background: #2a2e38; }
   .v.sel { background: rgba(212,175,55,.18); }
   .vn { color: #d4af37; font-size: .85rem; display: inline-flex; width: 1.9em; height: 1.9em; border: 1px solid #d4af37; border-radius: 50%; align-items: center; justify-content: center; margin: 0 6px; vertical-align: middle; }
-  #tafBox { margin-top: 22px; background: #10141b; border: 1px solid #2a2e38; border-right: 3px solid #d4af37; border-radius: 14px; padding: 22px 24px; display: none; }
-  #tafBox .ref { color: #d4af37; font-weight: 700; margin-bottom: 12px; font-size: 1rem; }
-  #tafBox .txt { color: #d8d3c8; font-size: 1.02rem; line-height: 2.05; }
+  #tafWrap { position: fixed; inset: 0; background: rgba(0,0,0,.55); display: none; z-index: 50; align-items: flex-end; justify-content: center; }
+  #tafBox { width: 100%; max-width: 760px; max-height: 82vh; overflow-y: auto; background: #10141b; border: 1px solid #2a2e38; border-top: 3px solid #d4af37; border-radius: 16px 16px 0 0; padding: 18px 22px 24px; }
+  #tafBox .ref { color: #d4af37; font-weight: 700; margin-bottom: 10px; font-size: 1rem; }
+  #tafBox .ayahT { color: #e8e6e3; font-size: 1.3rem; line-height: 2.1; margin-bottom: 14px; }
+  #tafBox .lbl { color: #9a958c; font-size: .8rem; margin-bottom: 6px; border-top: 1px solid #2a2e38; padding-top: 12px; }
+  #tafBox .txt { color: #d8d3c8; font-size: 1rem; line-height: 2; }
+  #tafBox .row { display: flex; gap: 10px; justify-content: space-between; margin-top: 16px; }
+  #tafBox .row button { flex: 1; background: #171a21; border: 1px solid #3a3e48; color: #e8e6e3; border-radius: 10px; padding: 10px; font-size: .88rem; cursor: pointer; font-family: inherit; }
+  #tafBox .row button:hover { border-color: #d4af37; color: #d4af37; }
+  #tafBox .row button:disabled { opacity: .35; }
   #tafBox .close { float: left; background: none; border: 1px solid #3a3e48; color: #9a958c; border-radius: 8px; padding: 3px 10px; cursor: pointer; font-family: inherit; }
   .nav { display: flex; justify-content: space-between; margin-top: 26px; }
   .nav button, .nav a { background: #171a21; border: 1px solid #3a3e48; color: #e8e6e3; border-radius: 10px; padding: 10px 16px; font-size: .88rem; cursor: pointer; font-family: inherit; text-decoration: none; }
@@ -48,9 +55,13 @@
   body.light .v:hover { background: #efe9d8; }
   body.light .v.sel { background: #f0e6c8; }
   body.light .vn { color: #8a6d1f; border-color: #8a6d1f; }
-  body.light #tafBox { background: #fdfaf3; border-color: #e0dbc9; border-right-color: #8a6d1f; }
+  body.light #tafBox { background: #fff; border-color: #e0dbc9; border-top-color: #8a6d1f; }
   body.light #tafBox .ref { color: #8a6d1f; }
+  body.light #tafBox .ayahT { color: #1f2430; }
   body.light #tafBox .txt { color: #33302a; }
+  body.light #tafBox .lbl { border-top-color: #e0dbc9; }
+  body.light #tafBox .row button { background: #fff; color: #1f2430; border-color: #d5d0c2; }
+  body.light #tafBox .row button:hover { border-color: #8a6d1f; color: #8a6d1f; }
   body.light .nav button, body.light .nav a { background: #fff; color: #1f2430; border-color: #d5d0c2; }
   body.light .nav button:hover, body.light .nav a:hover { border-color: #8a6d1f; color: #8a6d1f; }
 </style>
@@ -69,7 +80,7 @@
 <main class="wrap">
   <div class="shead"><b id="sname"></b><span id="scount"></span></div>
   <div class="mushaf" id="mushaf"><div style="text-align:center;color:#6b675f;font-size:1rem">جارٍ تحميل المصحف والتفسير…</div></div>
-  <div id="tafBox"><button class="close" id="tclose">إغلاق ✕</button><div class="ref" id="tref"></div><div class="txt" id="ttxt"></div></div>
+  <div id="tafWrap"><div id="tafBox"><button class="close" id="tclose">إغلاق ✕</button><div class="ref" id="tref"></div><div class="ayahT" id="tayah"></div><div class="lbl">التفسير — السعدي</div><div class="txt" id="ttxt"></div><div class="row"><button id="tprev">الآية السابقة ←</button><button id="tnext">← الآية التالية</button></div></div></div>
   <div class="nav">
     <button id="prevS">السورة السابقة ←</button>
     <a href="../">← بوابة التفسير</a>
@@ -87,7 +98,9 @@ var SURAHS=null,cache={},cur={s:1,a:0};
 var surahSel=document.getElementById('surahSel'),ayahSel=document.getElementById('ayahSel'),
     mushaf=document.getElementById('mushaf'),sname=document.getElementById('sname'),
     scount=document.getElementById('scount'),tafBox=document.getElementById('tafBox'),
-    tref=document.getElementById('tref'),ttxt=document.getElementById('ttxt');
+    tref=document.getElementById('tref'),ttxt=document.getElementById('ttxt'),
+    tafWrap=document.getElementById('tafWrap'),tayah=document.getElementById('tayah'),
+    tprev=document.getElementById('tprev'),tnext=document.getElementById('tnext');
 
 fetch('data/chapters.json').then(function(r){return r.json()}).then(function(d){
   SURAHS=d.chapters;
@@ -99,7 +112,15 @@ surahSel.onchange=function(){ render(+surahSel.value); };
 ayahSel.onchange=function(){ var a=+ayahSel.value; if(a) openTaf(cur.s,a,true); };
 document.getElementById('prevS').onclick=function(){ if(cur.s>1) render(cur.s-1); };
 document.getElementById('nextS').onclick=function(){ if(cur.s<114) render(cur.s+1); };
-document.getElementById('tclose').onclick=function(){ tafBox.style.display='none'; var x=mushaf.querySelector('.sel'); if(x)x.classList.remove('sel'); cur.a=0; };
+document.getElementById('tclose').onclick=closeTaf;
+tafWrap.onclick=function(e){ if(e.target===tafWrap)closeTaf(); };
+tprev.onclick=function(){ stepTaf(-1); };
+tnext.onclick=function(){ stepTaf(1); };
+function closeTaf(){ tafWrap.style.display='none'; var x=mushaf.querySelector('.sel'); if(x)x.classList.remove('sel'); cur.a=0; }
+function stepTaf(d){
+  var a=cur.a+d; if(a<1||a>SURAHS[cur.s-1].verses_count)return;
+  openTaf(cur.s,a,false);
+}
 
 function render(s){
   cur={s:s,a:0}; surahSel.value=s;
@@ -129,10 +150,12 @@ function openTaf(s,a,scroll){
   cur.a=a; ayahSel.value=a;
   mushaf.querySelectorAll('.sel').forEach(function(e){e.classList.remove('sel')});
   var el=mushaf.querySelector('[data-a="'+a+'"]'); if(el){el.classList.add('sel'); if(scroll)el.scrollIntoView({block:'center'});}
-  var v=d[String(a)];
-  tref.textContent='تفسير '+SURAHS[s-1].name_arabic+' — آية '+a;
-  ttxt.textContent=(v&&v.f)?v.f:'لا يوجد تفسير مستقل لهذه الآية عند السعدي — تُفسَّر ضمن ما قبلها أو بعدها.';
-  tafBox.style.display='block';
+  var v=d[String(a)]||{};
+  tref.textContent=SURAHS[s-1].name_arabic+' — آية '+a;
+  tayah.textContent=v.t?v.t+' ﴿'+a+'﴾':'';
+  ttxt.textContent=v.f?v.f:'لا يوجد تفسير مستقل لهذه الآية عند السعدي — تُفسَّر ضمن ما قبلها أو بعدها.';
+  tprev.disabled=(a<=1); tnext.disabled=(a>=SURAHS[s-1].verses_count);
+  tafWrap.style.display='flex';
 }
 </script>
 </body>
