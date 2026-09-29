@@ -54,7 +54,6 @@ footer a{color:var(--dim);font-size:.85rem;text-decoration:none}
 <body>
 <div class="bar">
   <div class="bar-row">
-    <button class="icon-btn" id="bk" title="رجوع" style="visibility:hidden">→</button>
     <div id="ttl">كتب صالح الشامي</div>
     <button class="icon-btn" id="thB" title="فاتح/داكن">☀</button>
   </div>
@@ -72,11 +71,13 @@ const NUM=n=>n?`<span class="cnt">${n} حديثاً</span>`:'';
 async function boot(){
   S.tree=await (await fetch('data/tree.json')).json();
   S.stack=[{lv:'books'}];
+  history.replaceState({d:1},'');
   render();
 }
 function cur(){return S.stack[S.stack.length-1]}
-function go(node){S.stack.push(node);S.q='';$('q').value='';render();scrollTo(0,0)}
-function back(){if(S.stack.length>1){S.stack.pop();S.q='';$('q').value='';render()}}
+function go(node){S.stack.push(node);history.pushState({d:S.stack.length},'');S.q='';$('q').value='';render();scrollTo(0,0)}
+function back(){if(S.stack.length>1){history.back()}}
+window.addEventListener('popstate',e=>{S.stack.length=(e.state&&e.state.d)||1;S.q='';$('q').value='';render()});
 function kids(){
   const c=cur();
   if(c.lv==='books')return S.tree.map(b=>({node:b,lv:'book',nm:b.name,n:b.n}));
@@ -91,13 +92,12 @@ function* allBabs(book,path=[]){
     yield {bab:b,ketab:k,path:`${book.name} ‹ ${m.name} ‹ ${k.name}${f.name?' ‹ '+f.name:''}`};
 }
 function render(){
-  const c=cur(),main=$('main'),bk=$('bk'),crumb=$('crumb'),sw=$('srchWrap');
-  bk.style.visibility=S.stack.length>1?'visible':'hidden';
+  const c=cur(),main=$('main'),crumb=$('crumb'),sw=$('srchWrap');
   $('ttl').textContent=c.lv==='books'?'كتب صالح الشامي':(c.node?.name||'كتب صالح الشامي');
   const path=S.stack.slice(1).map(s=>s.node.name);
   crumb.className='crumb'+(path.length?' show':'');
   crumb.innerHTML=path.map((p,i)=>`<span data-i="${i}">${esc(p)}</span>`).join('<i>‹</i>');
-  crumb.querySelectorAll('span').forEach(el=>el.onclick=()=>{S.stack.length=+el.dataset.i+2;S.q='';$('q').value='';render()});
+  crumb.querySelectorAll('span').forEach(el=>el.onclick=()=>{S.stack.length=+el.dataset.i+2;history.pushState({d:S.stack.length},'');S.q='';$('q').value='';render()});
   const isBooks=c.lv==='books', isH=c.lv==='hadith';
   sw.className='srch'+((isBooks||isH)?'':' show');
   if(isBooks){main.innerHTML=`<div class="lead">أربعة كتب مشكولة — <b>28,565 حديثاً</b> — بفهارسها: مقصد ← كتاب ← فصل ← باب. اختر كتاباً:</div>`+
@@ -155,7 +155,7 @@ async function renderHadiths(c){
       ${h.fn&&h.fn.length?`<details><summary>الحواشي (${h.fn.length})</summary><div class="tk-body">${h.fn.map(f=>esc(f.footnotes||f)).join('')}</div></details>`:''}
     </div>`).join('')||'<div class="empty">لا أحاديث مطابقة.</div>');
 }
-$('bk').onclick=back;
+
 $('q').addEventListener('input',e=>{S.q=e.target.value;render()});
 const TH='hadith-theme';
 function applyTheme(t){document.body.classList.toggle('light',t==='light');document.body.classList.toggle('dark',t==='dark');$('thB').textContent=t==='light'?'☾':'☀';document.querySelector('meta[name="theme-color"]').content=t==='light'?'#f6f2e9':'#0f1419'}
