@@ -128,6 +128,12 @@ function* allBabs(){
   for(const m of BOOK)for(const u of m.units)for(const b of u.babs)
     yield{bab:b,unit:u,mq:m,path:`${m.nm} ‹ ${u.nm}`};
 }
+function descend(x){
+  let kids=x.lv==='mq'?x.node.units.map(u=>({lv:'unit',nm:u.nm,node:u}))
+        :x.lv==='unit'?x.node.babs.map(b=>({lv:'bab',nm:b.nm,node:b})):null;
+  if(kids&&kids.length===1)return descend(kids[0]);
+  return x;
+}
 const LBL={root:'الأبواب',mq:'الوحدات',unit:'الأبواب الفرعية',bab:''};
 function row(x,i,num){
   return `<div class="row" data-i="${i}" style="animation-delay:${Math.min(i*40,400)}ms">
@@ -158,11 +164,11 @@ function render(){
     if(hits.length)html+=`<div class="sec">أبواب الكتاب المطابقة · ${hits.length}</div>`+hits.slice(0,40).map((x,i)=>`<div class="row g" data-i="${i}"><span class="nm"><b>${esc(x.bab.nm)}</b><small class="pth">${esc(x.path)} · ${x.bab.hs.length} حديثاً</small></span><span class="go">‹</span></div>`).join('');
     main.innerHTML=html;
     main.querySelectorAll('.row.g').forEach(el=>el.onclick=()=>{const x=hits[+el.dataset.i];go({lv:'bab',nm:x.bab.nm,node:x.bab})});
-    main.querySelectorAll('.row:not(.g)').forEach(el=>el.onclick=()=>{const x=flt[+el.dataset.i];go({lv:x.lv,nm:x.nm,node:x.node})});
+    main.querySelectorAll('.row:not(.g)').forEach(el=>el.onclick=()=>{const x=descend(flt[+el.dataset.i]);go({lv:x.lv,nm:x.nm,node:x.node})});
     return;
   }
   main.innerHTML=html;
-  main.querySelectorAll('.row').forEach(el=>el.onclick=()=>{const x=flt[+el.dataset.i];go({lv:x.lv,nm:x.nm,node:x.node})});
+  main.querySelectorAll('.row').forEach(el=>el.onclick=()=>{const x=descend(flt[+el.dataset.i]);go({lv:x.lv,nm:x.nm,node:x.node})});
 }
 function renderHadiths(c,q){
   const main=$('main');
