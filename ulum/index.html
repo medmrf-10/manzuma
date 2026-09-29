@@ -13,6 +13,8 @@
 <title>بوابة العلوم الشرعية — المنظومة</title>
 <style>
   :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--line:#2a3440}
+  body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--line:#e0d9c9}
+  #thB{position:fixed;top:12px;inset-inline-end:12px;z-index:9;width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--acc);font-size:1.05rem;cursor:pointer}
   *{box-sizing:border-box;margin:0}
   body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:48px 20px}
   header{text-align:center;margin-bottom:40px}
@@ -63,5 +65,12 @@
   </a>
 </div>
 <footer><a href="../">← العودة إلى البوابة الأم</a></footer>
+<button id="thB" aria-label="تبديل المظهر">☀</button>
+<script>
+const thB=document.getElementById('thB');
+const setTh=l=>{document.body.classList.toggle('light',l);thB.textContent=l?'☾':'☀';try{localStorage.setItem('ulum-th',l?'l':'d')}catch(e){}};
+try{setTh(localStorage.getItem('ulum-th')==='l')}catch(e){setTh(false)}
+thB.onclick=()=>setTh(!document.body.classList.contains('light'));
+</script>
 </body>
 </html>

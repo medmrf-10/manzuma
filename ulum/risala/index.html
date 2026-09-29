@@ -12,7 +12,11 @@
 <link rel="apple-touch-icon" href="../../icons/icon-192.png">
 <title>قارئ الرسالة — ابن أبي زيد القيرواني</title>
 <style>
-  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--line:#2a3440}
+  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--line:#2a3440;--bar:#0f1419f2;--tocbg:#11171d;--hov:#22303d;--fncbg:#16202a}
+  body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--line:#e0d9c9;--bar:#f6f3ecf2;--tocbg:#f6f3ec;--hov:#efe9dc;--fncbg:#fdfcf8}
+  body.light u.fn{color:var(--acc3);border-bottom-color:var(--acc3)}
+  body.light #fnc{box-shadow:0 -8px 30px #0003}
+  body.light #fnc b{color:var(--acc3)}
   *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
@@ -27,7 +31,7 @@
   /* ── TOC drawer (mobile-first) ────────────────────── */
   .scrim{position:fixed;inset:0;background:#000a;opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
   .scrim.open{opacity:1;pointer-events:auto}
-  aside.toc{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(320px,88vw);background:#11171d;z-index:50;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .28s ease;box-shadow:-8px 0 30px #0008}
+  aside.toc{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(320px,88vw);background:var(--tocbg);z-index:50;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .28s ease;box-shadow:-8px 0 30px #0008}
   aside.toc.open{transform:none}
   .toc-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
   .toc-head b{color:var(--acc);flex:1;font-size:.95rem}
@@ -35,9 +39,9 @@
   .toc-search{padding:10px 14px;border-bottom:1px solid var(--line)}
   .toc-search input{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.95rem;font-family:inherit}
   nav.toc-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-  a.ti{display:block;padding:13px 16px;color:var(--ink);text-decoration:none;font-size:.95rem;border-bottom:1px solid #1b232c;line-height:1.75;min-height:48px}
+  a.ti{display:block;padding:13px 16px;color:var(--ink);text-decoration:none;font-size:.95rem;border-bottom:1px solid var(--line);line-height:1.75;min-height:48px}
   a.ti small{color:var(--dim);display:block;font-size:.74rem;margin-top:2px}
-  a.ti:active,a.ti.on{background:#22303d}
+  a.ti:active,a.ti.on{background:var(--hov)}
   a.ti.on{border-inline-start:4px solid var(--acc);color:var(--acc)}
 
   /* ── reader pane ──────────────────────────────────── */
@@ -46,22 +50,22 @@
   .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:.78rem;color:var(--dim);line-height:1.8}
   .matn{font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify}
   .matn span[data-type=title]{display:block;color:var(--acc2);font-weight:700;margin-top:20px;font-size:1.02rem}
-  .pg{color:var(--dim);font-size:.68rem;display:block;border-top:1px dashed #2a344055;margin-top:16px;padding-top:4px;text-align:start}
+  .pg{color:var(--dim);font-size:.68rem;display:block;border-top:1px dashed var(--line);margin-top:16px;padding-top:4px;text-align:start}
   .loading{color:var(--dim);text-align:center;padding:60px 20px}
   u.fn{text-decoration:none;color:#7fb3d8;border-bottom:1px dotted #7fb3d8;cursor:pointer;padding:2px 1px;border-radius:4px}
-  u.fn:active{background:#22303d}
+  u.fn:active{background:var(--hov)}
   span.fnm{color:var(--acc3);font-size:.75rem;cursor:pointer}
-  #fnc{position:fixed;inset-inline:0;bottom:140px;background:#16202a;border:1px solid var(--acc3);border-radius:14px;margin:0 10px;padding:14px 16px;max-height:38vh;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:60;box-shadow:0 -8px 30px #000a;display:none}
+  #fnc{position:fixed;inset-inline:0;bottom:140px;background:var(--fncbg);border:1px solid var(--acc3);border-radius:14px;margin:0 10px;padding:14px 16px;max-height:38vh;overflow-y:auto;-webkit-overflow-scrolling:touch;z-index:60;box-shadow:0 -8px 30px #000a;display:none}
   #fnc.open{display:block}
   #fnc b{color:#7fb3d8;font-size:.8rem;display:block;margin-bottom:8px}
   #fnc p{font-size:.98rem;line-height:2.1;text-align:justify}
   #fnc .x{position:absolute;top:8px;inset-inline-end:8px;width:38px;height:38px;border:none;background:transparent;color:var(--dim);font-size:1.2rem;cursor:pointer}
 
   /* ── bottom thumb nav ─────────────────────────────── */
-  .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:#0f1419f2;border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
+  .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:var(--bar);border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
   .bnav .row{display:flex;gap:10px}
   .bnav .row button{flex:1;height:50px;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:12px;font-size:.95rem;font-family:inherit;cursor:pointer}
-  .bnav button:active{border-color:var(--acc);background:#22303d}
+  .bnav button:active{border-color:var(--acc);background:var(--hov)}
   .bnav button.dis{opacity:.3;pointer-events:none}
   .bnav .pos{flex:none;align-self:center;color:var(--dim);font-size:.72rem;min-width:52px;text-align:center}
   .seg{display:flex;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--card)}
@@ -86,11 +90,12 @@
 <header class="top">
   <button class="icon-btn" id="openToc" aria-label="الفهرس">☰</button>
   <h1>رسالة ابن أبي زيد القيرواني</h1>
+  <button class="icon-btn thb" aria-label="المظهر">☀</button>
 </header>
 
 <div class="scrim" id="scrim"></div>
 <aside class="toc" id="tocPane">
-  <div class="toc-head"><b>الفهرس — <span id="tocn">…</span> باباً</b><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
+  <div class="toc-head"><b>الفهرس — <span id="tocn">…</span> باباً</b><button class="x thb" aria-label="المظهر">☀</button><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
   <div class="toc-search"><input type="search" id="tq" placeholder="ابحث في الأبواب…"></div>
   <nav class="toc-list" id="toc"></nav>
 </aside>
@@ -113,6 +118,10 @@
 
 <script>
 const pane=document.getElementById('tocPane'),scrim=document.getElementById('scrim');
+const thBs=[...document.querySelectorAll('.thb')];
+const setTh=l=>{document.body.classList.toggle('light',l);thBs.forEach(b=>b.textContent=l?'☾':'☀');try{localStorage.setItem('ulum-th',l?'l':'d')}catch(e){}};
+try{setTh(localStorage.getItem('ulum-th')==='l')}catch(e){setTh(false)}
+thBs.forEach(b=>b.onclick=()=>setTh(!document.body.classList.contains('light')));
 document.getElementById('openToc').onclick=()=>{pane.classList.add('open');scrim.classList.add('open')};
 const close=()=>{pane.classList.remove('open');scrim.classList.remove('open')};
 document.getElementById('closeToc').onclick=close; scrim.onclick=close;
