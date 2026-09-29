@@ -1,4 +1,5 @@
-/* المفسِّر — مصحف حقيقي (صفحات المصحف الـ604) + تفسير السعدي، بثيم المنظومة */
+/* المفسِّر — مصحف هاتف: الشاشة كلها صفحة المصحف، بلا إطار ولا هوامش.
+   التقليب بالسحب · درج أيمن للفهرس · ضغط مطوّل على الآية لقائمة الخدمات · تفسير السعدي. */
 const $ = (s) => document.querySelector(s);
 const app = $("#app");
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -8,17 +9,19 @@ const TAF_NAME = "تفسير السعدي";
 const JUZ_STARTS = [[1,1],[2,142],[2,253],[3,93],[4,24],[4,148],[5,82],[6,111],[7,88],[8,41],[9,93],[11,6],[12,53],[15,1],[17,1],[18,75],[21,1],[23,1],[25,21],[27,56],[29,46],[33,31],[36,28],[39,32],[41,47],[46,1],[51,31],[58,1],[67,1],[78,1]];
 const TOTAL_PAGES = 604;
 
-/* ---------- theme (manzuma 'lm' convention) ---------- */
+/* ---------- theme ---------- */
+let toggleTheme = () => {};
 (function () {
   const b = $("#lm");
   const set = (l) => {
     document.body.classList.toggle("light", l);
-    b.textContent = l ? "🌙 داكن" : "☀ فاتح";
+    if (b) b.textContent = l ? "🌙" : "☀";
     try { localStorage.setItem("lm", l ? "1" : "0"); } catch (e) {}
   };
   let s = null; try { s = localStorage.getItem("lm"); } catch (e) {}
   set(s === "1" || (s === null && matchMedia("(prefers-color-scheme: light)").matches));
-  b.onclick = () => set(!document.body.classList.contains("light"));
+  if (b) b.onclick = () => set(!document.body.classList.contains("light"));
+  toggleTheme = () => set(!document.body.classList.contains("light"));
 })();
 
 /* ---------- data ---------- */
@@ -29,6 +32,7 @@ const load = (url) => {
 };
 const surahData = (n) => load(`data/surah/${n}.json`);
 const pagesData = () => load("data/pages.json");
+const ahzabData = () => load("data/ahzab.json");
 let indexCache = null;
 const surahsIndex = async () => { if (!indexCache) indexCache = await load("data/index.json"); return indexCache; };
 const prefetchSurah = (n) => { if (n >= 1 && n <= 114) surahData(n).catch(() => {}); };
@@ -37,25 +41,6 @@ async function pageOf(s, a) {
   const pg = await pagesData();
   for (const k in pg) for (const [ns, f, t] of pg[k]) if (ns === s && a >= f && a <= t) return +k;
   return 1;
-}
-async function surahPageList(s) {
-  const d = await surahData(s);
-  const seen = []; const set = new Set();
-  for (const v of d.verses) if (!set.has(v.p)) { set.add(v.p); seen.push(v.p); }
-  return { d, pages: seen };
-}
-
-/* ---------- shared chrome ---------- */
-const header = () => `
-<header class="site-head">
-  <a class="brand" href="#/"><span class="brand-mark">م</span><span class="brand-txt">المفسِّر<br><small>المصحف · ${TAF_NAME}</small></span></a>
-  <nav class="top-nav"><a href="#/">السور</a><a href="#/m/1">المصحف</a></nav>
-</header>`;
-const footer = `<footer class="site-foot">النص القرآني: Uthmani (QUL) · التفسير: ${TAF_NAME} «تيسير الكريم الرحمن» · بوابة التفسير — ساسي</footer>`;
-
-function groupLabel(g) {
-  const f = +g.f.split(":")[1], t = +g.t.split(":")[1];
-  return f === t ? `الآية ${arNum(f)}` : `الآيات ${arNum(f)}–${arNum(t)}`;
 }
 
 /* ---------- tafsir panel ---------- */
@@ -66,12 +51,9 @@ function openTafsir(d, verseKey) {
   curSurah = d; curIdx = i;
   const v = d.verses[i];
   const wasClosed = $("#tafsir-panel").classList.contains("hidden");
-  $("#panel-title").textContent = `سورة ${d.ar}`;
   $("#panel-ayah").textContent = v.t;
-  $("#panel-body").innerHTML = "";
   $("#tafsir-overlay").classList.remove("hidden");
   $("#tafsir-panel").classList.remove("hidden");
-  document.body.style.overflow = "hidden";
   if (wasClosed) { try { history.pushState({ mufassirPanel: 1 }, ""); } catch (e) {} }
   try { localStorage.setItem("mufassir-last", `${d.n}:${v.a}`); } catch (e) {}
   const g = d.groups[v.g];
@@ -85,6 +67,10 @@ function openTafsir(d, verseKey) {
   $("#panel-next").disabled = i >= d.verses.length - 1;
   $("#panel-ayah").scrollTop = 0; $("#panel-body").scrollTop = 0;
 }
+function groupLabel(g) {
+  const f = +g.f.split(":")[1], t = +g.t.split(":")[1];
+  return f === t ? `الآية ${arNum(f)}` : `الآيات ${arNum(f)}–${arNum(t)}`;
+}
 function panelStep(step) {
   const i = curIdx + step;
   if (curSurah && i >= 0 && i < curSurah.verses.length) openTafsir(curSurah, curSurah.verses[i].k);
@@ -95,139 +81,138 @@ addEventListener("keydown", (e) => {
   if (!$("#tafsir-panel").classList.contains("hidden")) {
     if (e.key === "ArrowLeft") panelStep(-1);
     if (e.key === "ArrowRight") panelStep(1);
+    if (e.key === "Escape") closeTafsir();
   }
 });
 function closeTafsir() {
   $("#tafsir-overlay").classList.add("hidden");
   $("#tafsir-panel").classList.add("hidden");
-  document.body.style.overflow = "";
 }
 $("#tafsir-overlay").addEventListener("click", closeTafsir);
-$("#panel-close").addEventListener("click", closeTafsir);
-addEventListener("keydown", (e) => e.key === "Escape" && closeTafsir());
-// phone back: closes the open panel first (one history level), else walks the hash history
-addEventListener("popstate", (e) => {
-  if (!$("#tafsir-panel").classList.contains("hidden")) { closeTafsir(); }
-});
+addEventListener("popstate", () => { if (!$("#tafsir-panel").classList.contains("hidden")) closeTafsir(); });
 
-/* ---------- page flip (swipe + edge taps) ---------- */
-function bindFlip(el, goPrev, goNext) {
-  let x0 = 0, y0 = 0;
-  el.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
-  el.addEventListener("touchend", (e) => {
-    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
-    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) { dx > 0 ? goPrev() : goNext(); }
-  }, { passive: true });
-  el.querySelectorAll(".flip-zone").forEach((z) =>
-    z.addEventListener("click", (e) => { if (e.target === z) (z.dataset.dir === "prev" ? goPrev() : goNext()); }));
-}
-
-/* ---------- home ---------- */
-async function renderHome() {
-  const idx = await surahsIndex();
-  let resume = "";
-  try {
-    const last = localStorage.getItem("mufassir-last");
-    if (last) {
-      const [s, a] = last.split(":").map(Number);
-      const sIdx = idx.find((x) => x.n === s);
-      const p = await pageOf(s, a);
-      if (sIdx) resume = `<a class="resume" href="#/m/${p}">متابعة من آخر قراءة: ${esc(sIdx.ar)}، الآية ${arNum(a)} ←</a>`;
+/* ---------- gestures: swipe flip + long-press ---------- */
+let swipeMoved = false;
+function bindGestures(el, goPrev, goNext, onLongPress) {
+  let x0 = 0, y0 = 0, lpT = null, lpEl = null, edgeX0 = -1;
+  el.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    x0 = t.clientX; y0 = t.clientY; swipeMoved = false;
+    edgeX0 = x0 > innerWidth - 26 ? x0 : -1; // right-edge pull
+    lpEl = e.target.closest ? e.target.closest(".m-ayah") : null;
+    if (lpEl) {
+      lpT = setTimeout(() => {
+        lpT = null;
+        if (!swipeMoved && lpEl) { swipeMoved = true; onLongPress(lpEl); }
+      }, 500);
     }
-  } catch (e) {}
-  const juzPages = await Promise.all(JUZ_STARTS.map(([s, a]) => pageOf(s, a)));
-  app.innerHTML = header() + `
-  <section class="hero">
-    <h1>القرآن بـ<span class="accent">تفسير السعدي</span></h1>
-    <p>مصحف حقيقي — قلّب صفحاته كالكتاب، وانقر أي آية تقرأ تفسيرها.</p>
-    <div class="quick">
-      <input id="q" class="search" type="search" placeholder="ابحث عن سورة — بالاسم أو الرقم…" autocomplete="off">
-      <input id="go" class="search goto" type="text" inputmode="numeric" placeholder="سورة:آية مثل 2:255">
-    </div>
-    ${resume}
-    <div class="juz-row" id="juz"><span class="juz-lbl">الأجزاء:</span>${juzPages.map((p, i) =>
-      `<a class="juz-chip" href="#/m/${p}" title="الجزء ${arNum(i + 1)} — صفحة ${arNum(p)}">${arNum(i + 1)}</a>`).join("")}</div>
-  </section>
-  <div class="surah-grid" id="grid"></div>` + footer;
-  const draw = (list) => {
-    $("#grid").innerHTML = list.map((s) => `
-      <a class="surah-card" href="#/s/${s.n}">
-        <span class="surah-num">${arNum(s.n)}</span>
-        <span class="surah-name">${esc(s.ar)}<small>${esc(s.en)}</small></span>
-        <span class="surah-meta">${s.place} · ${arNum(s.ayahs)} آية</span>
-      </a>`).join("");
-  };
-  draw(idx);
-  $("#q").addEventListener("input", (e) => {
-    const t = e.target.value.trim();
-    draw(idx.filter((s) => s.ar.includes(t) || s.en.toLowerCase().includes(t.toLowerCase()) || String(s.n) === t));
+  }, { passive: true });
+  el.addEventListener("touchmove", (e) => {
+    const dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) { swipeMoved = true; if (lpT) { clearTimeout(lpT); lpT = null; } }
+  }, { passive: true });
+  el.addEventListener("touchend", (e) => {
+    if (lpT) { clearTimeout(lpT); lpT = null; }
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    if (edgeX0 > 0 && dx < -40 && Math.abs(dy) < 60) { // pull from right edge → drawer
+      if (window.MufassirDrawer) window.MufassirDrawer.open();
+      return;
+    }
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { dx > 0 ? goPrev() : goNext(); }
+  }, { passive: true });
+  el.addEventListener("touchcancel", () => { if (lpT) { clearTimeout(lpT); lpT = null; } });
+  // desktop: right edge zones flip pages; long-press via contextmenu
+  el.querySelectorAll(".flip-zone").forEach((z) =>
+    z.addEventListener("click", (e) => {
+      if (e.target === z && !swipeMoved) (z.dataset.dir === "prev" ? goPrev() : goNext());
+    }));
+  el.addEventListener("contextmenu", (e) => {
+    const a = e.target.closest ? e.target.closest(".m-ayah") : null;
+    if (a) { e.preventDefault(); onLongPress(a); }
   });
-  const gotoAyah = () => {
-    const m = $("#go").value.match(/(\d{1,3})\s*[:/\s]\s*(\d{1,3})/);
-    if (m && +m[1] >= 1 && +m[1] <= 114) location.hash = `#/s/${+m[1]}/a/${+m[2]}`;
-  };
-  $("#go").addEventListener("keydown", (e) => e.key === "Enter" && gotoAyah());
-  document.title = "المفسِّر — القرآن بتفسير السعدي";
 }
 
-/* ---------- mushaf: the real book ---------- */
+/* ---------- auto-fit ---------- */
+function fitMushaf() {
+  const box = $("#mtext");
+  if (!box) return;
+  let s = 1.22, guard = 80;
+  box.style.fontSize = s + "rem";
+  while (guard-- > 0 && s > 0.6 && (box.scrollHeight > box.clientHeight + 1 || box.scrollWidth > box.clientWidth + 1)) {
+    s -= 0.04; box.style.fontSize = s + "rem";
+  }
+}
+addEventListener("resize", () => { if ($("#mtext")) fitMushaf(); });
+
+/* ---------- the mushaf: screen IS the page ---------- */
+let curPage = 1, curSurahs = {};
 function surahBanner(d) {
   const bis = d.bismillah ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
   return `<div class="surah-banner"><span class="ornament">﴾</span><span class="surah-banner-name">سورة ${esc(d.ar)}</span><span class="ornament">﴿</span></div>${bis}`;
 }
 async function renderMushafPage(k) {
   k = Math.min(TOTAL_PAGES, Math.max(1, k));
-  app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل الصفحة…</div>';
+  curPage = k;
+  document.body.classList.add("book-mode");
+  const ov = $(".menu-overlay"); if (ov) ov.remove();
+  try { localStorage.setItem("mufassir-page", String(k)); } catch (e) {}
+  app.innerHTML = '<div class="mushaf-book"><div class="page-loading"><span class="spinner"></span></div></div>';
   const pg = await pagesData();
-  const ranges = pg[k];
+  const ranges = pg[k] || [];
   const surahs = {};
   await Promise.all([...new Set(ranges.map((r) => r[0]))].map(async (n) => { surahs[n] = await surahData(n); }));
+  curSurahs = surahs;
   let html = "", juz = null;
+  const firstSurah = ranges.length ? ranges[0][0] : 1;
   for (const [s, f, t] of ranges) {
     const d = surahs[s];
     if (f === 1) html += surahBanner(d);
     for (const v of d.verses) {
       if (v.a < f || v.a > t) continue;
       if (juz === null) juz = v.j;
-      html += `<span class="m-ayah" data-s="${s}" data-k="${v.k}" id="a-${s}-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span> `;
+      html += `<span class="m-ayah" data-s="${s}" data-k="${v.k}">${v.t}<span class="ayah-marker">${arNum(v.a)}${v.sd ? " ۩" : ""}</span></span> `;
     }
   }
+  const sName = surahs[firstSurah] ? surahs[firstSurah].ar : "";
   app.innerHTML = `
-  <div class="mushaf-book">
-    <div class="mushaf-page" id="mpage">
-      <div class="mushaf-frame">
-        <div class="frame-top">
-          <span></span>
-          <span class="mushaf-part">الجزء ${arNum(juz ?? "")}</span>
-        </div>
-        <div class="mushaf-text" id="mtext">${html}</div>
-        <div class="frame-bottom">
-          <a class="flip-btn" href="#/m/${k - 1}" ${k <= 1 ? 'style="visibility:hidden"' : ""}>‹</a>
-          <span class="page-num">${arNum(k)}</span>
-          <a class="flip-btn" href="#/m/${k + 1}" ${k >= TOTAL_PAGES ? 'style="visibility:hidden"' : ""}>›</a>
-        </div>
+  <div class="mushaf-book" id="mbook">
+    <div class="mushaf-page">
+      <div class="m-edge m-top" id="mtop">
+        <span class="m-corner" id="surah-name">${esc(sName)}</span>
+        <span class="m-corner">الجزء ${arNum(juz ?? "")}</span>
       </div>
-      <div class="flip-zone" data-dir="prev" aria-label="الصفحة السابقة"></div>
-      <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
+      <div class="mushaf-text" id="mtext">${html}</div>
+      <div class="m-edge m-bot">
+        <a class="flip-btn" href="#/m/${k + 1}" ${k >= TOTAL_PAGES ? 'style="visibility:hidden"' : ""} aria-label="التالية">‹</a>
+        <span class="page-num">${arNum(k)}</span>
+        <a class="flip-btn" href="#/m/${k - 1}" ${k <= 1 ? 'style="visibility:hidden"' : ""} aria-label="السابقة">›</a>
+      </div>
     </div>
+    <div class="edge-grip" id="grip" aria-label="الفهرس"></div>
+    <div class="flip-zone" data-dir="prev" aria-label="الصفحة السابقة"></div>
+    <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
   </div>`;
-  fitText($("#mtext"));
-  const mp = $("#mpage");
-  document.body.style.overflow = "hidden";
-  const mtext = $("#mtext");
-  const frame = mp.querySelector(".mushaf-frame");
-  let fs = 1.3;
-  while (fs > 0.62 && (mtext.scrollHeight > mtext.clientHeight || mtext.scrollWidth > mtext.clientWidth)) {
-    fs -= 0.02;
-    frame.style.fontSize = fs + "rem";
-  }
-  mp.querySelectorAll(".m-ayah").forEach((el) =>
+  fitMushaf();
+  const book = $("#mbook"), mt = $("#mtext");
+  mt.querySelectorAll(".m-ayah").forEach((el) =>
     el.addEventListener("click", () => {
-      mp.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
+      if (swipeMoved) return;
+      mt.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
       el.classList.add("active");
       openTafsir(surahs[+el.dataset.s], el.dataset.k);
     }));
-  bindFlip(mp, () => { if (k > 1) location.hash = `#/m/${k - 1}`; }, () => { if (k < TOTAL_PAGES) location.hash = `#/m/${k + 1}`; });
+  bindGestures(book,
+    () => { if (k > 1) location.hash = `#/m/${k - 1}`; },
+    () => { if (k < TOTAL_PAGES) location.hash = `#/m/${k + 1}`; },
+    (a) => { // long-press → context menu (component hook)
+      mt.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
+      a.classList.add("active");
+      if (window.MufassirCtx) window.MufassirCtx.open(a, surahs[+a.dataset.s], a.dataset.k);
+      else openTafsir(surahs[+a.dataset.s], a.dataset.k);
+    });
+  const openDrawer = () => { if (window.MufassirDrawer) window.MufassirDrawer.open(); };
+  $("#grip").addEventListener("click", openDrawer);
+  $("#mtop").addEventListener("click", openDrawer);
   document.title = `المفسِّر — صفحة ${arNum(k)}`;
   idle(() => {
     const nx = pg[k + 1], pv = pg[k - 1];
@@ -235,95 +220,49 @@ async function renderMushafPage(k) {
   });
 }
 
-/* ---------- auto-fit: shrink text until the page fully fits — no scroll ever ---------- */
-function fitText(el) {
-  el.style.fontSize = "";
-  let fs = parseFloat(getComputedStyle(el).fontSize);
-  while (fs > 11 && el.scrollHeight > el.clientHeight) { fs -= 0.5; el.style.fontSize = fs + "px"; }
-}
-
-/* ---------- surah view (real page numbers) ---------- */
-async function renderSurah(n, ayah, pageK) {
-  app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل السورة…</div>';
-  const { d, pages } = await surahPageList(n);
-  let k = null;
-  if (pageK) {
-    k = pageK;
-  } else if (ayah) {
-    const v = d.verses.find((x) => x.a === ayah);
-    k = v ? v.p : pages[0];
-  } else if (pageK != null) k = pages.includes(pageK) ? pageK : pages[0];
-  else k = pages[0];
-  const slice = d.verses.filter((v) => v.p === k);
-  const first = slice[0], last = slice[slice.length - 1];
-  const pos = pages.indexOf(k);
-  const bisLine = first.a === 1 && d.bismillah ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
-  app.innerHTML = `
-  <div class="mushaf-book">
-    <div class="mushaf-page" id="mpage">
-      <div class="mushaf-frame">
-        <div class="frame-top">
-          <span class="mushaf-part">سورة ${esc(d.ar)} · ${d.place}</span>
-        </div>
-        <div class="mushaf-text" id="mtext">${bisLine}${slice.map((v) =>
-          `<span class="m-ayah" data-k="${v.k}" id="a-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span>`).join(" ")}</div>
-        <div class="frame-bottom">
-          <a class="flip-btn" href="#/s/${n}/p/${k - 1}" ${pos <= 0 ? 'style="visibility:hidden"' : ""}>‹</a>
-          <span class="page-num">${arNum(k)}</span>
-          <a class="flip-btn" href="#/s/${n}/p/${k + 1}" ${pos >= pages.length - 1 ? 'style="visibility:hidden"' : ""}>›</a>
-        </div>
-      </div>
-      <div class="flip-zone" data-dir="prev" aria-label="الصفحة السابقة"></div>
-      <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
-    </div>
-  </div>`;
-  fitText($("#mtext"));
-  const mp = $("#mpage");
-  mp.querySelectorAll(".m-ayah").forEach((el) =>
-    el.addEventListener("click", () => {
-      mp.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
-      el.classList.add("active");
-      openTafsir(d, el.dataset.k);
-    }));
-  bindFlip(mp, () => { if (pos > 0) location.hash = `#/s/${n}/p/${k - 1}`; }, () => { if (pos < pages.length - 1) location.hash = `#/s/${n}/p/${k + 1}`; });
-  if (ayah) setTimeout(() => openTafsir(d, `${n}:${ayah}`), 150);
-  document.title = `المفسِّر — سورة ${d.ar}`;
-  idle(() => { prefetchSurah(n - 1); prefetchSurah(n + 1); });
-}
+/* ---------- shared API for components (drawer / ctxmenu) ---------- */
+window.Mufassir = {
+  goPage: (k) => { location.hash = `#/m/${Math.min(TOTAL_PAGES, Math.max(1, k))}`; },
+  pageOf, surahData, surahsIndex, pagesData, ahzabData, openTafsir, toggleTheme,
+  JUZ_STARTS, TOTAL_PAGES, arNum, esc,
+  state: () => ({ page: curPage, surahs: curSurahs }),
+};
 
 /* ---------- router ---------- */
 async function route() {
+  closeTafsir();
   const h = location.hash || "#/";
-  if (!/^#\/m\//.test(h)) document.body.style.overflow = "";
-  let m = h.match(/^#\/m\/(\d+)/);
-  if (m) { closeTafsir(); renderMushafPage(+m[1]).catch(() => { app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل الصفحة.</div>' + footer; }); return; }
+  let m = h.match(/^#\/m\/(\d+)\/a\/(\d+)$/);
+  if (m) {
+    const k = +m[1], a = +m[2];
+    renderMushafPage(k).then(async () => {
+      const pg = await pagesData();
+      const rg = (pg[k] || []).find(([s, f, t]) => a >= f && a <= t);
+      if (rg) { const d = await surahData(rg[0]); openTafsir(d, `${rg[0]}:${a}`); }
+    }).catch(() => {});
+    return;
+  }
+  m = h.match(/^#\/m\/(\d+)/);
+  if (m) {
+    renderMushafPage(+m[1]).catch(() => {
+      app.innerHTML = '<div class="mushaf-book"><div class="page-loading">تعذّر تحميل الصفحة.</div></div>';
+    });
+    return;
+  }
   m = h.match(/^#\/s\/(\d+)/);
   if (m) {
-    if (!/a\/\d+/.test(h)) closeTafsir();
     const n = Math.min(114, Math.max(1, +m[1]));
-    const pm = h.match(/\/p\/(\d+)/), am = h.match(/\/a\/(\d+)/);
-    if (pm) {
-      // real mushaf page number within this surah
-      (async () => {
-        const { pages } = await surahPageList(n);
-        const k = +pm[1];
-        if (pages.includes(k)) renderSurah(n, null, k); else renderSurah(n, null);
-      })().catch(() => { app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer; });
-      return;
-    }
-    renderSurah(n, am ? +am[1] : null).catch(() => {
-      app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer;
-    });
-  } else {
-    closeTafsir();
-    renderHome().catch(() => {
-      app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل الفهرس.</div>' + footer;
-    });
+    surahData(n).then((d) => {
+      const am = h.match(/\/a\/(\d+)/);
+      const v = am ? d.verses.find((x) => x.a === +am[1]) : null;
+      const p = v ? v.p : (d.verses[0] ? d.verses[0].p : 1);
+      location.replace(`#/m/${p}${v ? `/a/${v.a}` : ""}`);
+    }).catch(() => location.replace("#/m/1"));
+    return;
   }
-}
-function renderSurahAt(n, k) {
-  // render surah page by real mushaf page number — page turn, no auto-tafsir
-  renderSurah(n, null, k).then(() => {});
+  let r = 1;
+  try { r = Math.min(TOTAL_PAGES, Math.max(1, +localStorage.getItem("mufassir-page") || 1)); } catch (e) {}
+  location.replace(`#/m/${r}`);
 }
 addEventListener("hashchange", route);
 route();
