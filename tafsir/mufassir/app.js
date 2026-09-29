@@ -29,7 +29,7 @@ const surahData = (n) => load(`data/surah/${n}.json`);
 let indexCache = null;
 const surahsIndex = async () => { if (!indexCache) indexCache = await load("data/index.json"); return indexCache; };
 const prefetchSurah = (n) => { if (n >= 1 && n <= 114) surahData(n).catch(() => {}); };
-const idle = (f) => (window.requestIdleCallback || setTimeout)(f, 300);
+const idle = (f) => (window.requestIdleCallback ? window.requestIdleCallback(f) : setTimeout(f, 300));
 
 /* ---------- shared chrome ---------- */
 const header = () => `
@@ -162,7 +162,7 @@ async function route() {
   if ((m = h.match(/^#\/s\/(\d+)(?:\/(mushaf|a\/(\d+)))?/))) {
     const n = Math.min(114, Math.max(1, +m[1]));
     const ayah = m[3] ? +m[3] : null;
-    renderSurah(n, m[2] === "mushaf" ? "mushaf" : "list", ayah).catch(() => {
+    renderSurah(n, m[2] === "mushaf" ? "mushaf" : "list", ayah).catch((e) => {
       app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer;
     });
   } else {
