@@ -1,4 +1,4 @@
-/* المفسِّر — موقع التفسير بتفسير السعدي. SPA ثابت فوق data/*.json — ثيم المنظومة */
+/* المفسِّر — مصحف حقيقي (صفحات المصحف الـ604) + تفسير السعدي، بثيم المنظومة */
 const $ = (s) => document.querySelector(s);
 const app = $("#app");
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -6,6 +6,7 @@ const AR_D = "٠١٢٣٤٥٦٧٨٩";
 const arNum = (n) => String(n).replace(/\d/g, (d) => AR_D[+d]);
 const TAF_NAME = "تفسير السعدي";
 const JUZ_STARTS = [[1,1],[2,142],[2,253],[3,93],[4,24],[4,148],[5,82],[6,111],[7,88],[8,41],[9,93],[11,6],[12,53],[15,1],[17,1],[18,75],[21,1],[23,1],[25,21],[27,56],[29,46],[33,31],[36,28],[39,32],[41,47],[46,1],[51,31],[58,1],[67,1],[78,1]];
+const TOTAL_PAGES = 604;
 
 /* ---------- theme (manzuma 'lm' convention) ---------- */
 (function () {
@@ -27,16 +28,28 @@ const load = (url) => {
   return cache.get(url);
 };
 const surahData = (n) => load(`data/surah/${n}.json`);
+const pagesData = () => load("data/pages.json");
 let indexCache = null;
 const surahsIndex = async () => { if (!indexCache) indexCache = await load("data/index.json"); return indexCache; };
 const prefetchSurah = (n) => { if (n >= 1 && n <= 114) surahData(n).catch(() => {}); };
 const idle = (f) => (window.requestIdleCallback ? window.requestIdleCallback(f) : setTimeout(f, 300));
+async function pageOf(s, a) {
+  const pg = await pagesData();
+  for (const k in pg) for (const [ns, f, t] of pg[k]) if (ns === s && a >= f && a <= t) return +k;
+  return 1;
+}
+async function surahPageList(s) {
+  const d = await surahData(s);
+  const seen = []; const set = new Set();
+  for (const v of d.verses) if (!set.has(v.p)) { set.add(v.p); seen.push(v.p); }
+  return { d, pages: seen };
+}
 
 /* ---------- shared chrome ---------- */
 const header = () => `
 <header class="site-head">
-  <a class="brand" href="#/"><span class="brand-mark">م</span><span class="brand-txt">المفسِّر<br><small>القرآن · ${TAF_NAME}</small></span></a>
-  <nav class="top-nav"><a href="#/">السور</a><a href="../">بوابة التفسير</a></nav>
+  <a class="brand" href="#/"><span class="brand-mark">م</span><span class="brand-txt">المفسِّر<br><small>المصحف · ${TAF_NAME}</small></span></a>
+  <nav class="top-nav"><a href="#/">السور</a><a href="#/m/1">المصحف</a><a href="../">بوابة التفسير</a></nav>
 </header>`;
 const footer = `<footer class="site-foot">النص القرآني: Uthmani (QUL) · التفسير: ${TAF_NAME} «تيسير الكريم الرحمن» · بوابة التفسير — ساسي</footer>`;
 
@@ -77,8 +90,10 @@ function panelStep(step) {
 $("#panel-prev").addEventListener("click", () => panelStep(-1));
 $("#panel-next").addEventListener("click", () => panelStep(1));
 addEventListener("keydown", (e) => {
-  if (e.key === "ArrowLeft" && !$("#tafsir-panel").classList.contains("hidden")) panelStep(-1);
-  if (e.key === "ArrowRight" && !$("#tafsir-panel").classList.contains("hidden")) panelStep(1);
+  if (!$("#tafsir-panel").classList.contains("hidden")) {
+    if (e.key === "ArrowLeft") panelStep(-1);
+    if (e.key === "ArrowRight") panelStep(1);
+  }
 });
 function closeTafsir() {
   $("#tafsir-overlay").classList.add("hidden");
@@ -89,80 +104,133 @@ $("#tafsir-overlay").addEventListener("click", closeTafsir);
 $("#panel-close").addEventListener("click", closeTafsir);
 addEventListener("keydown", (e) => e.key === "Escape" && closeTafsir());
 
-/* ---------- home: surah grid ---------- */
+/* ---------- page flip (swipe + edge taps) ---------- */
+function bindFlip(el, goPrev, goNext) {
+  let x0 = 0, y0 = 0;
+  el.addEventListener("touchstart", (e) => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  el.addEventListener("touchend", (e) => {
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) { dx > 0 ? goPrev() : goNext(); }
+  }, { passive: true });
+  el.querySelectorAll(".flip-zone").forEach((z) =>
+    z.addEventListener("click", (e) => { if (e.target === z) (z.dataset.dir === "prev" ? goPrev() : goNext()); }));
+}
+
+/* ---------- home ---------- */
 async function renderHome() {
   const idx = await surahsIndex();
-  let last = null;
-  try { last = (localStorage.getItem("mufassir-last") || "").split(":"); } catch (e) {}
-  const resume = last && last.length === 2 ? (() => {
-    const sn = idx.find((c) => c.n === +last[0]);
-    return sn ? `<a class="resume" href="#/s/${sn.n}/a/${+last[1]}">متابعة من آخر قراءة — سورة ${esc(sn.ar)} · الآية ${arNum(+last[1])} ←</a>` : "";
-  })() : "";
+  let resume = "";
+  try {
+    const last = localStorage.getItem("mufassir-last");
+    if (last) {
+      const [s, a] = last.split(":").map(Number);
+      const sIdx = idx.find((x) => x.n === s);
+      const p = await pageOf(s, a);
+      if (sIdx) resume = `<a class="resume" href="#/m/${p}">متابعة من آخر قراءة: ${esc(sIdx.ar)}، الآية ${arNum(a)} ←</a>`;
+    }
+  } catch (e) {}
+  const juzPages = await Promise.all(JUZ_STARTS.map(([s, a]) => pageOf(s, a)));
   app.innerHTML = header() + `
   <section class="hero">
     <h1>القرآن بـ<span class="accent">تفسير السعدي</span></h1>
-    <p>اختر سورة، تصفّح آياتها صفحاتٍ كالمصحف، وانقر أي آية تقرأ تفسيرها في لوحة جانبية — بلا مغادرة الصفحة.</p>
+    <p>مصحف حقيقي — قلّب صفحاته كالكتاب، وانقر أي آية تقرأ تفسيرها.</p>
     <div class="quick">
       <input id="q" class="search" type="search" placeholder="ابحث عن سورة — بالاسم أو الرقم…" autocomplete="off">
       <input id="go" class="search goto" type="text" inputmode="numeric" placeholder="سورة:آية مثل 2:255">
     </div>
     ${resume}
-    <div class="juz-row" id="juz"><span class="juz-lbl">تصفّح بالأجزاء:</span></div>
+    <div class="juz-row" id="juz"><span class="juz-lbl">الأجزاء:</span>${juzPages.map((p, i) =>
+      `<a class="juz-chip" href="#/m/${p}" title="الجزء ${arNum(i + 1)} — صفحة ${arNum(p)}">${arNum(i + 1)}</a>`).join("")}</div>
   </section>
   <div class="surah-grid" id="grid"></div>` + footer;
-  $("#juz").insertAdjacentHTML("beforeend", JUZ_STARTS.map(([s, a], i) =>
-    `<a class="juz-chip" href="#/s/${s}/a/${a}" title="الجزء ${arNum(i + 1)} — يبدأ ${esc(idx.find(c => c.n === s)?.ar || s)} ${arNum(a)}">${arNum(i + 1)}</a>`).join(""));
-  $("#go").addEventListener("keydown", (e) => {
-    if (e.key !== "Enter") return;
-    const m = e.target.value.trim().match(/(\d{1,3})\s*[:\/\s]\s*(\d{1,3})/);
-    if (m) { const sn = +m[1], a = +m[2]; if (sn >= 1 && sn <= 114 && a >= 1) location.hash = `#/s/${sn}/a/${a}`; }
-  });
-  const grid = $("#grid");
-  const draw = (q) => {
-    q = (q || "").trim().toLowerCase();
-    const list = idx.filter((c) => !q || c.ar.includes(q) || c.en.toLowerCase().includes(q) || String(c.n) === q);
-    grid.innerHTML = list.map((c) => `
-      <a class="surah-card" href="#/s/${c.n}">
-        <span class="surah-num">${arNum(c.n)}</span>
-        <span class="names"><span class="surah-ar">${esc(c.ar)}</span><span class="surah-en">${esc(c.en)}</span></span>
-        <span class="surah-meta">${c.place} · ${arNum(c.ayahs)} آية</span>
-      </a>`).join("") || `<div class="page-loading">لا نتائج.</div>`;
+  const draw = (list) => {
+    $("#grid").innerHTML = list.map((s) => `
+      <a class="surah-card" href="#/s/${s.n}">
+        <span class="surah-num">${arNum(s.n)}</span>
+        <span class="surah-name">${esc(s.ar)}<small>${esc(s.en)}</small></span>
+        <span class="surah-meta">${s.place} · ${arNum(s.ayahs)} آية</span>
+      </a>`).join("");
   };
-  draw();
-  $("#q").addEventListener("input", (e) => draw(e.target.value));
-  document.title = `المفسِّر — ${TAF_NAME}`;
+  draw(idx);
+  $("#q").addEventListener("input", (e) => {
+    const t = e.target.value.trim();
+    draw(idx.filter((s) => s.ar.includes(t) || s.en.toLowerCase().includes(t.toLowerCase()) || String(s.n) === t));
+  });
+  const gotoAyah = () => {
+    const m = $("#go").value.match(/(\d{1,3})\s*[:/\s]\s*(\d{1,3})/);
+    if (m && +m[1] >= 1 && +m[1] <= 114) location.hash = `#/s/${+m[1]}/a/${+m[2]}`;
+  };
+  $("#go").addEventListener("keydown", (e) => e.key === "Enter" && gotoAyah());
+  document.title = "المفسِّر — القرآن بتفسير السعدي";
 }
 
-/* ---------- surah page — paged like a mushaf ---------- */
-const PAGE = 15;           // list mode
-const PAGE_CHARS = 1400;   // mushaf mode: ~what fits one screen
-function buildPages(verses, budget) {
-  const pages = [[]];
-  let len = 0;
-  for (const v of verses) {
-    if (len + v.t.length > budget && pages[pages.length - 1].length) { pages.push([]); len = 0; }
-    pages[pages.length - 1].push(v); len += v.t.length + 1;
+/* ---------- mushaf: the real book ---------- */
+function surahBanner(d) {
+  const bis = d.bismillah ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
+  return `<div class="surah-banner"><span class="ornament">﴾</span><span class="surah-banner-name">سورة ${esc(d.ar)}</span><span class="ornament">﴿</span></div>${bis}`;
+}
+async function renderMushafPage(k) {
+  k = Math.min(TOTAL_PAGES, Math.max(1, k));
+  app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل الصفحة…</div>';
+  const pg = await pagesData();
+  const ranges = pg[k];
+  const surahs = {};
+  await Promise.all([...new Set(ranges.map((r) => r[0]))].map(async (n) => { surahs[n] = await surahData(n); }));
+  let html = "", juz = null;
+  for (const [s, f, t] of ranges) {
+    const d = surahs[s];
+    if (f === 1) html += surahBanner(d);
+    for (const v of d.verses) {
+      if (v.a < f || v.a > t) continue;
+      if (juz === null) juz = v.j;
+      html += `<span class="m-ayah" data-s="${s}" data-k="${v.k}" id="a-${s}-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span> `;
+    }
   }
-  return pages;
+  app.innerHTML = header() + `
+  <div class="mushaf-wrap">
+    <div class="mushaf-top">
+      <span class="mushaf-part">الجزء ${arNum(juz ?? "")}</span>
+      <a class="back-link" href="#/">→ فهرس السور</a>
+    </div>
+    <div class="mushaf-page" id="mpage">
+      <div class="flip-zone" data-dir="prev" aria-label="الصفحة السابقة"></div>
+      <div class="mushaf-frame">${html}</div>
+      <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
+    </div>
+    <div class="pager">
+      <a class="page-btn" href="#/m/${k - 1}" ${k <= 1 ? 'style="visibility:hidden"' : ""}>‹ السابقة</a>
+      <span class="page-info">${arNum(k)}</span>
+      <a class="page-btn" href="#/m/${k + 1}" ${k >= TOTAL_PAGES ? 'style="visibility:hidden"' : ""}>التالية ›</a>
+    </div>
+  </div>` + footer;
+  const mp = $("#mpage");
+  mp.querySelectorAll(".m-ayah").forEach((el) =>
+    el.addEventListener("click", () => {
+      mp.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
+      el.classList.add("active");
+      openTafsir(surahs[+el.dataset.s], el.dataset.k);
+    }));
+  bindFlip(mp, () => { if (k > 1) location.hash = `#/m/${k - 1}`; }, () => { if (k < TOTAL_PAGES) location.hash = `#/m/${k + 1}`; });
+  document.title = `المفسِّر — صفحة ${arNum(k)}`;
+  idle(() => {
+    const nx = pg[k + 1], pv = pg[k - 1];
+    [...(nx || []), ...(pv || [])].forEach(([s]) => prefetchSurah(s));
+  });
 }
-function surahHash(n, mode, page) {
-  let h = `#/s/${n}`;
-  if (mode === "list") h += "/list";
-  if (page && page > 1) h += `/p/${page}`;
-  return h;
-}
-async function renderSurah(n, mode, page, ayah) {
+
+/* ---------- surah view (real page numbers) ---------- */
+async function renderSurah(n, ayah) {
   app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل السورة…</div>';
-  const d = await surahData(n);
-  const total = d.verses.length;
-  const pagesArr = mode === "list" ? Array.from({ length: Math.ceil(total / PAGE) }, (_, i) => d.verses.slice(i * PAGE, i * PAGE + PAGE)) : buildPages(d.verses, PAGE_CHARS);
-  const pages = pagesArr.length;
-  if (ayah && !page) page = pagesArr.findIndex((pg) => pg.some((v) => v.a === ayah)) + 1 || 1;
-  page = Math.min(pages, Math.max(1, page || 1));
-  const slice = pagesArr[page - 1];
-  const from = d.verses.indexOf(slice[0]);
-  const lastA = slice[slice.length - 1].a;
-  const bisLine = page === 1 && n !== 9 && n !== 1 ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
+  const { d, pages } = await surahPageList(n);
+  let k = null;
+  if (ayah) {
+    const v = d.verses.find((x) => x.a === ayah);
+    k = v ? v.p : pages[0];
+  } else k = pages[0];
+  const slice = d.verses.filter((v) => v.p === k);
+  const first = slice[0], last = slice[slice.length - 1];
+  const pos = pages.indexOf(k);
+  const bisLine = first.a === 1 && d.bismillah ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
   const prev = n > 1 ? `<a class="back-link" href="#/s/${n - 1}">→ السورة السابقة</a>` : "<span></span>";
   const next = n < 114 ? `<a class="back-link" href="#/s/${n + 1}" style="text-align:left">السورة التالية ←</a>` : "<span></span>";
   app.innerHTML = header() + `
@@ -170,59 +238,39 @@ async function renderSurah(n, mode, page, ayah) {
     <a class="back-link" href="#/">→ كل السور</a>
     <div class="surah-title-row">
       <h1 class="surah-title">${esc(d.ar)}</h1>
-      <div class="surah-title-meta">${d.place} · ${arNum(total)} آية · ${TAF_NAME}</div>
+      <div class="surah-title-meta">${d.place} · ${arNum(d.verses.length)} آية · صفحات ${arNum(pages[0])}–${arNum(pages[pages.length - 1])} · ${TAF_NAME}</div>
     </div>
     <div class="surah-tools">
-      <div class="mode-toggle">
-        <button data-mode="mushaf" class="${mode === "mushaf" ? "active" : ""}">المصحف</button>
-        <button data-mode="list" class="${mode === "list" ? "active" : ""}">قائمة الآيات</button>
-      </div>
       <div class="jump">
         <input id="jumpA" type="text" inputmode="numeric" placeholder="اذهب إلى الآية…" aria-label="اذهب إلى الآية">
         <button id="jumpGo" class="nav-btn" style="flex:0;padding:8px 16px">اذهب</button>
       </div>
+      <a class="nav-btn open-mushaf" href="#/m/${first.p}">افتح في المصحف — صفحة ${arNum(first.p)}</a>
     </div>
   </div>
   ${bisLine}
-  <div id="surah-body"></div>
+  <div id="surah-body"><div class="mushaf" id="spage">${slice.map((v) =>
+    `<span class="m-ayah" data-k="${v.k}" id="a-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span>`).join(" ")}</div></div>
   <div class="pager">
-    ${page > 1 ? `<a class="page-btn" href="${surahHash(n, mode, page - 1)}">‹ الصفحة السابقة</a>` : "<span></span>"}
-    <span class="page-info">صفحة ${arNum(page)} من ${arNum(pages)} · الآيات ${arNum(from + 1)}–${arNum(lastA)}</span>
-    ${page < pages ? `<a class="page-btn" href="${surahHash(n, mode, page + 1)}">الصفحة التالية ›</a>` : "<span></span>"}
+    <a class="page-btn" href="#/s/${n}/p/${k - 1}" ${pos <= 0 ? 'style="visibility:hidden"' : ""}>‹ الصفحة السابقة</a>
+    <span class="page-info">صفحة ${arNum(k)} من المصحف · الآيات ${arNum(first.a)}–${arNum(last.a)}</span>
+    <a class="page-btn" href="#/s/${n}/p/${k + 1}" ${pos >= pages.length - 1 ? 'style="visibility:hidden"' : ""}>الصفحة التالية ›</a>
   </div>
   <div class="surah-nav">${prev}${next}</div>` + footer;
-
-  document.querySelectorAll(".mode-toggle button").forEach((b) =>
-    b.addEventListener("click", () => { location.hash = surahHash(n, b.dataset.mode, 1); }));
   const jump = () => {
     const a = +$("#jumpA").value.trim();
-    if (a >= 1 && a <= total) location.hash = `#/s/${n}${mode === "list" ? "/list" : ""}/a/${a}`;
+    if (a >= 1 && a <= d.verses.length) location.hash = `#/s/${n}/a/${a}`;
   };
   $("#jumpGo").addEventListener("click", jump);
   $("#jumpA").addEventListener("keydown", (e) => { if (e.key === "Enter") jump(); });
-
-  const body = $("#surah-body");
-  if (mode === "mushaf") {
-    body.innerHTML = `<div class="mushaf">` + slice.map((v) =>
-      `<span class="m-ayah" data-k="${v.k}" id="a-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span>`).join(" ") + `</div>`;
-    body.querySelectorAll(".m-ayah").forEach((el) =>
-      el.addEventListener("click", () => {
-        body.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
-        el.classList.add("active");
-        openTafsir(d, el.dataset.k);
-      }));
-  } else {
-    body.innerHTML = `<div class="ayah-list">` + slice.map((v) => `
-      <div class="ayah-card" id="a-${v.a}" data-k="${v.k}" role="button" tabindex="0">
-        <div class="ayah-text">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></div>
-        <div class="ayah-foot"><button class="tafsir-btn">قراءة التفسير</button></div>
-      </div>`).join("") + `</div>`;
-    body.querySelectorAll(".ayah-card").forEach((card) => {
-      const open = () => openTafsir(d, card.dataset.k);
-      card.addEventListener("click", open);
-      card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); } });
-    });
-  }
+  const mp = $("#spage");
+  mp.querySelectorAll(".m-ayah").forEach((el) =>
+    el.addEventListener("click", () => {
+      mp.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
+      el.classList.add("active");
+      openTafsir(d, el.dataset.k);
+    }));
+  bindFlip(mp, () => { if (pos > 0) location.hash = `#/s/${n}/p/${k - 1}`; }, () => { if (pos < pages.length - 1) location.hash = `#/s/${n}/p/${k + 1}`; });
   if (ayah) {
     const el = $(`#a-${ayah}`);
     el?.scrollIntoView({ block: "center" });
@@ -235,13 +283,23 @@ async function renderSurah(n, mode, page, ayah) {
 /* ---------- router ---------- */
 async function route() {
   const h = location.hash || "#/";
-  const m = h.match(/^#\/s\/(\d+)/);
+  let m = h.match(/^#\/m\/(\d+)/);
+  if (m) { closeTafsir(); renderMushafPage(+m[1]).catch(() => { app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل الصفحة.</div>' + footer; }); return; }
+  m = h.match(/^#\/s\/(\d+)/);
   if (m) {
     if (!/a\/\d+/.test(h)) closeTafsir();
     const n = Math.min(114, Math.max(1, +m[1]));
-    const mode = /\/list/.test(h) ? "list" : "mushaf";
     const pm = h.match(/\/p\/(\d+)/), am = h.match(/\/a\/(\d+)/);
-    renderSurah(n, mode, pm ? +pm[1] : null, am ? +am[1] : null).catch(() => {
+    if (pm) {
+      // real mushaf page number within this surah
+      (async () => {
+        const { pages } = await surahPageList(n);
+        const k = +pm[1];
+        if (pages.includes(k)) renderSurahAt(n, k); else renderSurah(n, null);
+      })().catch(() => { app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer; });
+      return;
+    }
+    renderSurah(n, am ? +am[1] : null).catch(() => {
       app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer;
     });
   } else {
@@ -250,6 +308,13 @@ async function route() {
       app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل الفهرس.</div>' + footer;
     });
   }
+}
+function renderSurahAt(n, k) {
+  // render surah page by real mushaf page number
+  surahPageList(n).then(({ d }) => {
+    const v = d.verses.find((x) => x.p === k);
+    renderSurah(n, v ? v.a : null).then(() => {});
+  });
 }
 addEventListener("hashchange", route);
 route();
