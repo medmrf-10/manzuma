@@ -24,14 +24,19 @@ main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .it .tt{font-size:19px;font-weight:700;line-height:1.55;display:block}
 .it .ss{font-size:14px;color:var(--mut);margin-top:6px;display:block;line-height:1.6}
 .it .cnt{display:inline-block;background:var(--card2);color:var(--acc2);border-radius:8px;padding:2px 10px;font-size:13px;margin-top:8px;font-weight:700}
-.pk{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
-.pk button{flex:1;min-width:56px;border:1px solid var(--line);background:var(--card2);color:var(--mut);border-radius:9px;padding:7px 2px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:700}
-.pk button.sel{color:#fff;border-color:transparent}
+.pk{display:flex;gap:5px;margin-top:12px}
+.pk button{flex:1;min-width:54px;border:1px solid var(--line);background:var(--card2);color:var(--mut);border-radius:11px;padding:3px 2px 8px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:700;line-height:1.4}
+.pk button i{display:block;height:4px;border-radius:2px;margin:0 8px 6px}
+.pk button.sel{color:#fff;border-color:transparent;box-shadow:0 2px 9px rgba(0,0,0,.28)}
+.pk button.sel i{background:rgba(255,255,255,.65)!important}
 .pk button[data-l="1"].sel{background:#2ea36b}
 .pk button[data-l="2"].sel{background:#5da85a}
 .pk button[data-l="3"].sel{background:#7d8894}
 .pk button[data-l="4"].sel{background:#d1923f}
 .pk button[data-l="5"].sel{background:#c94f4f}
+.pk.big{flex-wrap:wrap;gap:7px}
+.pk.big button{min-width:31%;padding:6px 6px 12px;font-size:15px;border-radius:13px}
+.pk.big button i{height:5px;margin:0 10px 8px}
 .crd{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
 .crd h2{font-size:22px;line-height:1.6;margin-bottom:12px}
 .row{display:flex;gap:8px;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line);font-size:15px}
@@ -68,8 +73,8 @@ function mark(id,l,ev){
   DIRTY=true;try{localStorage.setItem('turath2-prefs',JSON.stringify(PREFS))}catch(e){}
   updN();render();
 }
-function pkr(id){
-  return `<div class="pk">${LVLS.map(x=>`<button data-l="${x.k}" class="${PREFS[id]===x.k?'sel':''}" onclick="mark(${id},${x.k},event)">${x.n}</button>`).join('')}</div>`;
+function pkr(id,big){
+  return `<div class="pk${big?' big':''}">${LVLS.map(x=>`<button data-l="${x.k}" class="${PREFS[id]===x.k?'sel':''}" onclick="mark(${id},${x.k},event)"><i style="background:${LVC[x.k]}"></i>${x.n}${PREFS[id]===x.k?' ✓':''}</button>`).join('')}</div>`;
 }
 function tag(id){
   const l=PREFS[id];return l?`<span class="tag" style="background:${LVC[l]}">${LVLS[l-1].n}</span>`:'';
@@ -93,7 +98,7 @@ async function render(){
   }else{
     h1.textContent=BK.t;
     const d=BK;
-    app.innerHTML=crumb('الأقسام ‹ '+CUR.n+' ‹ '+d.t)+`<div class="crd"><h2>${esc(d.t)}</h2>${tag(d.i)}${pkr(d.i)}
+    app.innerHTML=crumb('الأقسام ‹ '+CUR.n+' ‹ '+d.t)+`<div class="crd"><h2>${esc(d.t)}</h2>${tag(d.i)}${pkr(d.i,1)}
       ${d.a?`<div class="row"><b>المؤلف</b><span>${esc(d.a)}${d.d?` <span style="color:var(--mut)">(ت ${esc(d.d)}هـ)</span>`:''}</span></div>`:''}
       ${d.p?`<div class="row"><b>الصفحات</b><span>${d.p.toLocaleString('ar-EG')}</span></div>`:''}
       ${d.tc?`<div class="row"><b>عناوين الفهرس</b><span>${d.tc.toLocaleString('ar-EG')}</span></div>`:''}
