@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>التراث الكلي — النسخة</title>
+<title>التراث الكلي — النسخة (قيد التعديل)</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" href="../../icons/icon-192.png">
 <style>
 :root{--bg:#0e1116;--card:#171c24;--card2:#1d242e;--ink:#e8ecf1;--mut:#93a0ae;--acc:#2f7d64;--acc2:#3d9979;--line:#263040}
 body.light{--bg:#f6f7f9;--card:#ffffff;--card2:#f0f2f5;--ink:#1a2330;--mut:#5b6a7a;--acc:#1f7a5f;--acc2:#24916f;--line:#dde3ea}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;padding-bottom:76px}
 header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;gap:10px}
 h1{font-size:19px;flex:1;line-height:1.4}
 .back{display:none;background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 14px;font-size:15px;cursor:pointer}
@@ -19,11 +19,19 @@ h1{font-size:19px;flex:1;line-height:1.4}
 main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .lead{color:var(--mut);font-size:14px;margin:4px 0 14px;line-height:1.8}
 .q{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:17px;padding:13px 16px;margin-bottom:12px}
-.it{display:block;width:100%;text-align:right;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px;cursor:pointer;color:var(--ink);font-family:inherit}
+.it{display:block;width:100%;text-align:right;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px;cursor:pointer;color:var(--ink);font-family:inherit;border-right:5px solid transparent}
 .it:active{background:var(--card2)}
 .it .tt{font-size:19px;font-weight:700;line-height:1.55;display:block}
 .it .ss{font-size:14px;color:var(--mut);margin-top:6px;display:block;line-height:1.6}
 .it .cnt{display:inline-block;background:var(--card2);color:var(--acc2);border-radius:8px;padding:2px 10px;font-size:13px;margin-top:8px;font-weight:700}
+.pk{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.pk button{flex:1;min-width:56px;border:1px solid var(--line);background:var(--card2);color:var(--mut);border-radius:9px;padding:7px 2px;font-size:12.5px;cursor:pointer;font-family:inherit;font-weight:700}
+.pk button.sel{color:#fff;border-color:transparent}
+.pk button[data-l="1"].sel{background:#2ea36b}
+.pk button[data-l="2"].sel{background:#5da85a}
+.pk button[data-l="3"].sel{background:#7d8894}
+.pk button[data-l="4"].sel{background:#d1923f}
+.pk button[data-l="5"].sel{background:#c94f4f}
 .crd{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
 .crd h2{font-size:22px;line-height:1.6;margin-bottom:12px}
 .row{display:flex;gap:8px;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line);font-size:15px}
@@ -31,50 +39,73 @@ main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .bet{margin-top:14px;background:var(--card2);border-radius:12px;padding:14px;font-size:14px;line-height:2;white-space:pre-line;color:var(--ink)}
 .hint{color:var(--mut);text-align:center;padding:30px;font-size:15px;line-height:2}
 .crumb{font-size:13px;color:var(--acc2);margin-bottom:10px;font-weight:700}
+#sv{position:fixed;bottom:0;left:0;right:0;z-index:8;background:var(--card);border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:10px;align-items:center}
+#sv button{flex:1;background:var(--acc);color:#fff;border:0;border-radius:12px;padding:14px;font-size:17px;font-weight:700;cursor:pointer;font-family:inherit}
+#sv .n{color:var(--mut);font-size:13px;min-width:90px;text-align:center;line-height:1.5}
+.tag{display:inline-block;border-radius:8px;padding:2px 10px;font-size:12.5px;font-weight:700;color:#fff;margin-top:8px}
 </style>
 </head>
 <body>
 <header>
   <button class="back" id="back" onclick="back()">‹ رجوع</button>
-  <h1 id="h1">التراث الكلي</h1>
+  <h1 id="h1">التراث الكلي — النسخة</h1>
   <button class="thb" id="thb" onclick="tog()">☀</button>
 </header>
 <main id="app"><div class="hint">…يحمّل فهرس الأقسام</div></main>
+<div id="sv"><button onclick="save()">حفظ التعديلات</button><div class="n" id="svn"></div></div>
 <script>
 const app=document.getElementById('app'),h1=document.getElementById('h1'),bk=document.getElementById('back');
-let IDX=null,CUR=null,LV='cats',CAT=null,BK=null;
+let IDX=null,CUR=null,LV='cats',CAT=null,BK=null,PREFS={},SRV={},DIRTY=false;
+const LVLS=[{k:1,n:'مرغوب جدا'},{k:2,n:'مرغوب'},{k:3,n:'محايد'},{k:4,n:'غير مرغوب'},{k:5,n:'ممنوع'}];
+const LVC={1:'#2ea36b',2:'#5da85a',3:'#7d8894',4:'#d1923f',5:'#c94f4f'};
 try{if(localStorage.getItem('ulum-th')==='l'){document.body.classList.add('light');document.getElementById('thb').textContent='☾'}}catch(e){}
 function tog(){const l=document.body.classList.toggle('light');document.getElementById('thb').textContent=l?'☾':'☀';try{localStorage.setItem('ulum-th',l?'l':'d')}catch(e){}}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+try{const l=localStorage.getItem('turath2-prefs');if(l)PREFS=JSON.parse(l)}catch(e){}
+function mark(id,l,ev){
+  ev.stopPropagation();
+  if(PREFS[id]===l)delete PREFS[id];else PREFS[id]=l;
+  DIRTY=true;try{localStorage.setItem('turath2-prefs',JSON.stringify(PREFS))}catch(e){}
+  updN();render();
+}
+function pkr(id){
+  return `<div class="pk">${LVLS.map(x=>`<button data-l="${x.k}" class="${PREFS[id]===x.k?'sel':''}" onclick="mark(${id},${x.k},event)">${x.n}</button>`).join('')}</div>`;
+}
+function tag(id){
+  const l=PREFS[id];return l?`<span class="tag" style="background:${LVC[l]}">${LVLS[l-1].n}</span>`:'';
+}
+function updN(){
+  const n=Object.keys(PREFS).length,srvn=Object.keys(SRV).length;
+  document.getElementById('svn').innerHTML=DIRTY?`<b style="color:var(--acc2)">${n.toLocaleString('ar-EG')} تعديل</b><br>غير مثبّت بالموقع`:`${srvn.toLocaleString('ar-EG')} مثبّت${n?' · '+n.toLocaleString('ar-EG')+' محلي':''}`;
+}
 function back(){if(LV==='book'){LV='books';render()}else if(LV==='books'){LV='cats';CAT=null;render()}}
 function crumb(t){return t?`<div class="crumb">${esc(t)}</div>`:''}
 async function render(){
   bk.classList.toggle('on',LV!=='cats');
   if(LV==='cats'){
     h1.textContent='التراث الكلي — النسخة (قيد التعديل)';
-    app.innerHTML=`<div class="lead">أربعون قسماً و ${IDX.total.toLocaleString('ar-EG')} كتاباً — اضغط القسم لترى كتبه منظمة بوفاة مؤلفها</div>`+
+    app.innerHTML=`<div class="lead">أربعون قسماً و ${IDX.total.toLocaleString('ar-EG')} كتاباً — اضغط القسم لترى كتبه؛ تحت كل كتاب خمس درجات تختار منها، ثم «حفظ التعديلات» ينتج ملف اختياراتك لتسلّمه لي فأثبّته هنا</div>`+
       IDX.cats.map((c,i)=>`<button class="it" onclick="openCat(${i})"><span class="tt">${esc(c.n)}</span><span class="cnt">${c.c.toLocaleString('ar-EG')} كتاب</span></button>`).join('');
   }else if(LV==='books'){
     h1.textContent=CUR.n;
-    const bs=CUR.books;
     app.innerHTML=crumb('الأقسام ‹ '+CUR.n)+`<input class="q" id="q" placeholder="ابحث بعنوان كتاب أو اسم مؤلف…" oninput="filt(this.value)"><div id="lst"></div>`;
-    draw(bs);document.getElementById('q').focus();
+    draw(CUR.books);document.getElementById('q').focus();
   }else{
     h1.textContent=BK.t;
     const d=BK;
-    app.innerHTML=crumb('الأقسام ‹ '+CUR.n+' ‹ '+d.t)+`<div class="crd"><h2>${esc(d.t)}</h2>
+    app.innerHTML=crumb('الأقسام ‹ '+CUR.n+' ‹ '+d.t)+`<div class="crd"><h2>${esc(d.t)}</h2>${tag(d.i)}${pkr(d.i)}
       ${d.a?`<div class="row"><b>المؤلف</b><span>${esc(d.a)}${d.d?` <span style="color:var(--mut)">(ت ${esc(d.d)}هـ)</span>`:''}</span></div>`:''}
       ${d.p?`<div class="row"><b>الصفحات</b><span>${d.p.toLocaleString('ar-EG')}</span></div>`:''}
       ${d.tc?`<div class="row"><b>عناوين الفهرس</b><span>${d.tc.toLocaleString('ar-EG')}</span></div>`:''}
       <div class="row"><b>القسم</b><span>${esc(CUR.n)}</span></div>
       ${d.b?`<div class="bet">${esc(d.b)}</div>`:''}</div>`;
   }
-  window.scrollTo(0,0);
+  updN();window.scrollTo(0,0);
 }
 function draw(bs){
   const l=document.getElementById('lst');
   if(!bs.length){l.innerHTML='<div class="hint">لا نتيجة</div>';return}
-  l.innerHTML=bs.slice(0,300).map(b=>`<button class="it" onclick="openBook(${b.i})"><span class="tt">${esc(b.t)}</span><span class="ss">${esc(b.a)}${b.d?` — ت ${esc(b.d)}هـ`:''}</span><span class="cnt">${b.p?b.p.toLocaleString('ar-EG')+' صفحة':''}${b.tc?' · '+b.tc.toLocaleString('ar-EG')+' عنواناً':''}</span></button>`).join('')+(bs.length>300?`<div class="hint">${(bs.length-300).toLocaleString('ar-EG')} كتاباً آخر — ضيّق البحث</div>`:'');
+  l.innerHTML=bs.slice(0,300).map(b=>`<button class="it" style="border-right-color:${PREFS[b.i]?LVC[PREFS[b.i]]:'transparent'}" onclick="openBook(${b.i})"><span class="tt">${esc(b.t)}</span><span class="ss">${esc(b.a)}${b.d?` — ت ${esc(b.d)}هـ`:''}</span><span class="cnt">${b.p?b.p.toLocaleString('ar-EG')+' صفحة':''}${b.tc?' · '+b.tc.toLocaleString('ar-EG')+' عنواناً':''}</span>${tag(b.i)}${pkr(b.i)}</button>`).join('')+(bs.length>300?`<div class="hint">${(bs.length-300).toLocaleString('ar-EG')} كتاباً آخر — ضيّق البحث</div>`:'');
 }
 function filt(v){
   v=v.trim();
@@ -88,7 +119,17 @@ async function openCat(i){
   LV='books';render();
 }
 function openBook(id){BK=CUR.books.find(b=>b.i===id);LV='book';render()}
-(async()=>{IDX=await (await fetch('data/index.json')).json();render()})();
+async function save(){
+  const payload=JSON.stringify({saved_at:new Date().toISOString(),prefs:PREFS},null,1);
+  try{await navigator.clipboard.writeText(payload)}catch(e){}
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([payload],{type:'application/json'}));a.download='turath-prefs.json';a.click();
+  document.getElementById('svn').innerHTML='<b style="color:var(--acc2)">نُسخ ونُزّل الملف</b><br>أرسله لي لأثبّته';
+}
+(async()=>{
+  IDX=await (await fetch('data/index.json')).json();
+  try{SRV=(await (await fetch('data/prefs.json')).json()).prefs||{}}catch(e){SRV={}}
+  PREFS=Object.assign({},SRV,PREFS);render();
+})();
 </script>
 </body>
 </html>
