@@ -8,19 +8,11 @@
 | 2 | [تخطيط بنك تمارين العلوم الشرعية](33fb6c66f86ddbd7-بنك-تمارين-العلوم-الشرعية.md) | مكتمل | [فتح](https://gemini.google.com/app/33fb6c66f86ddbd7) |
 | 3 | [الفروق الفردية في التعلم](9a267a4525f19561-الفروق-الفردية-في-التعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/9a267a4525f19561) |
 | 4 | [مصفوفات الفقه المقارن](8fbc3fe08c961482-مصفوفات-الفقه-المقارن.md) | مكتمل | [فتح](https://gemini.google.com/app/8fbc3fe08c961482) |
+| 5 | [التعلم بالتعليم ونمذجة التلميذ الافتراضي](bcaf6b6bb6109ab1-التعلم-بالتعليم-والتلميذ-الافتراضي.md) | مكتمل | [فتح](https://gemini.google.com/app/bcaf6b6bb6109ab1) |
 
 ## قيد التنفيذ (تُضاف فور اكتمالها)
 
 | البحث | رابط المحادثة |
 |-------|----------------|
-| تداخل الموضوعات بالتعلم الذاتي | [فتح](https://gemini.google.com/app/ffdda0ec822b1148) |
-| تأثير الأمثلة المحلولة وتلاشي التوجيه | [فتح](https://gemini.google.com/app/83b2c22bb90cb6ee) |
-| التعلم الذاتي ونقل المهارات | [فتح](https://gemini.google.com/app/2095f50fd7053b40) |
-| علم الأعصاب للتعلم الذاتي | [فتح](https://gemini.google.com/app/8fd4a7b081ce0f06) |
-| التمرين المتعمد والتعلم الذاتي | [فتح](https://gemini.google.com/app/915762ed8f8bf894) |
-| آليات التعلم الذاتي المعرفي | [فتح](https://gemini.google.com/app/cbccd8e169ebe3b5) |
-| خوارزميات المراجعات المتباعدة | [فتح](https://gemini.google.com/app/a9cbbec4b725daab) |
-| أثر الاستدعاء النشط | [فتح](https://gemini.google.com/app/891cb08854b57495) |
-| علم التعلم الذاتي والاستدعاء النشط | [فتح](https://gemini.google.com/app/7385edb280866974) |
-| التعلم الذاتي الذكي | [فتح](https://gemini.google.com/app/8f1cae1ce011c9b5) |
-| فهارس الفقه المقارن | [فتح](https://gemini.google.com/app/1b79330491cc01a8) |
+| العبء المعرفي | [فتح](https://gemini.google.com/app/9dd654a984bc8941) |
+| بنك التمارين الشرعية (إعادة) | [فتح](https://gemini.google.com/app/98e4137b122950aa) |
