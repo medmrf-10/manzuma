@@ -37,5 +37,17 @@
 <p class="desc">المشروع المركزي لإدارة التعلم عابر المجالات: ملف متعلم موحد · خوارزمية تكرار متباعد للاستدعاء والحفظ والمراجعة · نقطة الالتقاء المشتركة بين الأبواب الخمسة. المالك: الناقد (المدير).</p>
 <span class="badge">قيد البناء</span>
 <a class="back" href="../">← العودة إلى البوابة الأم</a>
+<style>
+body.light{background:#f5f3ef;color:#1f2430}
+body.light h1{color:#8a6d1f}
+body.light .desc{color:#5d594f}
+body.light .badge{background:#f6ecd0;color:#8a6d1f;border-color:#e0d3ac}
+body.light a.back{color:#7a756a}
+body.light a.back:hover{color:#8a6d1f}
+</style>
+<button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
+<script>
+(function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
+</script>
 </body>
 </html>

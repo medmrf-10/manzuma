@@ -1,4 +1,4 @@
-const CACHE = 'manzuma-v3';
+const CACHE = 'manzuma-v4';
 const ASSETS = [
   '/manzuma/',
   '/manzuma/index.html',
@@ -9,7 +9,9 @@ const ASSETS = [
   '/manzuma/hadith/','/manzuma/hadith/muqaddima/',
   '/manzuma/english/',
   '/manzuma/ulum/',
-  '/manzuma/core/'
+  '/manzuma/core/',
+  '/manzuma/research/',
+  '/manzuma/research/read.html'
 ];
 
 self.addEventListener('install', e => {

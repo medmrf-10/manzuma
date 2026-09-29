@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f1115">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/icon-192.png">
+<title>المقالات البحثية — المنظومة</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; margin: 0; padding: 34px 16px 60px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  .hero { text-align: center; margin-bottom: 30px; }
+  .hero h1 { color: #d4af37; font-size: 1.9rem; margin: 0 0 8px; }
+  .hero p { color: #9a958c; font-size: .95rem; margin: 0; }
+  .stats { display: flex; justify-content: center; gap: 10px; margin: 18px 0 8px; flex-wrap: wrap; }
+  .stat { background: #171a21; border: 1px solid #2a2e38; border-radius: 999px; padding: 6px 16px; font-size: .8rem; color: #b9b4ab; }
+  .stat b { color: #d4af37; }
+  .search { width: 100%; background: #171a21; border: 1px solid #2a2e38; color: #e8e6e3; border-radius: 12px; padding: 12px 16px; font-size: .95rem; font-family: inherit; margin-bottom: 26px; }
+  .search:focus { outline: none; border-color: #d4af37; }
+  .domain { margin-bottom: 26px; }
+  .domain h2 { color: #d4af37; font-size: 1.1rem; margin: 0 0 4px; }
+  .domain .cnt { color: #6d6960; font-size: .78rem; margin-bottom: 12px; }
+  .card { display: block; text-decoration: none; color: inherit; background: #171a21; border: 1px solid #2a2e38; border-radius: 13px; padding: 15px 18px; margin-bottom: 10px; transition: border-color .15s, transform .1s; }
+  .card:hover { border-color: #d4af37; transform: translateY(-1px); }
+  .card .t { font-weight: 600; font-size: .98rem; }
+  .card .m { color: #8f8a80; font-size: .76rem; margin-top: 5px; }
+  .hidden { display: none !important; }
+  a.back { display: inline-block; margin-top: 26px; color: #8f8a80; font-size: .85rem; text-decoration: none; }
+  a.back:hover { color: #d4af37; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <h1>المقالات البحثية</h1>
+  <p>تقارير البحث العميق الموثقة — قاعدة علم الأعصاب والخدمات الرقمية التي تُبنى عليها المنظومة</p>
+  <div class="stats">
+    <span class="stat"><b>26</b> تقريراً</span>
+    <span class="stat"><b>4</b> مجموعات</span>
+    <span class="stat">بحث عميق موثق</span>
+  </div>
+</header>
+<input class="search" id="q" type="search" placeholder="ابحث في عناوين التقارير…">
+<div id="lib"></div>
+<a class="back" href="../">← العودة إلى البوابة الأم</a>
+</div>
+<script>
+const GROUPS = [
+  { name: "باب المركزي لإدارة التعلم", items: [
+    ["الاستدعاء النشط واختبار الذات","12e5daceac35d1cf-الاستدعاء-النشط.md"],
+    ["التكرار المتباعد وجدولة المراجعة","742b0f76a04fd485-التكرار-المتباعد.md"],
+    ["التداخل بين الموضوعات","a676e03292e035e4-التداخل.md"],
+    ["العبء المعرفي وحدود الذاكرة العاملة","9dd654a984bc8941-العبء-المعرفي.md"],
+    ["التفصيل والتفسير الذاتي","e3e5ec8e2643869a-التفصيل-والشرح-الذاتي.md"],
+    ["الأمثلة المحلولة والتلاشي التدريجي","55c883dbe8467ad2-الأمثلة-المحلولة.md"],
+    ["هندسة التمارين والممارسة المتعمدة","6bb9dd538e107ad2-هندسة-التمارين.md"],
+    ["توليد الأسئلة الذاتية","7c6141d868a41f05-توليد-الأسئلة.md"],
+    ["التعلم بالمشروع ونقل التعلم","cd6dd7ecbb351dd6-التعلم-بالمشروع.md"],
+    ["اكتساب المفردات","f6a04dab3bfb5b5b-اكتساب-المفردات.md"],
+    ["تخطيط التعلم وقياس التقدم","06af324ff208a7cb-تخطيط-التعلم.md"],
+    ["نمذجة المتعلم وتتبع الأخطاء","4e61c539cc27eb15-نمذجة-المتعلم.md"],
+    ["الفروق الفردية في التعلم","9a267a4525f19561-الفروق-الفردية-في-التعلم.md"],
+    ["النوم وترسيخ الذاكرة","0b96a7cc0e5b6fb7-النوم-والترسيخ.md"],
+    ["الدافع واستدامة التعلم الذاتي","6721fc1b5cab8711-الدافع-والاستدامة.md"]
+  ]},
+  { name: "باب الإنجليزية", items: [
+    ["القراءة الممتدة لاكتساب الإنجليزية","db52d9d02b62f3d5-القراءة-الممتدة.md"],
+    ["أخطاء المتعلمين العرب في الإنجليزية","f393f939f42a841a-أخطاء-العربية-في-الإنجليزية.md"],
+    ["المدخل المفهوم مقابل التعليم الصريح","0d59f565cc65a02b-المدخل-المفهوم.md"],
+    ["عمق المعرفة المعجمية مقابل اتساعها","067163337f6f71c7-عمق-المفردات.md"],
+    ["مزامنة الصوت مع النص","dec2e7499bf16ea6-مزامنة-الصوت-والنص.md"],
+    ["الإنتاج الحر مقابل الترجمة الموجهة","7c6edb3fa22772a8-الإنتاج-مقابل-الترجمة.md"]
+  ]},
+  { name: "باب الحديث", items: [
+    ["جرد خدمات شروح الحديث الرقمية","718b7723beb39476-شروح-الحديث-الرقمية.md"]
+  ]},
+  { name: "أبحاث البنية المشتركة", items: [
+    ["تقييم منصات القرآن والحديث الرقمية","a7c7023533a10ac0-تقييم-منصات-القرآن-والحديث.md"],
+    ["تخطيط بنك تمارين العلوم الشرعية","33fb6c66f86ddbd7-بنك-تمارين-العلوم-الشرعية.md"],
+    ["مصفوفات الفقه المقارن","8fbc3fe08c961482-مصفوفات-الفقه-المقارن.md"],
+    ["التعلم بالتعليم والتلميذ الافتراضي","bcaf6b6bb6109ab1-التعلم-بالتعليم-والتلميذ-الافتراضي.md"]
+  ]}
+];
+const lib = document.getElementById('lib');
+GROUPS.forEach(g => {
+  const sec = document.createElement('section');
+  sec.className = 'domain';
+  sec.innerHTML = `<h2>${g.name}</h2><div class="cnt">${g.items.length} تقرير</div>`;
+  g.items.forEach(([title, file]) => {
+    const a = document.createElement('a');
+    a.className = 'card';
+    a.href = 'read.html?f=' + encodeURIComponent(file);
+    a.innerHTML = `<div class="t">${title}</div><div class="m">تقرير بحث عميق — Gemini Deep Research</div>`;
+    a.dataset.title = title;
+    sec.appendChild(a);
+  });
+  lib.appendChild(sec);
+});
+document.getElementById('q').addEventListener('input', e => {
+  const v = e.target.value.trim();
+  document.querySelectorAll('.card').forEach(c => {
+    c.classList.toggle('hidden', v && !c.dataset.title.includes(v));
+  });
+  document.querySelectorAll('.domain').forEach(d => {
+    d.classList.toggle('hidden', v && ![...d.querySelectorAll('.card')].some(c => !c.classList.contains('hidden')));
+  });
+});
+</script>
+<style>
+body.light{background:#f5f3ef;color:#1f2430}
+body.light h1,body.light h2{color:#8a6d1f}
+body.light .hero p,body.light .cnt,body.light .stat{color:#5d594f}
+body.light .stat b{color:#8a6d1f}
+body.light .card,body.light .search,body.light .stat{background:#fffdf8;border-color:#ddd6c8}
+body.light .card .m{color:#5d594f}
+body.light .search{color:#1f2430}
+body.light .search:focus{border-color:#8a6d1f}
+body.light .card:hover{border-color:#8a6d1f}
+body.light a.back{color:#7a756a}
+body.light a.back:hover{color:#8a6d1f}
+</style>
+<button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
+<script>
+(function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
+</script>
+</body>
+</html>
