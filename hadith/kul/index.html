@@ -174,7 +174,7 @@ function renderHadiths(c,q){
       ${h.f?`<span>${esc(h.f)}</span>`:''}
       ${h.p?`<span>ص ${h.p}</span>`:''}</div>
       ${h.k?`<details><summary>التخريج</summary><div class="tk-body">${esc(h.k)}</div></details>`:''}
-      ${h.fn?`<details><summary>الحواشي</summary><div class="tk-body">${esc(h.fn)}</div></details>`:''}
+      ${h.fn&&h.fn.length?`<details><summary>الحواشي (${h.fn.length})</summary><div class="tk-body">${h.fn.map(f=>esc(f.footnotes||f)).join('')}</div></details>`:''}
     </div>`).join('')||'<div class="empty">لا أحاديث مطابقة.</div>');
 }
 $('bk').onclick=back;$('fab').onclick=back;
