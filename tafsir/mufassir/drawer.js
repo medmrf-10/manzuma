@@ -67,10 +67,12 @@
           <button class="drw-tab" data-t="a">الآيات</button>
         </div>
         <div class="drw-list" id="drw-list"></div>
+        <div class="drw-foot"><button id="drw-theme" type="button">تبديل الوضع</button></div>
       </div>`;
       document.body.appendChild(ov);
       ov.addEventListener("click", (e) => { if (e.target === ov) close(); });
       ov.querySelector("#drw-x").addEventListener("click", () => close());
+      ov.querySelector("#drw-theme").addEventListener("click", () => M().toggleTheme());
       ov.querySelectorAll(".drw-tab").forEach((b) =>
         b.addEventListener("click", () => {
           ov.querySelectorAll(".drw-tab").forEach((x) => x.classList.remove("on"));
