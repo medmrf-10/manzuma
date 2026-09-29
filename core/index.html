@@ -17,6 +17,10 @@
   h1 { color: #d4af37; font-size: 2rem; margin-bottom: 16px; }
   .desc { color: #9a958c; max-width: 560px; line-height: 1.8; }
   .badge { display: inline-block; margin-top: 24px; font-size: .85rem; padding: 6px 18px; border-radius: 999px; background: #2a2410; color: #d4af37; border: 1px solid #4a4020; }
+  .entry { display: block; margin-top: 34px; padding: 16px 22px; background: #171a21; border: 1px solid #2a2e38; border-radius: 13px; color: inherit; text-decoration: none; max-width: 460px; transition: border-color .15s; }
+  .entry:hover { border-color: #d4af37; }
+  .entry b { display: block; color: #e8e6e3; margin-bottom: 6px; font-size: 1.05rem; }
+  .entry span { color: #8f8a80; font-size: .82rem; }
   a.back { margin-top: 36px; color: #8f8a80; font-size: .85rem; text-decoration: none; }
   a.back:hover { color: #d4af37; }
 
@@ -34,13 +38,17 @@
 </head>
 <body>
 <h1>بوابة المركزي للتعلم</h1>
-<p class="desc">المشروع المركزي لإدارة التعلم عابر المجالات: ملف متعلم موحد · خوارزمية تكرار متباعد للاستدعاء والحفظ والمراجعة · نقطة الالتقاء المشتركة بين الأبواب الخمسة. المالك: الناقد (المدير).</p>
-<span class="badge">قيد البناء</span>
+<p class="desc">المشروع المركزي لإدارة التعلم عابر المجالات: ملف متعلم موحد · خوارزمية تكرار متباعد للاستدعاء والحفظ والمراجعة · نقطة الالتقاء المشتركة بين الأبواب الخمسة. المالك: الناقد.</p>
+<a class="entry" href="articles/">📑 <b>المقالات البحثية</b><span>15 تقرير بحث عميق موثق — القاعدة العلمية للمركز</span></a>
 <a class="back" href="../">← العودة إلى البوابة الأم</a>
 <style>
 body.light{background:#f5f3ef;color:#1f2430}
 body.light h1{color:#8a6d1f}
 body.light .desc{color:#5d594f}
+body.light .entry{background:#fffdf8;border-color:#ddd6c8}
+body.light .entry b{color:#1f2430}
+body.light .entry span{color:#5d594f}
+body.light .entry:hover{border-color:#8a6d1f}
 body.light .badge{background:#f6ecd0;color:#8a6d1f;border-color:#e0d3ac}
 body.light a.back{color:#7a756a}
 body.light a.back:hover{color:#8a6d1f}

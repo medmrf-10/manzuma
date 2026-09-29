@@ -6,23 +6,23 @@
 |---|---------|--------|----------------|
 | 1 | [تقييم منصات القرآن والحديث الرقمية](a7c7023533a10ac0-تقييم-منصات-القرآن-والحديث.md) | مكتمل | [فتح](https://gemini.google.com/app/a7c7023533a10ac0) |
 | 2 | [تخطيط بنك تمارين العلوم الشرعية](33fb6c66f86ddbd7-بنك-تمارين-العلوم-الشرعية.md) | مكتمل | [فتح](https://gemini.google.com/app/33fb6c66f86ddbd7) |
-| 3 | [الفروق الفردية في التعلم](9a267a4525f19561-الفروق-الفردية-في-التعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/9a267a4525f19561) |
+| 3 | [الفروق الفردية في التعلم](../core/articles/9a267a4525f19561-الفروق-الفردية-في-التعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/9a267a4525f19561) |
 | 4 | [مصفوفات الفقه المقارن](8fbc3fe08c961482-مصفوفات-الفقه-المقارن.md) | مكتمل | [فتح](https://gemini.google.com/app/8fbc3fe08c961482) |
 | 5 | [التعلم بالتعليم ونمذجة التلميذ الافتراضي](bcaf6b6bb6109ab1-التعلم-بالتعليم-والتلميذ-الافتراضي.md) | مكتمل | [فتح](https://gemini.google.com/app/bcaf6b6bb6109ab1) |
-| 6 | [العبء المعرفي وحدود الذاكرة العاملة](9dd654a984bc8941-العبء-المعرفي.md) | مكتمل | [فتح](https://gemini.google.com/app/9dd654a984bc8941) |
-| 7 | [الاستدعاء النشط واختبار الذات](12e5daceac35d1cf-الاستدعاء-النشط.md) | مكتمل | [فتح](https://gemini.google.com/app/12e5daceac35d1cf) |
-| 8 | [التكرار المتباعد وجدولة الممارسة الموزعة](742b0f76a04fd485-التكرار-المتباعد.md) | مكتمل | [فتح](https://gemini.google.com/app/742b0f76a04fd485) |
-| 9 | [التداخل بين الموضوعات](a676e03292e035e4-التداخل.md) | مكتمل | [فتح](https://gemini.google.com/app/a676e03292e035e4) |
-| 10 | [هندسة التمارين والممارسة المتعمدة](6bb9dd538e107ad2-هندسة-التمارين.md) | مكتمل | [فتح](https://gemini.google.com/app/6bb9dd538e107ad2) |
-| 11 | [التفصيل والتفسير الذاتي](e3e5ec8e2643869a-التفصيل-والشرح-الذاتي.md) | مكتمل | [فتح](https://gemini.google.com/app/e3e5ec8e2643869a) |
-| 12 | [توليد الأسئلة الذاتية](7c6141d868a41f05-توليد-الأسئلة.md) | مكتمل | [فتح](https://gemini.google.com/app/7c6141d868a41f05) |
-| 13 | [الأمثلة المحلولة والتلاشي التدريجي](55c883dbe8467ad2-الأمثلة-المحلولة.md) | مكتمل | [فتح](https://gemini.google.com/app/55c883dbe8467ad2) |
-| 14 | [التعلم بالمشروع ونقل التعلم](cd6dd7ecbb351dd6-التعلم-بالمشروع.md) | مكتمل | [فتح](https://gemini.google.com/app/cd6dd7ecbb351dd6) |
-| 15 | [اكتساب المفردات](f6a04dab3bfb5b5b-اكتساب-المفردات.md) | مكتمل | [فتح](https://gemini.google.com/app/f6a04dab3bfb5b5b) |
-| 16 | [تخطيط التعلم وقياس التقدم](06af324ff208a7cb-تخطيط-التعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/06af324ff208a7cb) |
-| 17 | [نمذجة المتعلم وتتبع الأخطاء](4e61c539cc27eb15-نمذجة-المتعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/4e61c539cc27eb15) |
-| 18 | [النوم وترسيخ الذاكرة](0b96a7cc0e5b6fb7-النوم-والترسيخ.md) | مكتمل | [فتح](https://gemini.google.com/app/0b96a7cc0e5b6fb7) |
-| 19 | [الدافع واستدامة التعلم الذاتي](6721fc1b5cab8711-الدافع-والاستدامة.md) | مكتمل | [فتح](https://gemini.google.com/app/6721fc1b5cab8711) |
+| 6 | [العبء المعرفي وحدود الذاكرة العاملة](../core/articles/9dd654a984bc8941-العبء-المعرفي.md) | مكتمل | [فتح](https://gemini.google.com/app/9dd654a984bc8941) |
+| 7 | [الاستدعاء النشط واختبار الذات](../core/articles/12e5daceac35d1cf-الاستدعاء-النشط.md) | مكتمل | [فتح](https://gemini.google.com/app/12e5daceac35d1cf) |
+| 8 | [التكرار المتباعد وجدولة الممارسة الموزعة](../core/articles/742b0f76a04fd485-التكرار-المتباعد.md) | مكتمل | [فتح](https://gemini.google.com/app/742b0f76a04fd485) |
+| 9 | [التداخل بين الموضوعات](../core/articles/a676e03292e035e4-التداخل.md) | مكتمل | [فتح](https://gemini.google.com/app/a676e03292e035e4) |
+| 10 | [هندسة التمارين والممارسة المتعمدة](../core/articles/6bb9dd538e107ad2-هندسة-التمارين.md) | مكتمل | [فتح](https://gemini.google.com/app/6bb9dd538e107ad2) |
+| 11 | [التفصيل والتفسير الذاتي](../core/articles/e3e5ec8e2643869a-التفصيل-والشرح-الذاتي.md) | مكتمل | [فتح](https://gemini.google.com/app/e3e5ec8e2643869a) |
+| 12 | [توليد الأسئلة الذاتية](../core/articles/7c6141d868a41f05-توليد-الأسئلة.md) | مكتمل | [فتح](https://gemini.google.com/app/7c6141d868a41f05) |
+| 13 | [الأمثلة المحلولة والتلاشي التدريجي](../core/articles/55c883dbe8467ad2-الأمثلة-المحلولة.md) | مكتمل | [فتح](https://gemini.google.com/app/55c883dbe8467ad2) |
+| 14 | [التعلم بالمشروع ونقل التعلم](../core/articles/cd6dd7ecbb351dd6-التعلم-بالمشروع.md) | مكتمل | [فتح](https://gemini.google.com/app/cd6dd7ecbb351dd6) |
+| 15 | [اكتساب المفردات](../core/articles/f6a04dab3bfb5b5b-اكتساب-المفردات.md) | مكتمل | [فتح](https://gemini.google.com/app/f6a04dab3bfb5b5b) |
+| 16 | [تخطيط التعلم وقياس التقدم](../core/articles/06af324ff208a7cb-تخطيط-التعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/06af324ff208a7cb) |
+| 17 | [نمذجة المتعلم وتتبع الأخطاء](../core/articles/4e61c539cc27eb15-نمذجة-المتعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/4e61c539cc27eb15) |
+| 18 | [النوم وترسيخ الذاكرة](../core/articles/0b96a7cc0e5b6fb7-النوم-والترسيخ.md) | مكتمل | [فتح](https://gemini.google.com/app/0b96a7cc0e5b6fb7) |
+| 19 | [الدافع واستدامة التعلم الذاتي](../core/articles/6721fc1b5cab8711-الدافع-والاستدامة.md) | مكتمل | [فتح](https://gemini.google.com/app/6721fc1b5cab8711) |
 
 ## طابور الباحث — باب الإنجليزية
 

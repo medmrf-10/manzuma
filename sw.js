@@ -10,8 +10,8 @@ const ASSETS = [
   '/manzuma/english/',
   '/manzuma/ulum/',
   '/manzuma/core/',
-  '/manzuma/research/',
-  '/manzuma/research/read.html'
+  '/manzuma/core/articles/',
+  '/manzuma/core/articles/read.html'
 ];
 
 self.addEventListener('install', e => {
