@@ -65,12 +65,14 @@ function openTafsir(d, verseKey) {
   if (i < 0) return;
   curSurah = d; curIdx = i;
   const v = d.verses[i];
+  const wasClosed = $("#tafsir-panel").classList.contains("hidden");
   $("#panel-title").textContent = `سورة ${d.ar}`;
   $("#panel-ayah").textContent = v.t;
   $("#panel-body").innerHTML = "";
   $("#tafsir-overlay").classList.remove("hidden");
   $("#tafsir-panel").classList.remove("hidden");
   document.body.style.overflow = "hidden";
+  if (wasClosed) { try { history.pushState({ mufassirPanel: 1 }, ""); } catch (e) {} }
   try { localStorage.setItem("mufassir-last", `${d.n}:${v.a}`); } catch (e) {}
   const g = d.groups[v.g];
   if (g) {
@@ -103,6 +105,10 @@ function closeTafsir() {
 $("#tafsir-overlay").addEventListener("click", closeTafsir);
 $("#panel-close").addEventListener("click", closeTafsir);
 addEventListener("keydown", (e) => e.key === "Escape" && closeTafsir());
+// phone back: closes the open panel first (one history level), else walks the hash history
+addEventListener("popstate", (e) => {
+  if (!$("#tafsir-panel").classList.contains("hidden")) { closeTafsir(); }
+});
 
 /* ---------- page flip (swipe + edge taps) ---------- */
 function bindFlip(el, goPrev, goNext) {
@@ -191,7 +197,7 @@ async function renderMushafPage(k) {
     <div class="mushaf-page" id="mpage">
       <div class="mushaf-frame">
         <div class="frame-top">
-          <a class="frame-link" href="#/">فهرس</a>
+          <span></span>
           <span class="mushaf-part">الجزء ${arNum(juz ?? "")}</span>
         </div>
         <div class="mushaf-text" id="mtext">${html}</div>
@@ -237,7 +243,6 @@ async function renderSurah(n, ayah) {
   const next = n < 114 ? `<a class="back-link" href="#/s/${n + 1}" style="text-align:left">السورة التالية ←</a>` : "<span></span>";
   app.innerHTML = header() + `
   <div class="surah-head">
-    <a class="back-link" href="#/">→ كل السور</a>
     <div class="surah-title-row">
       <h1 class="surah-title">${esc(d.ar)}</h1>
       <div class="surah-title-meta">${d.place} · ${arNum(d.verses.length)} آية · صفحات ${arNum(pages[0])}–${arNum(pages[pages.length - 1])} · ${TAF_NAME}</div>

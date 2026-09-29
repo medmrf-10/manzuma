@@ -67,7 +67,7 @@ a { color: var(--gold); text-decoration: none; }
 .page-num { color: var(--gold); font-weight: 700; font-size: 1rem; font-family: var(--sans); }
 .flip-btn { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; color: var(--gold); font-size: 1.1rem; text-decoration: none; }
 .flip-btn:hover { border-color: var(--gold); background: rgba(212,175,55,.1); }
-.flip-zone { position: absolute; top: 0; bottom: 0; width: 20%; cursor: pointer; z-index: 1; }
+.flip-zone { position: absolute; top: 0; bottom: 0; width: 28px; cursor: pointer; z-index: 1; }
 .flip-zone[data-dir="prev"] { right: 0; }
 .flip-zone[data-dir="next"] { left: 0; }
 .surah-banner { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 8px 0 12px; padding: 8px 10px; border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); }
