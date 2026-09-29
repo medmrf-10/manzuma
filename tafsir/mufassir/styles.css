@@ -15,16 +15,17 @@ a { color: var(--gold); text-decoration: none; }
 body.book-mode { overflow: hidden; height: 100vh; height: 100dvh; overscroll-behavior: none; }
 body.book-mode #lm { display: none; }
 .mushaf-book { position: fixed; inset: 0; z-index: 25; background: var(--bg); display: flex; touch-action: none; user-select: none; }
-.mushaf-page { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--card); }
-.m-edge { display: flex; justify-content: space-between; align-items: center; padding: 0 14px; color: var(--dimmer); font-size: .72rem; flex: 0 0 auto; }
-.m-top { height: 26px; border-bottom: 1px solid var(--line); }
-.m-bot { height: 34px; border-top: 1px solid var(--line); }
+.mushaf-page { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--card); position: relative; }
+.m-edge { position: absolute; left: 0; right: 0; z-index: 6; display: flex; justify-content: space-between; align-items: center; padding: 0 14px; color: var(--dimmer); font-size: .72rem; background: rgba(23,26,33,.82); backdrop-filter: blur(6px); transition: opacity .18s ease; }
+.m-top { top: 0; height: 26px; border-bottom: 1px solid var(--line); }
+.m-bot { bottom: 0; height: 34px; border-top: 1px solid var(--line); }
+.mushaf-book.chrome-hidden .m-edge, .mushaf-book.chrome-hidden .edge-grip { opacity: 0; pointer-events: none; }
 .m-corner { font-family: var(--sans); }
 .page-num { color: var(--gold); font-weight: 700; font-size: .95rem; }
 .flip-btn { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; color: var(--dimmer); font-size: 1.05rem; }
 .flip-btn:hover { color: var(--gold); }
 
-.mushaf-text { flex: 1; min-height: 0; overflow: hidden; padding: 10px 16px; font-family: var(--quran); font-size: 1.22rem; line-height: 2.0; text-align: justify; }
+.mushaf-text { flex: 1; min-height: 0; overflow: hidden; padding: 34px 16px 44px; font-family: var(--quran); font-size: 1.22rem; line-height: 2.0; text-align: justify; }
 .mushaf-text .bismillah { font-size: 1.3em; color: var(--gold); text-align: center; margin: 6px 0 4px; }
 .mushaf-text .surah-banner { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 6px 0 8px; padding: 4px 8px; border-top: 1px solid var(--gold); border-bottom: 1px solid var(--gold); }
 .mushaf-text .surah-banner-name { color: var(--gold); font-size: 1.1em; }
@@ -66,3 +67,4 @@ body.light .overlay { background: rgba(60,55,40,.25); }
 body.light .m-ayah:hover { background: #f0e6c8; }
 body.light .m-ayah.active { background: #ecd9a4; }
 body.light .edge-grip { background: linear-gradient(to left, rgba(138,109,31,.5), rgba(138,109,31,.1) 60%, transparent); }
+body.light .m-edge { background: rgba(255,255,255,.85); }

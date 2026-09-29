@@ -194,13 +194,10 @@ async function renderMushafPage(k) {
   </div>`;
   fitMushaf();
   const book = $("#mbook"), mt = $("#mtext");
-  mt.querySelectorAll(".m-ayah").forEach((el) =>
-    el.addEventListener("click", () => {
-      if (swipeMoved) return;
-      mt.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
-      el.classList.add("active");
-      openTafsir(surahs[+el.dataset.s], el.dataset.k);
-    }));
+  mt.addEventListener("click", () => { // لمسة على النص: إخفاء/إظهار الحواف للقراءة الغامرة
+    if (swipeMoved) return;
+    book.classList.toggle("chrome-hidden");
+  });
   bindGestures(book,
     () => { if (k > 1) location.hash = `#/m/${k - 1}`; },
     () => { if (k < TOTAL_PAGES) location.hash = `#/m/${k + 1}`; },
