@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f1419">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../../icons/icon-192.png">
+<title>خلاصة بحث الشروح الرقمية</title>
+<style>
+  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#3fbf8f;--line:#2a3440}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9}
+  header{text-align:center;padding:40px 16px 20px;border-bottom:2px solid var(--acc)}
+  h1{font-size:1.8rem;color:var(--acc);margin-bottom:8px}
+  .sub{color:var(--dim);font-size:.95rem}
+  .wrap{max-width:880px;margin:0 auto;padding:28px 16px 60px}
+  .verdict{background:var(--card);border:1px solid var(--acc);border-radius:12px;padding:18px 22px;margin-bottom:24px}
+  .verdict h2{color:var(--acc);font-size:1.15rem;margin-bottom:8px}
+  .verdict p{font-size:.95rem}
+  h2.sec{color:var(--acc);font-size:1.15rem;margin:26px 0 12px;border-right:3px solid var(--acc);padding-right:10px}
+  .src{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+  .src h3{font-size:1.02rem;color:var(--ink);margin-bottom:4px}
+  .src .rank{display:inline-block;background:var(--acc);color:var(--bg);border-radius:50%;width:26px;height:26px;line-height:26px;text-align:center;font-size:.85rem;margin-left:8px}
+  .src .score{color:var(--acc2);font-size:.8rem}
+  .src p{font-size:.88rem;color:var(--dim);margin-top:6px}
+  .src .chips{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:.75rem;background:#243040;border:1px solid var(--line);border-radius:14px;padding:2px 10px;color:var(--dim)}
+  .chip.good{border-color:var(--acc2);color:#7fd4ab}
+  .chip.bad{border-color:#a3543d;color:#e0906f}
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
+  th,td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:right}
+  th{color:var(--acc);position:sticky;top:0;background:var(--card)}
+  .scrolly{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card);max-height:420px;overflow-y:auto}
+  .layer{background:var(--card);border:1px solid var(--line);border-right:3px solid var(--acc2);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+  .layer h3{font-size:.98rem;color:var(--acc2);margin-bottom:4px}
+  .layer p{font-size:.88rem;color:var(--dim)}
+  .srcs{font-size:.75rem;color:var(--dim);margin-top:6px}
+  .back{display:inline-block;margin-top:22px;color:var(--dim);font-size:.85rem;text-decoration:none}
+  .back:hover{color:var(--acc)}
+  footer{text-align:center;color:var(--dim);font-size:.78rem;margin-top:44px;border-top:1px solid var(--line);padding-top:14px}
+  .theme-btn{position:fixed;top:12px;left:12px;z-index:99;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.8rem;cursor:pointer;font-family:inherit}
+  body.light{--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5}
+  body.light .chip{background:#f0ead9;color:#5d5645}
+  body.light .chip.good{color:#1f6b4a}
+  body.light .chip.bad{color:#b0462a}
+  @media (prefers-color-scheme:light){body:not(.dark){--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5}body:not(.dark) .chip{background:#f0ead9;color:#5d5645}body:not(.dark) .chip.good{color:#1f6b4a}body:not(.dark) .chip.bad{color:#b0462a}}
+</style>
+</head>
+<body>
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️ فاتح</button>
+<header>
+  <h1>خلاصة البحث: مصادر شروح الحديث الرقمية</h1>
+  <p class="sub">تقييم ميداني لسبعة مستودعات وخدمات تقدم نصوص الشروح بصيغ قابلة للاستهلاك البرمجي — مرتبة من الأجمل فأنظف إلى الأدنى</p>
+</header>
+<div class="wrap">
+
+  <div class="verdict">
+    <h2>الخلاصة بجملة</h2>
+    <p>لا يوجد مصدر واحد يجمع نصوص الشروح الكاملة مع فهرسة علائقية 1:1 بالحديث؛ فالمطولات التراثية (فتح الباري وإخوتها) مهيكلة بالصفحات والأبواب لا بأرقام الأحاديث، والخدمات المفهرسة بالحديث (HadeethEnc) تقتصر على نصوص مهذبة مختصرة. التوصية: معمارية هجينة من ثلاث طبقات — مفصلة في الأسفل.</p>
+  </div>
+
+  <h2 class="sec">الترتيب التفاضلي للمصادر السبعة</h2>
+
+  <div class="src">
+    <h3><span class="rank">1</span>Shamela4_Full_DB على HuggingFace <span class="score">نظافة 9.5/10</span></h3>
+    <p>قسم شروح الحديث كاملاً بصيغ JSONL+JSON (~2.1GB): فتح الباري، شرح النووي، عون المعبود، تحفة الأحوذي، إرشاد الساري، مرقاة المفاتيح، فيض الباري — بملفات manifest وpages وtoc لكل كتاب.</p>
+    <div class="chips"><span class="chip good">السبعة كلهم مغطاة</span><span class="chip good">ملكية عامة، استخدام حر</span><span class="chip">تحميل مجمع Git LFS</span><span class="chip">فهرسة بالصفحة والجزء وشجرة الأبواب</span></div>
+    <div class="srcs">المصدر: AuthenticIlm/Shamela4_Full_DB</div>
+  </div>
+
+  <div class="src">
+    <h3><span class="rank">2</span>واجهة HadeethEnc (إسلام هاوس) <span class="score">نظافة 10/10</span></h3>
+    <p>REST API بصيغة JSON مع Excel وPDF (~200MB) — الربط العلائقي الوحيد الكامل 1:1 بين الحديث وشرحه ومفرداته وفوائده، بترخيص مصرّح للاستخدام البرمجي والذكاء الاصطناعي.</p>
+    <div class="chips"><span class="chip good">فهرسة 1:1 كاملة</span><span class="chip good">ترخيص AI صريح</span><span class="chip bad">شروح مهذبة مختصرة لا مطولات</span></div>
+    <div class="srcs">المصدر: hadeethenc.com/api/v1</div>
+  </div>
+
+  <div class="src">
+    <h3><span class="rank">3</span>وسيط الدرر السنية (dorar-hadith-api) <span class="score">نظافة 8.5/10</span></h3>
+    <p>وسيط Node.js/Express مفتوح المصدر (MIT) يحوّل موسوعة الدرر إلى JSON منقّى عند الطلب: شرح بمعرف sharh_id، بحث نصي في الشروح (t=3)، تخريج ورواة ورتبة الحديث.</p>
+    <div class="chips"><span class="chip good">كود MIT</span><span class="chip good">شرح + تخريج + درجة</span><span class="chip bad">100 استعلام/يوم — يحتاج تشغيلاً محلياً وتخزيناً مؤقتاً</span></div>
+    <div class="srcs">المصدر: AhmedElTabarani/dorar-hadith-api</div>
+  </div>
+
+  <div class="src">
+    <h3><span class="rank">4</span>مدونة OpenITI / KITAB <span class="score">نظافة 9/10</span></h3>
+    <p>أكبر مدونة تراثية مفتوحة بمعايير أكاديمية (~350MB لقسم الشروح): فتح الباري والنووي وإرشاد الساري ومرقاة المفاتيح وعمدة القاري بمعرفات موثقة وفهارس صفحات معيارية (CTS).</p>
+    <div class="chips"><span class="chip good">نظافة أكاديمية مدققة</span><span class="chip good">CC BY-NC-SA 4.0</span><span class="chip bad">يحتاج مفسراً لترميز mARkdown (### | وPageV01P003)</span><span class="chip bad">لا ربط بأرقام الأحاديث</span></div>
+    <div class="srcs">المصدر: منظمة OpenITI على GitHub + مكتبة openiti</div>
+  </div>
+
+  <div class="src">
+    <h3><span class="rank">5</span>الشاملة المكتبية الرسمية <span class="score">نظافة 9.5/10</span></h3>
+    <p>الأصل التاريخي: أكثر من 250 عنواناً في الشروح والحواشي، كل المطلوبة بأكثر من طبعة محققة — قواعد MDB/SQLite/BOK (~3.5GB) بجداول عناوين شجرية ونصوص صفحات.</p>
+    <div class="chips"><span class="chip good">أوسع تغطية إطلاقاً</span><span class="chip">مجاني فردي ودعوي</span><span class="chip bad">لا حقل لترقيم الأحاديث — استخراج لاحق لازم</span></div>
+    <div class="srcs">المصدر: shamela.ws الرسمية</div>
+  </div>
+
+  <div class="src">
+    <h3><span class="rank">6</span>مكتبة إسلام ويب <span class="score">نظافة 9.5/10 (مشكول)</span></h3>
+    <p>أدق فهرسة فقهية علائقية موجودة: فقرة الشرح مرتبطة صراحة برقم الحديث (bookhad) والباب والصفحة والجزء — لكنها HTML ديناميكي مغلق بلا واجهة ولا رخصة سحب.</p>
+    <div class="chips"><span class="chip good">أفضل ربط حديث↔شرح</span><span class="chip good">تشكيل كامل</span><span class="chip bad">حقوق محفوظة — كشط محدود فقط</span></div>
+    <div class="srcs">المصدر: islamweb.net (غير رسمي عبر alighamdan/islamweb.net)</div>
+  </div>
+
+  <div class="src">
+    <h3><span class="rank">7</span>المكتبة الوقفية <span class="score">3/10 برمجياً</span></h3>
+    <p>أوثق الطبعات المحققة مصورة PDF (~15GB): فتح الباري بتحقيق ابن باز والفاريابي والأرناؤوط وغيرهم — للتوثيق والمراجعة البصرية لا للاستهلاك الآلي.</p>
+    <div class="chips"><span class="chip good">أدق الطبعات تاريخياً</span><span class="chip bad">PDF مصور — يتطلب OCR عالي الخطأ</span></div>
+    <div class="srcs">المصدر: waqfeya.net</div>
+  </div>
+
+  <h2 class="sec">المعمارية الهجينة الموصى بها لباب الحديث</h2>
+
+  <div class="layer">
+    <h3>الطبقة 1 — الاستدلال السريع والمعاني المباشرة</h3>
+    <p>HadeethEnc API مصدراً أساسياً للأحاديث المشهورة: متن مشكول + مفردات غريبة + فوائد + شرح موجز، بمعرف حديث موحد ككيان رئيسي.</p>
+  </div>
+  <div class="layer">
+    <h3>الطبقة 2 — الاسترجاع التراثي المعمق</h3>
+    <p>Shamela4_Full_DB مخزناً رئيسياً للمطولات: قراءة pages.jsonl بربطها بشجرة الأبواب toc.jsonl، تقسيم النصوص كتلاً دلالية، ورصد مواضع الأحاديث داخل الشرح بتعابير نمطية («قوله:»، «وفيه حديث فلان») وربطها بمتون الطبقة الأولى.</p>
+  </div>
+  <div class="layer">
+    <h3>الطبقة 3 — التوثيق والمطابقة المرجعية</h3>
+    <p>OpenITI وإسلام ويب مرجعيتي تحقق: مطابقة أرقام الأجزاء والصفحات المطبوعة وتخريج الأسانيد وتراجم الرواة عند بناء بطاقات العرض التفصيلية.</p>
+  </div>
+
+  <a class="back" href="../">← العودة إلى بوابة الحديث</a>
+  <footer>ملخص مبني على تقرير «شروح الحديث الرقمية» الكامل المودع في research/ — باب الحديث، بوابة المنظومة</footer>
+</div>
+<script>
+function applyTheme(t){document.body.classList.toggle('light',t==='light');document.body.classList.toggle('dark',t==='dark');document.getElementById('themeBtn').textContent=t==='light'?'🌙 داكن':'☀️ فاتح';document.querySelector('meta[name=theme-color]').content=t==='light'?'#f6f2e9':'#0f1419'}
+function toggleTheme(){const t=document.body.classList.contains('light')?'dark':'light';localStorage.setItem('theme',t);applyTheme(t)}
+applyTheme(localStorage.getItem('theme')||'auto');
+</script>
+</body>
+</html>

@@ -6,7 +6,7 @@ const ASSETS = [
   '/manzuma/icons/icon-192.png',
   '/manzuma/icons/icon-512.png',
   '/manzuma/tafsir/',
-  '/manzuma/hadith/','/manzuma/hadith/muqaddima/',
+  '/manzuma/hadith/','/manzuma/hadith/muqaddima/','/manzuma/hadith/shuruh/',
   '/manzuma/english/',
   '/manzuma/ulum/',
   '/manzuma/core/',
