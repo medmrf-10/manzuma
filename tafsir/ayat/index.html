@@ -8,120 +8,132 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
-<title>تفسير آية — السعدي | بوابة التفسير</title>
+<title>المفسِّر — موقع التفسير | بوابة التفسير</title>
 <style>
   * { box-sizing: border-box; }
-  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; padding: 32px 18px 60px; max-width: 760px; margin: 0 auto; }
-  h1 { color: #d4af37; font-size: 1.6rem; margin: 0 0 4px; text-align: center; }
-  .sub { color: #9a958c; text-align: center; font-size: .9rem; margin-bottom: 26px; }
-  .pick { display: flex; gap: 12px; margin-bottom: 22px; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; margin: 0; }
+  header { background: #171a21; border-bottom: 2px solid #d4af37; padding: 18px 20px 14px; position: sticky; top: 0; z-index: 10; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 18px; }
+  h1 { color: #d4af37; font-size: 1.35rem; margin: 0 0 2px; }
+  header .sub { color: #9a958c; font-size: .82rem; margin-bottom: 12px; }
+  .pick { display: flex; gap: 10px; }
   .pick > div { flex: 1; }
-  label { display: block; color: #9a958c; font-size: .82rem; margin-bottom: 6px; }
-  select { width: 100%; padding: 12px 14px; font-size: 1rem; font-family: inherit; background: #171a21; color: #e8e6e3; border: 1px solid #3a3e48; border-radius: 10px; cursor: pointer; }
+  label { display: block; color: #9a958c; font-size: .75rem; margin-bottom: 4px; }
+  select { width: 100%; padding: 9px 12px; font-size: .95rem; font-family: inherit; background: #0f1115; color: #e8e6e3; border: 1px solid #3a3e48; border-radius: 8px; cursor: pointer; }
   select:focus { border-color: #d4af37; outline: none; }
   #ayahSel { text-align: center; }
-  .card { background: #171a21; border: 1px solid #2a2e38; border-radius: 14px; padding: 22px; }
-  .ref { color: #d4af37; font-weight: 700; font-size: 1rem; margin-bottom: 14px; }
-  .tafsir { color: #d8d3c8; font-size: 1.05rem; line-height: 2.1; white-space: pre-wrap; }
-  .tafsir .qv { color: #d4af37; font-weight: 600; }
-  .empty { color: #6b675f; text-align: center; padding: 40px 0; font-size: .95rem; }
-  .loading { color: #9a958c; text-align: center; padding: 40px 0; }
-  .nav { margin-top: 14px; display: flex; justify-content: space-between; }
-  .nav button { background: #171a21; border: 1px solid #3a3e48; color: #e8e6e3; border-radius: 10px; padding: 10px 18px; font-size: .9rem; cursor: pointer; font-family: inherit; }
-  .nav button:hover { border-color: #d4af37; color: #d4af37; }
-  .nav button:disabled { opacity: .35; cursor: default; }
-  a.back { display: block; margin-top: 30px; color: #8f8a80; font-size: .85rem; text-decoration: none; text-align: center; }
-  a.back:hover { color: #d4af37; }
-  .book { color: #6b675f; font-size: .78rem; text-align: center; margin-top: 8px; }
+  main { padding: 26px 0 60px; }
+  .shead { text-align: center; color: #9a958c; font-size: .85rem; margin-bottom: 18px; }
+  .shead b { color: #d4af37; font-size: 1.15rem; display: block; margin-bottom: 4px; }
+  .mushaf { background: #171a21; border: 1px solid #2a2e38; border-radius: 14px; padding: 26px 24px; font-size: 1.45rem; line-height: 2.4; text-align: justify; }
+  .v { cursor: pointer; border-radius: 6px; padding: 0 2px; transition: background .15s; }
+  .v:hover { background: #2a2e38; }
+  .v.sel { background: rgba(212,175,55,.18); }
+  .vn { color: #d4af37; font-size: .85rem; display: inline-flex; width: 1.9em; height: 1.9em; border: 1px solid #d4af37; border-radius: 50%; align-items: center; justify-content: center; margin: 0 6px; vertical-align: middle; }
+  #tafBox { margin-top: 22px; background: #10141b; border: 1px solid #2a2e38; border-right: 3px solid #d4af37; border-radius: 14px; padding: 22px 24px; display: none; }
+  #tafBox .ref { color: #d4af37; font-weight: 700; margin-bottom: 12px; font-size: 1rem; }
+  #tafBox .txt { color: #d8d3c8; font-size: 1.02rem; line-height: 2.05; }
+  #tafBox .close { float: left; background: none; border: 1px solid #3a3e48; color: #9a958c; border-radius: 8px; padding: 3px 10px; cursor: pointer; font-family: inherit; }
+  .nav { display: flex; justify-content: space-between; margin-top: 26px; }
+  .nav button, .nav a { background: #171a21; border: 1px solid #3a3e48; color: #e8e6e3; border-radius: 10px; padding: 10px 16px; font-size: .88rem; cursor: pointer; font-family: inherit; text-decoration: none; }
+  .nav button:hover, .nav a:hover { border-color: #d4af37; color: #d4af37; }
+  footer { text-align: center; color: #6b675f; font-size: .76rem; margin-top: 34px; }
 
-  body.light{background:#f5f3ef;color:#1f2430}
-  body.light h1{color:#8a6d1f}
-  body.light .sub,body.light label{color:#5d594f}
-  body.light select{background:#fff;color:#1f2430;border-color:#d5d0c2}
-  body.light .card{background:#fff;border-color:#e0dbc9}
-  body.light .ref{color:#8a6d1f}
-  body.light .tafsir{color:#33302a}
-  body.light .tafsir .qv{color:#8a6d1f}
-  body.light .nav button{background:#fff;color:#1f2430;border-color:#d5d0c2}
-  body.light .nav button:hover{border-color:#8a6d1f;color:#8a6d1f}
-  body.light a.back{color:#7a756a}
-  body.light a.back:hover{color:#8a6d1f}
+  body.light { background: #f5f3ef; color: #1f2430; }
+  body.light header { background: #fff; border-bottom-color: #8a6d1f; }
+  body.light h1, body.light .shead b { color: #8a6d1f; }
+  body.light .sub, body.light label, body.light .shead { color: #5d594f; }
+  body.light select { background: #fff; color: #1f2430; border-color: #d5d0c2; }
+  body.light .mushaf { background: #fff; border-color: #e0dbc9; }
+  body.light .v:hover { background: #efe9d8; }
+  body.light .v.sel { background: #f0e6c8; }
+  body.light .vn { color: #8a6d1f; border-color: #8a6d1f; }
+  body.light #tafBox { background: #fdfaf3; border-color: #e0dbc9; border-right-color: #8a6d1f; }
+  body.light #tafBox .ref { color: #8a6d1f; }
+  body.light #tafBox .txt { color: #33302a; }
+  body.light .nav button, body.light .nav a { background: #fff; color: #1f2430; border-color: #d5d0c2; }
+  body.light .nav button:hover, body.light .nav a:hover { border-color: #8a6d1f; color: #8a6d1f; }
 </style>
 </head>
 <body>
-<h1>تفسير آية</h1>
-<p class="sub">اختر السورة ثم الآية يظهر تفسيرها — التفسير المختار: تفسير السعدي</p>
-
-<div class="pick">
-  <div>
-    <label for="surahSel">السورة</label>
-    <select id="surahSel"></select>
+<header>
+  <div class="wrap">
+    <h1>المفسِّر</h1>
+    <div class="sub">نص الآية بتفسير السعدي — اختر السورة، تصفّح الآيات، انقر أي آية لقراءة تفسيرها.</div>
+    <div class="pick">
+      <div><label for="surahSel">السورة</label><select id="surahSel"></select></div>
+      <div><label for="ayahSel">الآية</label><select id="ayahSel"></select></div>
+    </div>
   </div>
-  <div>
-    <label for="ayahSel">الآية</label>
-    <select id="ayahSel"></select>
+</header>
+<main class="wrap">
+  <div class="shead"><b id="sname"></b><span id="scount"></span></div>
+  <div class="mushaf" id="mushaf"><div style="text-align:center;color:#6b675f;font-size:1rem">جارٍ تحميل المصحف والتفسير…</div></div>
+  <div id="tafBox"><button class="close" id="tclose">إغلاق ✕</button><div class="ref" id="tref"></div><div class="txt" id="ttxt"></div></div>
+  <div class="nav">
+    <button id="prevS">السورة السابقة ←</button>
+    <a href="../">← بوابة التفسير</a>
+    <button id="nextS">← السورة التالية</button>
   </div>
-</div>
-
-<div class="card">
-  <div class="ref" id="ref"></div>
-  <div class="tafsir" id="tafsir"><div class="empty">اختر سورة وآية ليظهر التفسير هنا.</div></div>
-</div>
-<div class="nav">
-  <button id="prev">الآية السابقة ←</button>
-  <button id="next">← الآية التالية</button>
-</div>
-<div class="book">المصدر: تفسير السعدي (تيسير الكريم الرحمن) — بيانات QUL/quran.com</div>
-<a class="back" href="../">← العودة إلى بوابة التفسير</a>
+  <footer>المصدر: تفسير السعدي «تيسير الكريم الرحمن» — نص المصحف والتفسير من بيانات QUL/quran.com</footer>
+</main>
 
 <button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
 <script>
-(function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
+(function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';b.style.background=l?'#fff':'#171a21';b.style.color=l?'#1f2430':'#e8e6e3';b.style.borderColor=l?'#d5d0c2':'#3a3e48';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
 </script>
 <script>
-var SURAHS=null, cache={}, cur={s:1,a:1};
-var surahSel=document.getElementById('surahSel'), ayahSel=document.getElementById('ayahSel'),
-    tafsirEl=document.getElementById('tafsir'), refEl=document.getElementById('ref'),
-    prevB=document.getElementById('prev'), nextB=document.getElementById('next');
+var SURAHS=null,cache={},cur={s:1,a:0};
+var surahSel=document.getElementById('surahSel'),ayahSel=document.getElementById('ayahSel'),
+    mushaf=document.getElementById('mushaf'),sname=document.getElementById('sname'),
+    scount=document.getElementById('scount'),tafBox=document.getElementById('tafBox'),
+    tref=document.getElementById('tref'),ttxt=document.getElementById('ttxt');
 
 fetch('data/chapters.json').then(function(r){return r.json()}).then(function(d){
   SURAHS=d.chapters;
   surahSel.innerHTML=SURAHS.map(function(c){return '<option value="'+c.id+'">'+c.id+'. '+c.name_arabic+'</option>'}).join('');
-  fillAyahs(1); loadTafsir(1,1);
+  render(1);
 });
 
-function fillAyahs(s){
-  var n=SURAHS[s-1].verses_count;
-  ayahSel.innerHTML=''; for(var i=1;i<=n;i++){var o=document.createElement('option');o.value=i;o.textContent=i;ayahSel.appendChild(o);}
+surahSel.onchange=function(){ render(+surahSel.value); };
+ayahSel.onchange=function(){ var a=+ayahSel.value; if(a) openTaf(cur.s,a,true); };
+document.getElementById('prevS').onclick=function(){ if(cur.s>1) render(cur.s-1); };
+document.getElementById('nextS').onclick=function(){ if(cur.s<114) render(cur.s+1); };
+document.getElementById('tclose').onclick=function(){ tafBox.style.display='none'; var x=mushaf.querySelector('.sel'); if(x)x.classList.remove('sel'); cur.a=0; };
+
+function render(s){
+  cur={s:s,a:0}; surahSel.value=s;
+  sname.textContent=SURAHS[s-1].name_arabic;
+  scount.textContent='عدد آياتها '+SURAHS[s-1].verses_count;
+  tafBox.style.display='none';
+  mushaf.innerHTML='<div style="text-align:center;color:#6b675f;font-size:1rem">جارٍ التحميل…</div>';
+  var go=function(d){
+    var html='';
+    for(var i=1;i<=SURAHS[s-1].verses_count;i++){
+      var v=d[String(i)]; if(!v||!v.t)continue;
+      html+='<span class="v" data-a="'+i+'">'+v.t+'</span><span class="vn">'+i+'</span> ';
+    }
+    mushaf.innerHTML=html||'<div style="text-align:center;color:#6b675f;font-size:1rem">لا نص.</div>';
+    ayahSel.innerHTML=''; for(var i=1;i<=SURAHS[s-1].verses_count;i++){var o=document.createElement('option');o.value=i;o.textContent=i;ayahSel.appendChild(o);}
+    mushaf.querySelectorAll('.v').forEach(function(el){ el.onclick=function(){ openTaf(s,+el.dataset.a,true); }; });
+    window.scrollTo({top:0});
+  };
+  if(cache[s]){ go(cache[s]); } else {
+    fetch('data/'+s+'.json').then(function(r){return r.json()}).then(function(d){ cache[s]=d; go(d); })
+    .catch(function(){ mushaf.innerHTML='<div style="text-align:center;color:#6b675f;font-size:1rem">تعذر تحميل هذه السورة.</div>'; });
+  }
 }
 
-surahSel.onchange=function(){ fillAyahs(+surahSel.value); loadTafsir(+surahSel.value,1); ayahSel.value=1; };
-ayahSel.onchange=function(){ loadTafsir(+surahSel.value,+ayahSel.value); };
-
-function loadTafsir(s,a){
-  cur={s:s,a:a};
-  refEl.textContent=SURAHS[s-1].name_arabic+' — آية '+a;
-  tafsirEl.innerHTML='<div class="loading">جارٍ جلب التفسير…</div>';
-  navState();
-  if(cache[s]){show(cache[s],s,a);return;}
-  fetch('data/'+s+'.json').then(function(r){return r.json()}).then(function(d){
-    cache[s]=d; show(d,s,a);
-  }).catch(function(){ tafsirEl.innerHTML='<div class="empty">تعذر تحميل تفسير هذه السورة.</div>'; });
+function openTaf(s,a,scroll){
+  var d=cache[s]; if(!d)return;
+  cur.a=a; ayahSel.value=a;
+  mushaf.querySelectorAll('.sel').forEach(function(e){e.classList.remove('sel')});
+  var el=mushaf.querySelector('[data-a="'+a+'"]'); if(el){el.classList.add('sel'); if(scroll)el.scrollIntoView({block:'center'});}
+  var v=d[String(a)];
+  tref.textContent='تفسير '+SURAHS[s-1].name_arabic+' — آية '+a;
+  ttxt.textContent=(v&&v.f)?v.f:'لا يوجد تفسير مستقل لهذه الآية عند السعدي — تُفسَّر ضمن ما قبلها أو بعدها.';
+  tafBox.style.display='block';
 }
-
-function show(d,s,a){
-  if(cur.s!==s||cur.a!==a)return;
-  var t=d[String(a)]||d[a];
-  tafsirEl.innerHTML=t?('<div class="tafsir">'+t+'</div>'):'<div class="empty">لا تفسير مسجلاً لهذه الآية في المصدر.</div>';
-}
-
-function navState(){
-  var s=cur.s,a=cur.a,n=SURAHS[s-1].verses_count;
-  prevB.disabled=(s===1&&a===1); nextB.disabled=(s===114&&a===n);
-}
-prevB.onclick=function(){ var s=cur.s,a=cur.a; if(a>1)a--; else if(s>1){s--;a=SURAHS[s-1].verses_count;} go(s,a); };
-nextB.onclick=function(){ var s=cur.s,a=cur.a,n=SURAHS[s-1].verses_count; if(a<n)a++; else if(s<114){s++;a=1;} go(s,a); };
-function go(s,a){ surahSel.value=s; fillAyahs(s); ayahSel.value=a; loadTafsir(s,a); }
 </script>
 </body>
 </html>
