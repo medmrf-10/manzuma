@@ -24,20 +24,20 @@ main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .it .tt{font-size:19px;font-weight:700;line-height:1.55;display:block}
 .it .ss{font-size:14px;color:var(--mut);margin-top:6px;display:block;line-height:1.6}
 .it .cnt{display:inline-block;background:var(--card2);color:var(--acc2);border-radius:8px;padding:2px 10px;font-size:13px;margin-top:8px;font-weight:700}
-.pk{display:flex;margin-top:10px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card2)}
-.pk button{flex:1;border:0;border-left:1px solid var(--line);background:transparent;color:var(--mut);padding:8px 0 9px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:700;line-height:1.5;position:relative}
-.pk button:last-child{border-left:0}
-.pk button i{position:absolute;top:0;right:0;left:0;height:3px}
-.pk button.sel{color:#fff}
-.pk button.sel i{background:rgba(255,255,255,.55)!important}
+.pk{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+.pk button{border:1px solid var(--line);background:var(--card2);color:var(--mut);border-radius:11px;padding:8px 2px 7px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:800;line-height:1.35;display:flex;flex-direction:column;align-items:center;gap:5px}
+.pk button:active{transform:scale(.94)}
+.pk button .d{width:10px;height:10px;border-radius:50%;display:block}
+.pk button.sel{border-color:transparent;color:#fff;box-shadow:0 2px 9px rgba(0,0,0,.3)}
+.pk button.sel .d{background:#fff!important}
 .pk button[data-l="1"].sel{background:#2ea36b}
 .pk button[data-l="2"].sel{background:#5da85a}
 .pk button[data-l="3"].sel{background:#7d8894}
 .pk button[data-l="4"].sel{background:#d1923f}
 .pk button[data-l="5"].sel{background:#c94f4f}
-.pk.big{border-radius:14px}
-.pk.big button{font-size:15px;padding:11px 0 12px}
-.pk.big button i{height:4px}
+.pk.big{margin-top:14px;gap:8px}
+.pk.big button{border-radius:14px;font-size:15px;padding:13px 2px;gap:7px}
+.pk.big button .d{width:14px;height:14px}
 .crd{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
 .crd h2{font-size:22px;line-height:1.6;margin-bottom:12px}
 .row{display:flex;gap:8px;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line);font-size:15px}
@@ -72,10 +72,11 @@ function mark(id,l,ev){
   ev.stopPropagation();
   if(PREFS[id]===l)delete PREFS[id];else PREFS[id]=l;
   DIRTY=true;try{localStorage.setItem('turath2-prefs',JSON.stringify(PREFS))}catch(e){}
-  updN();render();
+  updN();
+  if(LV==='books')filt(document.getElementById('q').value);else render();
 }
 function pkr(id,big){
-  return `<div class="pk${big?' big':''}">${LVLS.map(x=>`<button data-l="${x.k}" class="${PREFS[id]===x.k?'sel':''}" onclick="mark(${id},${x.k},event)"><i style="background:${LVC[x.k]}"></i>${x.n}${PREFS[id]===x.k?' ✓':''}</button>`).join('')}</div>`;
+  return `<div class="pk${big?' big':''}">${LVLS.map(x=>`<button data-l="${x.k}" class="${PREFS[id]===x.k?'sel':''}" onclick="mark(${id},${x.k},event)"><span class="d" style="background:${LVC[x.k]}"></span>${x.n}${PREFS[id]===x.k?' ✓':''}</button>`).join('')}</div>`;
 }
 function tag(id){
   const l=PREFS[id];return l?`<span class="tag" style="background:${LVC[l]}">${LVLS[l-1].n}</span>`:'';
@@ -95,7 +96,7 @@ async function render(){
   }else if(LV==='books'){
     h1.textContent=CUR.n;
     app.innerHTML=crumb('الأقسام ‹ '+CUR.n)+`<input class="q" id="q" placeholder="ابحث بعنوان كتاب أو اسم مؤلف…" oninput="filt(this.value)"><div id="lst"></div>`;
-    draw(CUR.books);document.getElementById('q').focus();
+    draw(CUR.books);
   }else{
     h1.textContent=BK.t;
     const d=BK;
