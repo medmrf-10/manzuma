@@ -17,9 +17,14 @@
 | 11 | [التفصيل والتفسير الذاتي](e3e5ec8e2643869a-التفصيل-والشرح-الذاتي.md) | مكتمل | [فتح](https://gemini.google.com/app/e3e5ec8e2643869a) |
 | 12 | [توليد الأسئلة الذاتية](7c6141d868a41f05-توليد-الأسئلة.md) | مكتمل | [فتح](https://gemini.google.com/app/7c6141d868a41f05) |
 | 13 | [الأمثلة المحلولة والتلاشي التدريجي](55c883dbe8467ad2-الأمثلة-المحلولة.md) | مكتمل | [فتح](https://gemini.google.com/app/55c883dbe8467ad2) |
+| 14 | [التعلم بالمشروع ونقل التعلم](cd6dd7ecbb351dd6-التعلم-بالمشروع.md) | مكتمل | [فتح](https://gemini.google.com/app/cd6dd7ecbb351dd6) |
+| 15 | [اكتساب المفردات](f6a04dab3bfb5b5b-اكتساب-المفردات.md) | مكتمل | [فتح](https://gemini.google.com/app/f6a04dab3bfb5b5b) |
+| 16 | [تخطيط التعلم وقياس التقدم](06af324ff208a7cb-تخطيط-التعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/06af324ff208a7cb) |
 
 ## قيد التنفيذ (تُضاف فور اكتمالها)
 
 | البحث | رابط المحادثة |
 |-------|----------------|
-| التعلم بالمشروع ونقل التعلم | [فتح](https://gemini.google.com/app/cd6dd7ecbb351dd6) |
+| نمذجة المتعلم وتتبع الأخطاء | [فتح](https://gemini.google.com/app/4e61c539cc27eb15) |
+| النوم وترسيخ الذاكرة | [فتح](https://gemini.google.com/app/0b96a7cc0e5b6fb7) |
+| الدافع والانتباه والتركيز | [فتح](https://gemini.google.com/app/2284c3dff9a3d2d7) |
