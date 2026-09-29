@@ -9,12 +9,15 @@
 <link rel="apple-touch-icon" href="../../icons/icon-192.png">
 <title>الفهرس العابر — كتاب الطهارة</title>
 <style>
-:root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#2a3440}
+:root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#2a3440;--bar:#0f1419ee}
+body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecee}
+body.light .ms{box-shadow:0 1px 4px #00000014}
 *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100dvh}
 .top{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:2px solid var(--acc);position:sticky;top:0;background:var(--bg);z-index:5}
 .top h1{font-size:1rem;color:var(--acc);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top a{color:var(--dim);text-decoration:none;font-size:1.2rem;padding:6px}
+#thB{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--acc);font-size:1.05rem;cursor:pointer;flex:none}
 .intro{padding:14px;font-size:.82rem;color:var(--dim);line-height:1.9;border-bottom:1px solid var(--line)}
 .intro b{color:var(--ink)}
 .stats{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
@@ -47,13 +50,13 @@ main{padding:12px 12px 80px;display:flex;flex-direction:column;gap:14px;max-widt
 .rev button.ok.on{background:var(--acc2);color:#fff;border-color:var(--acc2)}
 .rev button.no.on{background:var(--warn);color:#fff;border-color:var(--warn)}
 .revnote{font-size:.72rem;color:var(--dim);padding:10px 14px;line-height:1.8}
-#revbar{position:sticky;top:58px;z-index:4;background:#0f1419ee;backdrop-filter:blur(8px);padding:8px 14px;font-size:.74rem;color:var(--dim);border-bottom:1px solid var(--line)}
+#revbar{position:sticky;top:58px;z-index:4;background:var(--bar);backdrop-filter:blur(8px);padding:8px 14px;font-size:.74rem;color:var(--dim);border-bottom:1px solid var(--line)}
 #revbar b{color:var(--acc)}
 footer{padding:16px;text-align:center;color:var(--dim);font-size:.7rem;line-height:1.8}
 </style>
 </head>
 <body>
-<header class="top"><a href="../">‹ بوابة العلوم</a><h1>الفهرس العابر — كتاب الطهارة: الرسالة × الأخضري</h1></header>
+<header class="top"><a href="../">‹ بوابة العلوم</a><h1>الفهرس العابر — كتاب الطهارة: الرسالة × الأخضري</h1><button id="thB" aria-label="تبديل المظهر">☀</button></header>
 
 <div class="intro">
 <b>تجربة الفهرس الموحد العابر للكتب:</b> مسائل كتاب الطهارة قُطِّعت مسألةً مسألةً، وكل مسألة جُمع فيها نصُّها حرفاً من <b>الرسالة</b> (ابن أبي زيد القيرواني ت. 386) ونصُّها من <b>الأخضري</b> (ت. 983) جنباً إلى جنب — فإن خلا أحد المتنين منها ظهر «غائب»، وإن اختلفا ظهر «خلاف». المحاذاة معروضة مكشوفة لتُراجَع مسألةً مسألةً لا صفحةً صفحةً — وهكذا تُراجَع آلاف الكتب.
@@ -129,6 +132,10 @@ function vote(i,v){const c=document.getElementById('m'+i);const ok=c.querySelect
 document.getElementById('revt').textContent=M.length;
 const both=M.filter(m=>m.r&&m.a).length, diff=M.filter(m=>m.d).length;
 document.getElementById('stats').innerHTML=`<span class="chip"><b>${M.length}</b> مسألة موحدة</span><span class="chip"><b>${both}</b> مشتركة في المتنين</span><span class="chip"><b>${M.length-both}</b> غائبة في أحدهما</span><span class="chip" style="border-color:#c9a227;color:var(--acc)"><b>${diff}</b> خلاف</span>`;
+const thB=document.getElementById('thB');
+const setTh=l=>{document.body.classList.toggle('light',l);thB.textContent=l?'☾':'☀';try{localStorage.setItem('abir-th',l?'l':'d')}catch(e){}};
+setTh(localStorage.getItem('abir-th')==='l');
+thB.onclick=()=>setTh(!document.body.classList.contains('light'));
 </script>
 </body>
 </html>
