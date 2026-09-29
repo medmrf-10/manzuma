@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#0f1115">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -60,6 +61,17 @@
     border: 1px solid #4a4020;
   }
   footer { margin-top: 56px; color: #6b665e; font-size: .8rem; }
+
+  @media (prefers-color-scheme: light) {
+    body { background: #f6f4ef; color: #2b2b28; }
+    h1, .gate h2 { color: #8a6d1f; }
+    .sub, .desc, .gate .owner, footer { color: #6b675f; }
+    .gate { background: #ffffff; border-color: #ddd8cc; }
+    .gate:hover { border-color: #8a6d1f; }
+    .badge { background: #f4ecd8; color: #8a6d1f; border-color: #d9cba4; }
+    a.back { color: #6b675f; }
+    a.back:hover { color: #8a6d1f; }
+  }
 </style>
 </head>
 <body>
