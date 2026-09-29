@@ -51,9 +51,19 @@
   input[type=search]{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1rem;margin-bottom:10px}
   .note{border:1px dashed var(--acc);border-radius:10px;padding:14px;background:#1e2833;font-size:.92rem}
   footer{text-align:center;color:var(--dim);font-size:.8rem;margin-top:50px;border-top:1px solid var(--line);padding-top:16px}
+  .theme-btn{position:fixed;top:12px;left:12px;z-index:99;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.8rem;cursor:pointer;font-family:inherit}
+  body.light{--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5}
+  body.light .tag{background:#f0ead9;color:#5d5645}
+  body.light .tag.sahih{color:#1f6b4a}
+  body.light .tag.warn{color:#b0462a}
+  body.light .chain .node{background:#f0ead9}
+  body.light .qawl{background:#f4efe2}
+  body.light .note{background:#f4efe2}
+  @media (prefers-color-scheme:light){body:not(.dark){--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5}body:not(.dark) .tag{background:#f0ead9;color:#5d5645}body:not(.dark) .tag.sahih{color:#1f6b4a}body:not(.dark) .tag.warn{color:#b0462a}body:not(.dark) .chain .node{background:#f0ead9}body:not(.dark) .qawl{background:#f4efe2}body:not(.dark) .note{background:#f4efe2}}
 </style>
 </head>
 <body>
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️ فاتح</button>
 <header>
   <h1>الجامع — مشروع الحديث المعرفي</h1>
   <p class="sub">موقع تجريبي تعريفي: ما الذي نزّلناه فعلاً، وماذا فيه، وكيف سنتعامل معه — بأمثلة حية حقيقية من بياناته</p>
@@ -127,6 +137,9 @@
 </div>
 <footer>صفحة تجريبية تعريفية — البيانات المعروضة حقيقية من قاعدتي المشروع المنزلتين محلياً</footer>
 <script>
+function applyTheme(t){document.body.classList.toggle('light',t==='light');document.body.classList.toggle('dark',t==='dark');document.getElementById('themeBtn').textContent=t==='light'?'🌙 داكن':'☀️ فاتح';document.querySelector('meta[name=theme-color]').content=t==='light'?'#f6f2e9':'#0f1419'}
+function toggleTheme(){const t=document.body.classList.contains('light')?'dark':'light';localStorage.setItem('theme',t);applyTheme(t)}
+applyTheme(localStorage.getItem('theme')||'auto');
 fetch('data.json').then(r=>r.json()).then(d=>{
   const S=d.stats;
   document.getElementById('stats').innerHTML=[
