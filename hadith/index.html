@@ -29,19 +29,23 @@
   .back{display:inline-block;margin-top:24px;color:var(--dim);font-size:.85rem;text-decoration:none}
   .back:hover{color:var(--acc)}
 
+  .theme-btn{position:fixed;top:12px;left:12px;z-index:99;background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:6px 14px;font-size:.8rem;cursor:pointer;font-family:inherit}
+  body.light{--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--line:#e0d8c5}
+  body.light .badge.off{background:#e8e0cc;color:#6d6657}
   @media (prefers-color-scheme: light) {
-    body { background: #f6f4ef; color: #2b2b28; }
-    h1, .gate h2 { color: #8a6d1f; }
-    .sub, .desc, .gate .owner, footer { color: #6b675f; }
-    .gate { background: #ffffff; border-color: #ddd8cc; }
-    .gate:hover { border-color: #8a6d1f; }
-    .badge { background: #f4ecd8; color: #8a6d1f; border-color: #d9cba4; }
-    a.back { color: #6b675f; }
-    a.back:hover { color: #8a6d1f; }
+    body:not(.dark) { background: #f6f4ef; color: #2b2b28; }
+    body:not(.dark) h1, body:not(.dark) .gate h2 { color: #8a6d1f; }
+    body:not(.dark) .sub, body:not(.dark) .desc, body:not(.dark) .gate .owner, body:not(.dark) footer { color: #6b675f; }
+    body:not(.dark) .gate { background: #ffffff; border-color: #ddd8cc; }
+    body:not(.dark) .gate:hover { border-color: #8a6d1f; }
+    body:not(.dark) .badge { background: #f4ecd8; color: #8a6d1f; border-color: #d9cba4; }
+    body:not(.dark) a.back { color: #6b675f; }
+    body:not(.dark) a.back:hover { color: #8a6d1f; }
   }
 </style>
 </head>
 <body>
+<button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️ فاتح</button>
 <header>
   <h1>بوابة الحديث</h1>
   <p class="sub">بنية الحديث التحتية على مشروع «الجامع» المعرفي — خدمة الشرح · خدمة المواضيع · بيانات الرواة والأسانيد</p>
@@ -65,5 +69,10 @@
 
   <a class="back" href="../">← العودة إلى البوابة الأم</a>
 </div>
+<script>
+function applyTheme(t){document.body.classList.toggle('light',t==='light');document.body.classList.toggle('dark',t==='dark');document.getElementById('themeBtn').textContent=t==='light'?'🌙 داكن':'☀️ فاتح';document.querySelector('meta[name=theme-color]').content=t==='light'?'#f6f2e9':'#0f1419'}
+function toggleTheme(){const t=document.body.classList.contains('light')?'dark':'light';localStorage.setItem('theme',t);applyTheme(t)}
+applyTheme(localStorage.getItem('theme')||'auto');
+</script>
 </body>
 </html>
