@@ -22,20 +22,24 @@ main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .it .tt{font-size:19px;font-weight:700;line-height:1.55;display:block}
 .it .ss{font-size:14px;color:var(--mut);margin-top:6px;display:block;line-height:1.6}
 .it .cnt{display:inline-block;background:var(--card2);color:var(--acc2);border-radius:8px;padding:2px 10px;font-size:13px;margin-top:8px;font-weight:700}
-.pk{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
-.pk button{border:1px solid var(--line);background:var(--card2);color:var(--mut);border-radius:11px;padding:8px 2px 7px;font-size:11px;cursor:pointer;font-family:inherit;font-weight:800;line-height:1.35;display:flex;flex-direction:column;align-items:center;gap:5px}
-.pk button:active{transform:scale(.94)}
-.pk button .d{width:10px;height:10px;border-radius:50%;display:block}
-.pk button.sel{border-color:transparent;color:#fff;box-shadow:0 2px 9px rgba(0,0,0,.3)}
-.pk button.sel .d{background:#fff!important}
-.pk button[data-l="1"].sel{background:#2ea36b}
-.pk button[data-l="2"].sel{background:#5da85a}
-.pk button[data-l="3"].sel{background:#7d8894}
-.pk button[data-l="4"].sel{background:#d1923f}
-.pk button[data-l="5"].sel{background:#c94f4f}
-.pk.big{margin-top:14px;gap:8px}
-.pk.big button{border-radius:14px;font-size:15px;padding:13px 2px;gap:7px}
-.pk.big button .d{width:14px;height:14px}
+.pr{display:flex;align-items:center;gap:9px;margin-top:9px;background:none;border:0;color:var(--mut);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;padding:5px 2px;width:100%;text-align:right}
+.pr .d{width:11px;height:11px;border-radius:50%;flex:none}
+.pr .pr-t{flex:1}
+.pr .chev{color:var(--line);font-size:15px}
+.pr.big{margin-top:14px;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:15px}
+#scrim{position:fixed;inset:0;background:#0009;z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}
+#scrim.on{opacity:1;pointer-events:auto}
+#sheet{position:fixed;bottom:0;left:0;right:0;z-index:41;background:var(--card);border-top:1px solid var(--line);border-radius:18px 18px 0 0;padding:8px 14px calc(16px + env(safe-area-inset-bottom));transform:translateY(105%);transition:transform .24s ease;max-width:560px;margin:0 auto;box-shadow:0 -12px 40px #0007}
+#sheet.on{transform:translateY(0)}
+#sheet .sh-t{display:flex;align-items:center;justify-content:space-between;color:var(--mut);font-size:13px;font-weight:700;padding:8px 4px 10px;border-bottom:1px solid var(--line);margin-bottom:6px}
+#sheet .sh-t button{background:none;border:0;color:var(--mut);font-size:18px;cursor:pointer;padding:4px 8px;font-family:inherit}
+.sh-o{display:flex;align-items:center;gap:14px;width:100%;background:none;border:0;border-radius:12px;color:var(--ink);font-family:inherit;font-size:17px;font-weight:700;padding:13px 10px;cursor:pointer;text-align:right}
+.sh-o:active{background:var(--card2)}
+.sh-o .d{width:15px;height:15px;border-radius:50%;flex:none}
+.sh-o .t{flex:1}
+.sh-o .ck{color:var(--acc2);font-size:18px;visibility:hidden}
+.sh-o.sel{background:var(--card2)}
+.sh-o.sel .ck{visibility:visible}
 .crd{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
 .crd h2{font-size:22px;line-height:1.6;margin-bottom:12px}
 .row{display:flex;gap:8px;align-items:baseline;padding:9px 0;border-bottom:1px dashed var(--line);font-size:15px}
@@ -55,6 +59,8 @@ main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
   <button class="thb" id="thb" onclick="tog()">☀</button>
 </header>
 <main id="app"><div class="hint">…يحمّل فهرس الأقسام</div></main>
+<div id="scrim" onclick="shClose()"></div>
+<div id="sheet"><div class="sh-t"><span id="sh-tt">درجة الكتاب</span><button onclick="shClose()">✕</button></div><div id="sh-ops"></div></div>
 <div id="sv"><button onclick="save()">حفظ التعديلات</button><div class="n" id="svn"></div></div>
 <script>
 const app=document.getElementById('app'),h1=document.getElementById('h1');
@@ -65,15 +71,21 @@ try{if(localStorage.getItem('ulum-th')==='l'){document.body.classList.add('light
 function tog(){const l=document.body.classList.toggle('light');document.getElementById('thb').textContent=l?'☾':'☀';try{localStorage.setItem('ulum-th',l?'l':'d')}catch(e){}}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 try{const l=localStorage.getItem('turath2-prefs');if(l)PREFS=JSON.parse(l)}catch(e){}
-function mark(id,l,ev){
-  ev.stopPropagation();
-  if(PREFS[id]===l)delete PREFS[id];else PREFS[id]=l;
-  DIRTY=true;try{localStorage.setItem('turath2-prefs',JSON.stringify(PREFS))}catch(e){}
-  updN();
-  if(LV==='books')filt(document.getElementById('q').value);else render();
-}
+let SH=null;
 function pkr(id,big){
-  return `<div class="pk${big?' big':''}">${LVLS.map(x=>`<button data-l="${x.k}" class="${PREFS[id]===x.k?'sel':''}" onclick="mark(${id},${x.k},event)"><span class="d" style="background:${LVC[x.k]}"></span>${x.n}${PREFS[id]===x.k?' ✓':''}</button>`).join('')}</div>`;
+  const l=PREFS[id];
+  return `<button class="pr${big?' big':''}" onclick="shOpen(${id},event)"><span class="d" style="background:${l?LVC[l]:'var(--line)'}"></span><span class="pr-t">${l?LVLS[l-1].n+' ✓':'قيّم الكتاب'}</span><span class="chev">‹</span></button>`;
+}
+function shOpen(id,ev){ev.stopPropagation();SH=id;
+  document.getElementById('sh-ops').innerHTML=LVLS.map(x=>`<button class="sh-o${PREFS[id]===x.k?' sel':''}" onclick="shPick(${x.k})"><span class="d" style="background:${LVC[x.k]}"></span><span class="t">${x.n}</span><span class="ck">✓</span></button>`).join('');
+  document.getElementById('scrim').classList.add('on');document.getElementById('sheet').classList.add('on');
+  history.pushState({lv:'sheet'},'');
+}
+function shClose(){SH=null;document.getElementById('scrim').classList.remove('on');document.getElementById('sheet').classList.remove('on')}
+function shPick(k){if(SH==null)return;
+  if(PREFS[SH]===k)delete PREFS[SH];else PREFS[SH]=k;
+  DIRTY=true;try{localStorage.setItem('turath2-prefs',JSON.stringify(PREFS))}catch(e){}
+  updN();shClose();if(LV==='books')filt(document.getElementById('q').value);else render();
 }
 function tag(id){
   const l=PREFS[id];return l?`<span class="tag" style="background:${LVC[l]}">${LVLS[l-1].n}</span>`:'';
@@ -82,7 +94,7 @@ function updN(){
   const n=Object.keys(PREFS).length,srvn=Object.keys(SRV).length;
   document.getElementById('svn').innerHTML=DIRTY?`<b style="color:var(--acc2)">${n.toLocaleString('ar-EG')} تعديل</b><br>غير مثبّت بالموقع`:`${srvn.toLocaleString('ar-EG')} مثبّت${n?' · '+n.toLocaleString('ar-EG')+' محلي':''}`;
 }
-window.onpopstate=e=>{LV=(e.state&&e.state.lv)||'cats';if((LV==='books'&&!CUR)||(LV==='book'&&!BK))LV='cats';render()};
+window.onpopstate=e=>{if(SH!=null){shClose();return}LV=(e.state&&e.state.lv)||'cats';if((LV==='books'&&!CUR)||(LV==='book'&&!BK))LV='cats';render()};
 function crumb(t){return t?`<div class="crumb">${esc(t)}</div>`:''}
 async function render(){
   if(LV==='cats'){
@@ -108,7 +120,7 @@ async function render(){
 function draw(bs){
   const l=document.getElementById('lst');
   if(!bs.length){l.innerHTML='<div class="hint">لا نتيجة</div>';return}
-  l.innerHTML=bs.slice(0,300).map(b=>`<button class="it" style="border-right-color:${PREFS[b.i]?LVC[PREFS[b.i]]:'transparent'}" onclick="openBook(${b.i})"><span class="tt">${esc(b.t)}</span><span class="ss">${esc(b.a)}${b.d?` — ت ${esc(b.d)}هـ`:''}</span><span class="cnt">${b.p?b.p.toLocaleString('ar-EG')+' صفحة':''}${b.tc?' · '+b.tc.toLocaleString('ar-EG')+' عنواناً':''}</span>${tag(b.i)}${pkr(b.i)}</button>`).join('')+(bs.length>300?`<div class="hint">${(bs.length-300).toLocaleString('ar-EG')} كتاباً آخر — ضيّق البحث</div>`:'');
+  l.innerHTML=bs.slice(0,300).map(b=>`<button class="it" style="border-right-color:${PREFS[b.i]?LVC[PREFS[b.i]]:'transparent'}" onclick="openBook(${b.i})"><span class="tt">${esc(b.t)}</span><span class="ss">${esc(b.a)}${b.d?` — ت ${esc(b.d)}هـ`:''}</span><span class="cnt">${b.p?b.p.toLocaleString('ar-EG')+' صفحة':''}${b.tc?' · '+b.tc.toLocaleString('ar-EG')+' عنواناً':''}</span>${pkr(b.i)}</button>`).join('')+(bs.length>300?`<div class="hint">${(bs.length-300).toLocaleString('ar-EG')} كتاباً آخر — ضيّق البحث</div>`:'');
 }
 function filt(v){
   v=v.trim();
