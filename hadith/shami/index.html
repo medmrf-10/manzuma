@@ -1,137 +1,167 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1419">
-<meta name="mobile-web-app-capable" content="yes">
-<link rel="manifest" href="../../manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
-<title>قارئ كتب الشامي</title>
+<title>قارئ كتب الشامي — باب الحديث</title>
 <style>
-  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#3fbf8f;--line:#2a3440}
-  *{box-sizing:border-box;margin:0}
-  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9;height:100vh;display:flex;flex-direction:column}
-  header{padding:10px 16px;border-bottom:2px solid var(--acc);display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  h1{font-size:1.15rem;color:var(--acc)}
-  .sub{color:var(--dim);font-size:.78rem}
-  main{flex:1;display:flex;overflow:hidden}
-  #side{width:340px;min-width:240px;border-left:1px solid var(--line);overflow-y:auto;padding:10px;background:var(--bg);resize:horizontal}
-  #content{flex:1;overflow-y:auto;padding:18px}
-  input[type=search]{width:100%;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.9rem;margin-bottom:8px}
-  details{margin:2px 0}
-  summary{cursor:pointer;padding:4px 6px;border-radius:6px;font-size:.88rem;color:var(--ink)}
-  summary:hover{background:var(--card)}
-  summary .cnt{color:var(--dim);font-size:.72rem}
-  .bnode>summary{color:var(--acc)}
-  .bab{display:block;width:100%;text-align:right;background:none;border:none;color:var(--dim);padding:4px 22px;font-size:.83rem;cursor:pointer;font-family:inherit;line-height:1.7}
-  .bab:hover,.bab.on{color:var(--acc2)}
-  .hd{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:12px}
-  .hd .mtn{font-size:1.08rem;line-height:2.15;margin:4px 0 10px}
-  .hd .row{display:flex;flex-wrap:wrap;gap:6px;font-size:.75rem}
-  .tag{background:#243040;border:1px solid var(--line);border-radius:14px;padding:2px 10px;color:var(--dim)}
-  .tag.g{border-color:var(--acc2);color:#7fd4ab}
-  .tag.r{border-color:var(--acc);color:var(--acc)}
-  .hd details.tk{font-size:.8rem;color:var(--dim);border:1px dashed var(--line);border-radius:8px;padding:6px 10px;margin-top:8px}
-  .hd details.tk summary{color:var(--acc);font-size:.78rem}
-  .crumb{font-size:.8rem;color:var(--dim);margin-bottom:12px}
-  .crumb b{color:var(--acc)}
-  #status{color:var(--dim);text-align:center;padding:40px;font-size:.9rem}
-  .theme-btn{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:5px 13px;font-size:.78rem;cursor:pointer;font-family:inherit}
-  .back{color:var(--dim);font-size:.8rem;text-decoration:none;margin-right:auto}
-  body.light{--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5}
-  body.light .tag{background:#f0ead9;color:#5d5645}
-  body.light .tag.g{color:#1f6b4a}
-  @media (prefers-color-scheme:light){body:not(.dark){--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5}body:not(.dark) .tag{background:#f0ead9;color:#5d5645}body:not(.dark) .tag.g{color:#1f6b4a}}
-  @media(max-width:700px){main{flex-direction:column}#side{width:100%;max-height:38%;border-left:none;border-bottom:1px solid var(--line)}}
+:root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--line:#2a3440;--hov:#22303d;--bar:#0f1419f2}
+body.light{--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5;--hov:#efe9dc;--bar:#f6f2e9f2}
+@media(prefers-color-scheme:light){body:not(.dark){--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5;--hov:#efe9dc;--bar:#f6f2e9f2}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9;min-height:100vh}
+.bar{position:sticky;top:0;z-index:20;background:var(--bar);backdrop-filter:blur(8px);border-bottom:2px solid var(--acc);padding-top:env(safe-area-inset-top)}
+.bar-row{display:flex;align-items:center;gap:8px;max-width:720px;margin:0 auto;padding:8px 12px}
+.icon-btn{width:44px;height:44px;flex:none;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:10px;font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;text-decoration:none}
+.icon-btn:active{background:var(--hov)}
+#ttl{flex:1;min-width:0;font-size:1rem;color:var(--acc);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crumb{max-width:720px;margin:0 auto;padding:6px 12px;display:none;flex-wrap:wrap;gap:4px;font-size:.8rem;color:var(--dim)}
+.crumb.show{display:flex}
+.crumb span{cursor:pointer}
+.crumb span:active{color:var(--acc)}
+.crumb i{font-style:normal;margin-inline:2px;color:var(--line)}
+.srch{max-width:720px;margin:0 auto;padding:6px 12px 10px;display:none}
+.srch.show{display:block}
+.srch input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1rem;font-family:inherit}
+main{max-width:720px;margin:0 auto;padding:14px 12px 60px}
+.lead{color:var(--dim);font-size:.92rem;margin-bottom:14px}
+.lead b{color:var(--acc)}
+.row{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;margin-bottom:9px;cursor:pointer;text-decoration:none;color:inherit}
+.row:active{background:var(--hov);border-color:var(--acc)}
+.row .nm{flex:1;min-width:0;font-size:1.02rem}
+.row .cnt{flex:none;font-size:.72rem;color:var(--acc2);border:1px solid var(--acc2);border-radius:999px;padding:2px 10px}
+.row .pth{display:block;font-size:.72rem;color:var(--dim);margin-top:2px}
+.row .arr{flex:none;color:var(--dim);font-size:.9rem}
+.sec{font-size:.8rem;color:var(--dim);margin:16px 2px 8px}
+.hd{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+.hd .mtn{font-size:1.04rem;line-height:2.15}
+.hd .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:.7rem;color:var(--dim)}
+.hd .tags span{border:1px solid var(--line);border-radius:999px;padding:1px 9px}
+.hd .tags .r{color:var(--acc);border-color:var(--acc)}
+.hd .tags .g{color:var(--acc2);border-color:var(--acc2)}
+.hd details{margin-top:10px;font-size:.84rem;color:var(--dim);border-top:1px dashed var(--line);padding-top:8px}
+.hd summary{cursor:pointer;color:var(--acc);font-size:.84rem}
+.hd .tk-body{white-space:pre-wrap;margin-top:6px}
+.empty{color:var(--dim);text-align:center;padding:40px 12px;font-size:.95rem}
+.loading{color:var(--dim);text-align:center;padding:30px}
+.back-top{display:block;text-align:center;margin:24px auto 0}
+footer{max-width:720px;margin:0 auto;padding:0 12px 30px;text-align:center}
+footer a{color:var(--dim);font-size:.85rem;text-decoration:none}
+@media(min-width:721px){.row{transition:transform .12s,border-color .12s}.row:hover{transform:translateY(-2px);border-color:var(--acc)}}
 </style>
 </head>
 <body>
-<header>
-  <h1>قارئ كتب الشامي</h1>
-  <span class="sub" id="cnt"></span>
-  <a class="back" href="../">← بوابة الحديث</a>
-  <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️ فاتح</button>
-</header>
-<main>
-  <div id="side"><input type="search" id="q" placeholder="ابحث في أسماء الأبواب…"><div id="tree"></div></div>
-  <div id="content"><div id="status">اختر باباً من الشجرة لعرض أحاديثه — التسلسل: مقصد ← كتاب ← فصل ← باب</div></div>
-</main>
+<div class="bar">
+  <div class="bar-row">
+    <button class="icon-btn" id="bk" title="رجوع" style="visibility:hidden">→</button>
+    <div id="ttl">كتب صالح الشامي</div>
+    <button class="icon-btn" id="thB" title="فاتح/داكن">☀</button>
+  </div>
+  <div class="crumb" id="crumb"></div>
+  <div class="srch" id="srchWrap"><input id="q" type="search" placeholder="ابحث هنا…"></div>
+</div>
+<main id="main"><div class="loading">يُحمَّل الفهرس…</div></main>
+<footer><a class="back-top" href="../">← العودة إلى باب الحديث</a></footer>
 <script>
-function applyTheme(t){document.body.classList.toggle('light',t==='light');document.body.classList.toggle('dark',t==='dark');document.getElementById('themeBtn').textContent=t==='light'?'🌙 داكن':'☀️ فاتح';document.querySelector('meta[name=theme-color]').content=t==='light'?'#f6f2e9':'#0f1419'}
-function toggleTheme(){const t=document.body.classList.contains('light')?'dark':'light';localStorage.setItem('theme',t);applyTheme(t)}
-applyTheme(localStorage.getItem('theme')||'auto');
+const S={tree:null,stack:[],cache:{},q:''};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const NUM=n=>n?`<span class="cnt">${n} حديثاً</span>`:'';
 
-const treeEl=document.getElementById('tree'),cont=document.getElementById('content');
-let TREE=null,shardCache={};
-const esc=s=>String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
-fetch('data/tree.json').then(r=>r.json()).then(t=>{
-  TREE=t;
-  document.getElementById('cnt').textContent=t.reduce((s,b)=>s+b.n,0).toLocaleString('en')+' حديثاً · '+t.length+' كتب';
-  renderTree(t);
-});
-
-function renderTree(books,q){
-  treeEl.innerHTML='';
-  books.forEach(b=>{
-    const bd=document.createElement('details');bd.className='bnode';bd.open=!!q;
-    bd.innerHTML=`<summary>${esc(b.name)} <span class="cnt">${b.n.toLocaleString('en')}</span></summary>`;
-    b.maqsads.forEach(m=>{
-      const md=document.createElement('details');md.open=!!q;
-      md.innerHTML=`<summary>${esc(m.name)} <span class="cnt">${m.n}</span></summary>`;
-      m.ketabs.forEach(k=>{
-        const kd=document.createElement('details');kd.open=!!q;
-        kd.innerHTML=`<summary>${esc(k.name)} <span class="cnt">${k.n}</span></summary>`;
-        k.fasls.forEach(f=>{
-          const showBabs=q?f.babs.filter(x=>x.name&&x.name.includes(q)):f.babs;
-          if(q&&!showBabs.length)return;
-          const fd=document.createElement('details');fd.open=!!q;
-          fd.innerHTML=`<summary>${esc(f.name)} <span class="cnt">${f.n}</span></summary>`;
-          showBabs.forEach(c=>{
-            const btn=document.createElement('button');btn.className='bab';
-            btn.textContent=c.name+` (${c.n})`;
-            btn.onclick=()=>{document.querySelectorAll('.bab.on').forEach(x=>x.classList.remove('on'));btn.classList.add('on');loadKetab(b,k,f,c)};
-            fd.appendChild(btn);
-          });
-          kd.appendChild(fd);
-        });
-        md.appendChild(kd);
-      });
-      bd.appendChild(md);
-    });
-    treeEl.appendChild(bd);
+async function boot(){
+  S.tree=await (await fetch('data/tree.json')).json();
+  S.stack=[{lv:'books'}];
+  render();
+}
+function cur(){return S.stack[S.stack.length-1]}
+function go(node){S.stack.push(node);S.q='';$('q').value='';render();scrollTo(0,0)}
+function back(){if(S.stack.length>1){S.stack.pop();S.q='';$('q').value='';render()}}
+function kids(){
+  const c=cur();
+  if(c.lv==='books')return S.tree.map(b=>({node:b,lv:'book',nm:b.name,n:b.n}));
+  const o=c.node;
+  const arr=o.maqsads||o.ketabs||o.fasls||o.babs||[];
+  const lv=o.maqsads?'maqsad':o.ketabs?'ketab':o.fasls?'fasl':'bab';
+  return arr.map(x=>({node:x,lv:lv==='bab'?'bab':lv,nm:x.name,n:x.n}));
+}
+function norm(s){return String(s||'').replace(/[ً-ٰٟۖ-ۭـ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')}
+function* allBabs(book,path=[]){
+  for(const m of book.maqsads||[])for(const k of m.ketabs||[])for(const f of k.fasls||[])for(const b of f.babs||[])
+    yield {bab:b,ketab:k,path:`${book.name} ‹ ${m.name} ‹ ${k.name}${f.name?' ‹ '+f.name:''}`};
+}
+function render(){
+  const c=cur(),main=$('main'),bk=$('bk'),crumb=$('crumb'),sw=$('srchWrap');
+  bk.style.visibility=S.stack.length>1?'visible':'hidden';
+  $('ttl').textContent=c.lv==='books'?'كتب صالح الشامي':(c.node?.name||'كتب صالح الشامي');
+  const path=S.stack.slice(1).map(s=>s.node.name);
+  crumb.className='crumb'+(path.length?' show':'');
+  crumb.innerHTML=path.map((p,i)=>`<span data-i="${i}">${esc(p)}</span>`).join('<i>‹</i>');
+  crumb.querySelectorAll('span').forEach(el=>el.onclick=()=>{S.stack.length=+el.dataset.i+2;S.q='';$('q').value='';render()});
+  const isBooks=c.lv==='books', isH=c.lv==='hadith';
+  sw.className='srch'+((isBooks||isH)?'':' show');
+  if(isBooks){main.innerHTML=`<div class="lead">أربعة كتب مشكولة — <b>28,565 حديثاً</b> — بفهارسها: مقصد ← كتاب ← فصل ← باب. اختر كتاباً:</div>`+
+    S.tree.map(b=>{const tot=b.maqsads?.length||0;return `<div class="row" data-id="${b.id}"><span class="nm">${esc(b.name)}<span class="pth">${tot} مقاصد</span></span>${NUM(b.n)}<span class="arr">‹</span></div>`}).join('');
+    main.querySelectorAll('.row').forEach(el=>el.onclick=()=>go({lv:'book',node:S.tree.find(b=>b.id==el.dataset.id)}));
+    return;}
+  if(isH){renderHadiths(c);return}
+  const ks=kids();
+  if(ks.length===1&&ks[0].lv!=='bab'){go({lv:ks[0].lv,node:ks[0].node});return}
+  if(ks.length&&ks[0].lv==='bab'){renderBabs(c,ks);return}
+  const q=norm(S.q);
+  const book=S.stack.find(s=>s.lv==='book')?.node;
+  let html=`<div class="lead">عدد العناوين: <b>${ks.length}</b></div>`;
+  const flt=q?ks.filter(x=>norm(x.nm).includes(q)):ks;
+  html+=flt.map((x,i)=>`<div class="row" data-i="${i}"><span class="nm">${esc(x.nm)}</span>${NUM(x.n)}<span class="arr">‹</span></div>`).join('')||'<div class="empty">لا نتائج في هذا المستوى.</div>';
+  let hits=[];
+  if(q&&book){
+    hits=[...allBabs(book)].filter(x=>norm(x.bab.name).includes(q));
+    if(hits.length)html+=`<div class="sec">في كل أبواب الكتاب (${hits.length}):</div>`+hits.slice(0,60).map((x,i)=>`<div class="row g" data-i="${i}"><span class="nm">${esc(x.bab.name)}<span class="pth">${esc(x.path)}</span></span>${NUM(x.bab.n)}<span class="arr">‹</span></div>`).join('');
+  }
+  main.innerHTML=html;
+  main.querySelectorAll('.row:not(.g)').forEach(el=>el.onclick=()=>{const x=flt[+el.dataset.i];go({lv:x.lv,node:x.node})});
+  main.querySelectorAll('.row.g').forEach(el=>el.onclick=()=>{const x=hits[+el.dataset.i];go({lv:'hadith',node:x.bab,ketab:x.ketab,path:x.path})});
+}
+function renderBabs(c,babs){
+  const q=norm(S.q);
+  const flt=q?babs.filter(x=>norm(x.nm).includes(q)):babs;
+  const main=$('main');
+  main.innerHTML=`<div class="lead">الأبواب: <b>${babs.length}</b></div>`+
+    flt.map((x,i)=>`<div class="row" data-i="${i}"><span class="nm">${esc(x.nm)}</span>${NUM(x.n)}<span class="arr">‹</span></div>`).join('')||'<div class="empty">لا نتائج.</div>';
+  main.querySelectorAll('.row').forEach(el=>{
+    const x=flt[+el.dataset.i];
+    const ketab=S.stack.find(s=>s.lv==='ketab')?.node||S.stack[S.stack.length-2]?.node;
+    el.onclick=()=>go({lv:'hadith',node:x.node,ketab});
   });
 }
-document.getElementById('q').oninput=e=>{
-  const q=e.target.value.trim();
-  if(!TREE)return;
-  if(!q){renderTree(TREE);return}
-  renderTree(TREE.map(b=>({...b,maqsads:b.maqsads})),q);
-};
-
-async function loadKetab(b,k,f,c){
-  cont.innerHTML='<div id="status">يحمّل…</div>';
-  const key=`k${b.id}_${k.id}`;
-  if(!shardCache[key]) shardCache[key]=await (await fetch(`data/${key}.json`)).json();
-  render(shardCache[key].filter(h=>h.c===c.name||(!c.name)),b,k,f,c);
+async function renderHadiths(c){
+  const main=$('main');
+  main.innerHTML='<div class="loading">يُحمَّل الباب…</div>';
+  const kid=c.ketab.id, bid=S.stack.find(s=>s.lv==='book').node.id;
+  const key=`k${bid}_${kid}`;
+  if(!S.cache[key])S.cache[key]=await (await fetch(`data/${key}.json`)).json();
+  const hs=S.cache[key].filter(r=>r.c===c.node.name&&r.t&&r.t!=='-');
+  const q=norm(S.q);
+  const flt=q?hs.filter(r=>norm(r.t).includes(q)):hs;
+  $('srchWrap').className='srch show';
+  main.innerHTML=`<div class="lead">${esc(c.node.name)} — <b>${hs.length}</b> حديثاً${q?` (تطابق البحث: ${flt.length})`:''}</div>`+
+    (flt.map(h=>`<div class="hd"><div class="mtn">${esc(h.t)}</div><div class="tags">
+      ${h.ref?`<span class="r">${esc(h.ref)}</span>`:''}
+      ${h.h?`<span class="g">${esc(h.h)}</span>`:''}
+      ${h.f?`<span>${esc(h.f)}</span>`:''}
+      ${h.p?`<span>ص ${h.p}</span>`:''}
+      <span>#${h.n}</span></div>
+      ${h.k?`<details><summary>التخريج</summary><div class="tk-body">${esc(h.k)}</div></details>`:''}
+      ${h.fn?`<details><summary>الحواشي</summary><div class="tk-body">${esc(h.fn)}</div></details>`:''}
+    </div>`).join('')||'<div class="empty">لا أحاديث مطابقة.</div>');
 }
-function render(list,b,k,f,c){
-  if(!list.length){cont.innerHTML='<div id="status">لا أحاديث هنا.</div>';return}
-  cont.innerHTML=`<div class="crumb">${esc(b.name)} ← ${esc(k.name)} ${f.name&&f.name!=='—'?'← '+esc(f.name):''} ← <b>${esc(c.name)}</b> · ${list.length} حديثاً</div>`+
-    list.map(h=>`<div class="hd">
-      <div class="mtn">${esc(h.t)}</div>
-      <div class="row">
-        ${h.ref?`<span class="tag r">${esc(h.ref)}</span>`:''}
-        ${h.h?`<span class="tag g">${esc(h.h)}</span>`:''}
-        ${h.p?`<span class="tag">ص ${esc(h.p)}</span>`:''}
-        <span class="tag">#${esc(h.n)}</span>
-      </div>
-      ${h.k?`<details class="tk"><summary>التخريج</summary>${esc(h.k)}</details>`:''}
-      ${h.fn?`<details class="tk"><summary>حواشٍ</summary>${esc(h.fn)}</details>`:''}
-    </div>`).join('');
-  cont.scrollTop=0;
-}
+$('bk').onclick=back;
+$('q').addEventListener('input',e=>{S.q=e.target.value;render()});
+const TH='hadith-theme';
+function applyTheme(t){document.body.classList.toggle('light',t==='light');document.body.classList.toggle('dark',t==='dark');$('thB').textContent=t==='light'?'☾':'☀';document.querySelector('meta[name="theme-color"]').content=t==='light'?'#f6f2e9':'#0f1419'}
+$('thB').onclick=()=>{const t=document.body.classList.contains('light')?'dark':'light';localStorage.setItem(TH,t);applyTheme(t)};
+applyTheme(localStorage.getItem(TH)||'');
+boot();
 </script>
 </body>
 </html>
