@@ -34,12 +34,12 @@ a { color: var(--gold); text-decoration: none; }
 .surah-en { color: var(--dimmer); font-size: .75rem; }
 .surah-meta { color: var(--dimmer); font-size: .72rem; text-align: left; }
 
-.surah-head { max-width: 880px; margin: 0 auto; padding: 22px 24px 10px; }
+.surah-head { max-width: 880px; margin: 0 auto; padding: 12px 24px 4px; }
 .back-link { color: var(--dim); font-size: .85rem; }
 .back-link:hover { color: var(--gold); }
-.surah-title-row { text-align: center; margin: 14px 0 18px; }
-.surah-title { font-family: var(--quran); font-size: 2.6rem; margin: 0; color: var(--gold); }
-.surah-title-meta { color: var(--dim); font-size: .82rem; margin-top: 6px; }
+.surah-title-row { text-align: center; margin: 4px 0 10px; }
+.surah-title { font-family: var(--quran); font-size: 1.9rem; margin: 0; color: var(--gold); }
+.surah-title-meta { color: var(--dim); font-size: .78rem; margin-top: 4px; }
 .mode-toggle { display: flex; justify-content: center; gap: 10px; margin-bottom: 8px; }
 .mode-toggle button { background: var(--card); border: 1px solid var(--line2); color: var(--ink); border-radius: 999px; padding: 8px 20px; font-family: inherit; font-size: .88rem; cursor: pointer; }
 .mode-toggle button.active { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
@@ -86,11 +86,11 @@ a { color: var(--gold); text-decoration: none; }
 .jump { display: flex; gap: 8px; }
 .jump input { width: 150px; padding: 8px 12px; font-size: .85rem; font-family: inherit; background: var(--card); color: var(--ink); border: 1px solid var(--line2); border-radius: 999px; text-align: center; }
 .jump input:focus { border-color: var(--gold); outline: none; }
-.pager { max-width: 880px; margin: 4px auto 0; padding: 16px 24px 20px; display: flex; justify-content: space-between; align-items: center; }
-.page-btn { background: var(--card); border: 1px solid var(--line2); color: var(--gold); border-radius: 10px; padding: 10px 18px; font-size: .85rem; font-weight: 600; text-decoration: none; }
+.pager { position: fixed; bottom: 0; left: 0; right: 0; z-index: 30; background: var(--card); border-top: 1px solid var(--line); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.page-btn { background: var(--card); border: 1px solid var(--line2); color: var(--gold); border-radius: 10px; padding: 12px 18px; font-size: .88rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .page-btn:hover { border-color: var(--gold); }
 .page-info { color: var(--dim); font-size: .8rem; }
-.surah-nav { max-width: 880px; margin: 0 auto; padding: 0 24px 50px; display: flex; justify-content: space-between; }
+.surah-nav { max-width: 880px; margin: 0 auto; padding: 0 24px 110px; display: flex; justify-content: space-between; }
 .site-foot { text-align: center; color: var(--dimmer); font-size: .74rem; padding: 20px 0 30px; }
 .page-loading { text-align: center; color: var(--dim); padding: 60px 0; }
 .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--line2); border-top-color: var(--gold); border-radius: 50%; animation: sp 1s linear infinite; vertical-align: middle; }

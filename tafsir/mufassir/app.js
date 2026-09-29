@@ -227,14 +227,15 @@ async function renderMushafPage(k) {
 }
 
 /* ---------- surah view (real page numbers) ---------- */
-async function renderSurah(n, ayah) {
+async function renderSurah(n, ayah, pageK) {
   app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل السورة…</div>';
   const { d, pages } = await surahPageList(n);
   let k = null;
   if (ayah) {
     const v = d.verses.find((x) => x.a === ayah);
     k = v ? v.p : pages[0];
-  } else k = pages[0];
+  } else if (pageK != null) k = pages.includes(pageK) ? pageK : pages[0];
+  else k = pages[0];
   const slice = d.verses.filter((v) => v.p === k);
   const first = slice[0], last = slice[slice.length - 1];
   const pos = pages.indexOf(k);
@@ -283,6 +284,7 @@ async function renderSurah(n, ayah) {
     el?.scrollIntoView({ block: "center" });
     setTimeout(() => openTafsir(d, `${n}:${ayah}`), 150);
   }
+  window.scrollTo(0, 0);
   document.title = `المفسِّر — سورة ${d.ar}`;
   idle(() => { prefetchSurah(n - 1); prefetchSurah(n + 1); });
 }
@@ -317,11 +319,8 @@ async function route() {
   }
 }
 function renderSurahAt(n, k) {
-  // render surah page by real mushaf page number
-  surahPageList(n).then(({ d }) => {
-    const v = d.verses.find((x) => x.p === k);
-    renderSurah(n, v ? v.a : null).then(() => {});
-  });
+  // render surah page by real mushaf page number — page turn, no auto-tafsir
+  renderSurah(n, null, k).then(() => {});
 }
 addEventListener("hashchange", route);
 route();
