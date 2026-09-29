@@ -13,38 +13,74 @@
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
 <title>بوابة التفسير — المنظومة</title>
 <style>
-  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; text-align: center; }
-  h1 { color: #d4af37; font-size: 2rem; margin-bottom: 16px; }
-  .desc { color: #9a958c; max-width: 560px; line-height: 1.8; }
-  .badge { display: inline-block; margin-top: 24px; font-size: .85rem; padding: 6px 18px; border-radius: 999px; background: #2a2410; color: #d4af37; border: 1px solid #4a4020; }
-  a.back { margin-top: 36px; color: #8f8a80; font-size: .85rem; text-decoration: none; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; padding: 40px 20px; max-width: 720px; margin: 0 auto; }
+  h1 { color: #d4af37; font-size: 2rem; margin-bottom: 8px; text-align: center; }
+  .desc { color: #9a958c; line-height: 1.8; text-align: center; margin-bottom: 32px; }
+  h2 { color: #d4af37; font-size: 1.15rem; margin: 32px 0 12px; border-bottom: 1px solid #2a2e38; padding-bottom: 8px; }
+  .svc { background: #171a21; border: 1px solid #2a2e38; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+  .svc b { color: #e8e6e3; }
+  .svc p { color: #9a958c; margin: 6px 0 0; font-size: .92rem; line-height: 1.7; }
+  .svc code { color: #d4af37; font-size: .85rem; direction: ltr; display: inline-block; }
+  .ayah { background: #171a21; border: 1px solid #2a2e38; border-right: 3px solid #d4af37; border-radius: 12px; padding: 18px; margin-bottom: 12px; }
+  .ayah .txt { font-size: 1.25rem; line-height: 2; color: #e8e6e3; }
+  .ayah .taf { margin-top: 12px; color: #b8b3a8; font-size: .95rem; line-height: 1.9; }
+  .ayah .src { margin-top: 10px; color: #6b675f; font-size: .78rem; }
+  .badge { display: inline-block; font-size: .8rem; padding: 4px 14px; border-radius: 999px; background: #2a2410; color: #d4af37; border: 1px solid #4a4020; }
+  .status { text-align: center; margin: 8px 0 28px; }
+  ul.plan { color: #9a958c; line-height: 2; padding-right: 20px; }
+  ul.plan li::marker { color: #d4af37; }
+  a.back { display: block; margin-top: 36px; color: #8f8a80; font-size: .85rem; text-decoration: none; text-align: center; }
   a.back:hover { color: #d4af37; }
+  a.lib { color: #9aa7c7; }
+  a.lib:hover { color: #d4af37; }
 
-  @media (prefers-color-scheme: light) {
-    body { background: #f6f4ef; color: #2b2b28; }
-    h1, .gate h2 { color: #8a6d1f; }
-    .sub, .desc, .gate .owner, footer { color: #6b675f; }
-    .gate { background: #ffffff; border-color: #ddd8cc; }
-    .gate:hover { border-color: #8a6d1f; }
-    .badge { background: #f4ecd8; color: #8a6d1f; border-color: #d9cba4; }
-    a.back { color: #6b675f; }
-    a.back:hover { color: #8a6d1f; }
-  }
+  body.light{background:#f5f3ef;color:#1f2430}
+  body.light h1,body.light h2{color:#8a6d1f}
+  body.light .desc,body.light .svc p,body.light ul.plan{color:#5d594f}
+  body.light h2{border-color:#e0dbc9}
+  body.light .svc,body.light .ayah{background:#ffffff;border-color:#e0dbc9}
+  body.light .ayah{border-right-color:#8a6d1f}
+  body.light .svc b,body.light .ayah .txt{color:#1f2430}
+  body.light .ayah .taf{color:#4d4a42}
+  body.light .ayah .src{color:#8a857a}
+  body.light .badge{background:#f6ecd0;color:#8a6d1f;border-color:#e0d3ac}
+  body.light a.back{color:#7a756a}
+  body.light a.back:hover{color:#8a6d1f}
+  body.light a.lib{color:#4a5d8a}
+  body.light a.lib:hover{color:#8a6d1f}
 </style>
 </head>
 <body>
 <h1>بوابة التفسير</h1>
 <p class="desc">بنية التفسير التحتية: آية + كتاب تفسير ← نص تفسيرها · موضوع ← آياته. المالك: ساسي.</p>
-<span class="badge">قيد البناء</span>
+<p class="status"><span class="badge">المرحلة 1 — النواة والعرض</span></p>
+
+<h2>الخدمتان الأساسيتان</h2>
+<div class="svc">
+  <b>تفسير آية</b>
+  <p>مدخل: سورة + رقم آية + كتاب تفسير ← مخرج: نص التفسير نظيفاً ومنسقاً. <code>tafsir?surah=2&amp;ayah=255&amp;book=tabari</code></p>
+</div>
+<div class="svc">
+  <b>آيات الموضوع</b>
+  <p>مدخل: موضوع أو مفهوم ← مخرج: قائمة الآيات المتعلقة به مرتبة بالسور. <code>topic?q=الصبر</code></p>
+</div>
+
+<h2>نموذج حي — آية الكرسي</h2>
+<div class="ayah">
+  <div class="txt">﴿اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ﴾</div>
+  <div class="taf">«الحيّ القيّوم»: الحيّ الذي له كمال الحياة، القيّوم القائم بنفسه المقيم لشؤون خلقه. «لا تأخذه سنة ولا نوم»: لا يعتريه نعاس ولا نوم. «وسع كرسيه السماوات والأرض»: الكرسي موضع القدمين، ووسعه إثبات عظمة سلطانه. «ولا يئوده حفظهما»: لا يثقله ولا يصعب عليه حفظ السماوات والأرض.</div>
+  <div class="src">البقرة 255 — مختصر من تفسير ابن كثير</div>
+</div>
+
+<h2>خطة البناء</h2>
+<ul class="plan">
+  <li>جرد مصادر التفسير الرقمية النظيفة (ابن كثير، الطبري، السعدي، التحرير والتنوير) — استكمالاً لبحث جرد شروح الحديث الرقمية.</li>
+  <li>قاعدة آية↔تفسير بفهرسة سورة/آية، ثم فهرس موضوعات.</li>
+  <li>واجهة قراءة تربط النص القرآني بتفسيره المختار مع توافق الوضع الفاتح.</li>
+  <li>ربط البحث: تقارير التعلم بالمنظومة في <a class="lib" href="../research/">مكتبة الأبحاث</a>.</li>
+</ul>
+
 <a class="back" href="../">← العودة إلى البوابة الأم</a>
-<style>
-body.light{background:#f5f3ef;color:#1f2430}
-body.light h1{color:#8a6d1f}
-body.light .desc{color:#5d594f}
-body.light .badge{background:#f6ecd0;color:#8a6d1f;border-color:#e0d3ac}
-body.light a.back{color:#7a756a}
-body.light a.back:hover{color:#8a6d1f}
-</style>
 <button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
 <script>
 (function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
