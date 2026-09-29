@@ -10,7 +10,7 @@
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../../icons/icon-192.png">
-<title>الفهرس العابر — كتاب الطهارة بين الرسالة والأخضري</title>
+<title>الفهرس العابر — الرسالة كاملةً × الأخضري</title>
 <style>
   :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#2a3440;--bar:#0f1419f2;--tocbg:#11171d;--hov:#22303d;--fncbg:#16202a}
   body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecf2;--tocbg:#f6f3ec;--hov:#efe9dc;--fncbg:#fdfcf8}
@@ -82,14 +82,14 @@
 
 <header class="top">
   <button class="icon-btn" id="openToc" aria-label="الفهرس">☰</button>
-  <h1>الفهرس العابر — كتاب الطهارة</h1>
+  <h1>الفهرس العابر — الرسالة × الأخضري</h1>
   <a class="icon-btn" href="../" aria-label="البوابة">⌂</a>
   <button class="icon-btn thb" aria-label="المظهر">☀</button>
 </header>
 
 <div class="scrim" id="scrim"></div>
 <aside class="toc" id="tocPane">
-  <div class="toc-head"><b>كتاب الطهارة — <span id="tocn">…</span> أبواب</b><button class="x thb" aria-label="المظهر">☀</button><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
+  <div class="toc-head"><b>فهرس الرسالة — <span id="tocn">…</span> باباً</b><button class="x thb" aria-label="المظهر">☀</button><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
   <div class="toc-search"><input type="search" id="tq" placeholder="ابحث في الأبواب…"></div>
   <nav class="toc-list" id="toc"></nav>
 </aside>
@@ -135,7 +135,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
     const matched=r.a.length;
     art.innerHTML=`<h2 class="sec-title">${r.spine.t}</h2>
-      <div class="meta-card">العمود = فهرس <b>${d.meta.r}</b> · ص ${r.spine.p0}–${r.spine.p1} · الباب ${i+1} من ${rows.length} · ${matched?matched+' عنواناً محاذياً من الأخضري':'بلا مقابل في الأخضري'}</div>
+      <div class="meta-card">العمود = فهرس <b>${d.meta.r}</b> · ص ${r.spine.p0}–${r.spine.p1} · الباب ${i+1} من ${rows.length} · ${matched?matched+' عنواناً محاذياً من الأخضري':'بلا مقابل — الأخضري لا يغطي هذا الباب (متنه في العبادات فقط)'}</div>
       ${r.note?`<div class="note">${r.note}</div>`:''}
       <div class="blk r"><h3>${d.meta.r} <span class="pgn">«${r.spine.t}»</span><span class="pgn">ص ${r.spine.p0}–${r.spine.p1}</span></h3><div class="matn">${esc(r.spine.text)}</div></div>
       ${r.a.map(a=>`<div class="blk a"><h3>${d.meta.a} <span class="pgn">«${a.t}»</span><span class="pgn">ص ${a.p0}–${a.p1}</span></h3><div class="matn">${esc(a.text)}</div></div>`).join('')}
