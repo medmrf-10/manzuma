@@ -20,6 +20,9 @@
 | 14 | [التعلم بالمشروع ونقل التعلم](cd6dd7ecbb351dd6-التعلم-بالمشروع.md) | مكتمل | [فتح](https://gemini.google.com/app/cd6dd7ecbb351dd6) |
 | 15 | [اكتساب المفردات](f6a04dab3bfb5b5b-اكتساب-المفردات.md) | مكتمل | [فتح](https://gemini.google.com/app/f6a04dab3bfb5b5b) |
 | 16 | [تخطيط التعلم وقياس التقدم](06af324ff208a7cb-تخطيط-التعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/06af324ff208a7cb) |
+| 17 | [نمذجة المتعلم وتتبع الأخطاء](4e61c539cc27eb15-نمذجة-المتعلم.md) | مكتمل | [فتح](https://gemini.google.com/app/4e61c539cc27eb15) |
+| 18 | [النوم وترسيخ الذاكرة](0b96a7cc0e5b6fb7-النوم-والترسيخ.md) | مكتمل | [فتح](https://gemini.google.com/app/0b96a7cc0e5b6fb7) |
+| 19 | [الدافع واستدامة التعلم الذاتي](6721fc1b5cab8711-الدافع-والاستدامة.md) | مكتمل | [فتح](https://gemini.google.com/app/6721fc1b5cab8711) |
 
 ## قيد التنفيذ (تُضاف فور اكتمالها)
 
