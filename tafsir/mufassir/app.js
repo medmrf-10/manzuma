@@ -94,10 +94,12 @@ addEventListener("popstate", () => { if (!$("#tafsir-panel").classList.contains(
 /* ---------- gestures: swipe flip + long-press ---------- */
 let swipeMoved = false;
 function bindGestures(el, goPrev, goNext, onLongPress) {
-  let x0 = 0, y0 = 0, lpT = null, lpEl = null, edgeX0 = -1;
+  let x0 = 0, y0 = 0, lpT = null, lpEl = null, edgeX0 = -1, drag = false;
+  const page = el.querySelector(".mushaf-page");
+  const snapBack = () => { if (page) { page.style.transition = "transform .25s ease-out"; page.style.transform = ""; } };
   el.addEventListener("touchstart", (e) => {
     const t = e.touches[0];
-    x0 = t.clientX; y0 = t.clientY; swipeMoved = false;
+    x0 = t.clientX; y0 = t.clientY; swipeMoved = false; drag = false;
     edgeX0 = x0 > innerWidth - 26 ? x0 : -1; // right-edge pull
     lpEl = e.target.closest ? e.target.closest(".m-ayah") : null;
     if (lpEl) {
@@ -110,22 +112,28 @@ function bindGestures(el, goPrev, goNext, onLongPress) {
   el.addEventListener("touchmove", (e) => {
     const dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
     if (Math.abs(dx) > 10 || Math.abs(dy) > 10) { swipeMoved = true; if (lpT) { clearTimeout(lpT); lpT = null; } }
+    if (page && edgeX0 < 0 && Math.abs(dx) > Math.abs(dy)) {
+      drag = true;
+      page.style.transition = "none";
+      page.style.transform = `translateX(${Math.max(-150, Math.min(150, dx * 0.55))}px)`;
+    }
   }, { passive: true });
   el.addEventListener("touchend", (e) => {
     if (lpT) { clearTimeout(lpT); lpT = null; }
     const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
     if (edgeX0 > 0 && dx < -40 && Math.abs(dy) < 60) { // pull from right edge → drawer
+      snapBack();
       if (window.MufassirDrawer) window.MufassirDrawer.open();
       return;
     }
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) { dx > 0 ? goPrev() : goNext(); }
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) {
+      const dir = dx > 0 ? 1 : -1;
+      if (page) { page.style.transition = "transform .2s ease-out"; page.style.transform = `translateX(${dir * 110}%)`; }
+      flipDir = -dir; // الصفحة الجديدة تدخل من الجهة المقابلة
+      dx > 0 ? goNext() : goPrev(); // سحب يمين = التالية، سحب يسار = السابقة (مصحف RTL)
+    } else if (drag) snapBack();
   }, { passive: true });
-  el.addEventListener("touchcancel", () => { if (lpT) { clearTimeout(lpT); lpT = null; } });
-  // desktop: right edge zones flip pages; long-press via contextmenu
-  el.querySelectorAll(".flip-zone").forEach((z) =>
-    z.addEventListener("click", (e) => {
-      if (e.target === z && !swipeMoved) (z.dataset.dir === "prev" ? goPrev() : goNext());
-    }));
+  el.addEventListener("touchcancel", () => { if (lpT) { clearTimeout(lpT); lpT = null; } snapBack(); });
   el.addEventListener("contextmenu", (e) => {
     const a = e.target.closest ? e.target.closest(".m-ayah") : null;
     if (a) { e.preventDefault(); onLongPress(a); }
@@ -145,7 +153,7 @@ function fitMushaf() {
 addEventListener("resize", () => { if ($("#mtext")) fitMushaf(); });
 
 /* ---------- the mushaf: screen IS the page ---------- */
-let curPage = 1, curSurahs = {};
+let curPage = 1, curSurahs = {}, flipDir = 0;
 function surahBanner(d) {
   const bis = d.bismillah ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
   return `<div class="surah-banner"><span class="ornament">﴾</span><span class="surah-banner-name">سورة ${esc(d.ar)}</span><span class="ornament">﴿</span></div>${bis}`;
@@ -183,17 +191,19 @@ async function renderMushafPage(k) {
       </div>
       <div class="mushaf-text" id="mtext">${html}</div>
       <div class="m-edge m-bot">
-        <a class="flip-btn" href="#/m/${k + 1}" ${k >= TOTAL_PAGES ? 'style="visibility:hidden"' : ""} aria-label="التالية">‹</a>
         <span class="page-num">${arNum(k)}</span>
-        <a class="flip-btn" href="#/m/${k - 1}" ${k <= 1 ? 'style="visibility:hidden"' : ""} aria-label="السابقة">›</a>
       </div>
     </div>
-    <div class="edge-grip" id="grip" aria-label="الفهرس"></div>
-    <div class="flip-zone" data-dir="prev" aria-label="الصفحة السابقة"></div>
-    <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
+    <button class="edge-grip" id="grip" type="button" aria-label="الفهرس"><i></i><i></i><i></i></button>
   </div>`;
   fitMushaf();
   const book = $("#mbook"), mt = $("#mtext");
+  if (flipDir) { // الصفحة تنساب من الجهة المقابلة لاتجاه السحب
+    const pg = book.querySelector(".mushaf-page");
+    pg.style.transform = `translateX(${flipDir * 100}%)`;
+    requestAnimationFrame(() => { pg.style.transition = "transform .24s ease-out"; pg.style.transform = ""; });
+    flipDir = 0;
+  }
   mt.addEventListener("click", () => { // لمسة على النص: إخفاء/إظهار الحواف للقراءة الغامرة
     if (swipeMoved) return;
     book.classList.toggle("chrome-hidden");
