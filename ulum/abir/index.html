@@ -4,91 +4,153 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f1419">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../../icons/icon-192.png">
-<title>الفهرس العابر — كتاب الطهارة على فهارس الكتابين</title>
+<title>الفهرس العابر — كتاب الطهارة بين الرسالة والأخضري</title>
 <style>
-:root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#2a3440;--bar:#0f1419ee;--hov:#22303d}
-body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecee;--hov:#efe9dc}
-*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
-body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100dvh}
-.top{display:flex;align-items:center;gap:10px;padding:12px;border-bottom:2px solid var(--acc);position:sticky;top:0;background:var(--bg);z-index:5}
-.top h1{font-size:1rem;color:var(--acc);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.top a{color:var(--dim);text-decoration:none;font-size:1.2rem;padding:6px}
-#thB{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:transparent;color:var(--acc);font-size:1.05rem;cursor:pointer;flex:none}
-.intro{padding:14px;font-size:.82rem;color:var(--dim);line-height:1.9;border-bottom:1px solid var(--line)}
-.intro b{color:var(--ink)}
-.stats{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
-.chip{font-size:.72rem;padding:5px 10px;border-radius:20px;border:1px solid var(--line);color:var(--dim);background:var(--card)}
-.chip b{color:var(--acc)}
-main{padding:12px 12px 80px;display:flex;flex-direction:column;gap:14px;max-width:860px;margin:0 auto;width:100%}
-.ms{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
-.ms-h{padding:12px 14px;display:flex;align-items:center;gap:8px;cursor:pointer}
-.ms-h h2{font-size:.98rem;flex:1;line-height:1.6}
-.ms-h h2 small{display:block;color:var(--dim);font-size:.7rem;font-weight:400}
-.tag{font-size:.66rem;padding:3px 9px;border-radius:12px;flex:none;font-weight:700}
-.tag.both{background:#2e7d5b22;color:#7ecfa8;border:1px solid #2e7d5b55}
-.tag.gap{background:#b0563a22;color:#e0906f;border:1px solid #b0563a55}
-.tag.many{background:#3d6b8e22;color:#7fb3d8;border:1px solid #3d6b8e66}
-.ms-body{display:none;border-top:1px solid var(--line)}
-.ms.open .ms-body{display:block}
-.note{padding:10px 14px;font-size:.76rem;color:var(--warn);border-bottom:1px dashed var(--line);line-height:1.8}
-.blk{padding:12px 14px;border-bottom:1px solid var(--line)}
-.blk:last-child{border-bottom:none}
-.blk h3{font-size:.72rem;margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.blk h3 .pgn{font-size:.62rem;border:1px solid var(--line);border-radius:8px;padding:1px 7px;color:var(--dim)}
-.blk.r h3{color:#e8c96a}
-.blk.a h3{color:#7fb3d8}
-.blk.a{background:#3d6b8e08;border-inline-start:3px solid var(--acc3)}
-.blk p{font-size:.97rem;line-height:2.1;text-align:justify;white-space:pre-wrap}
-body.light .blk.a{background:#3d6b8e0d}
-.rev{display:flex;gap:8px;padding:10px 14px;border-top:1px dashed var(--line);align-items:center;background:#00000010}
-.rev span{font-size:.7rem;color:var(--dim);flex:1}
-.rev button{height:36px;min-width:78px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--ink);font-family:inherit;font-size:.8rem;cursor:pointer}
-.rev button.ok.on{background:var(--acc2);color:#fff;border-color:var(--acc2)}
-.rev button.no.on{background:var(--warn);color:#fff;border-color:var(--warn)}
-footer{padding:16px;text-align:center;color:var(--dim);font-size:.7rem;line-height:1.8}
+  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#2a3440;--bar:#0f1419f2;--tocbg:#11171d;--hov:#22303d;--fncbg:#16202a}
+  body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecf2;--tocbg:#f6f3ec;--hov:#efe9dc;--fncbg:#fdfcf8}
+  *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+
+  .top{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:2px solid var(--acc);background:var(--bg);padding-top:calc(10px + env(safe-area-inset-top))}
+  .top h1{font-size:1rem;color:var(--acc);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .icon-btn{width:44px;height:44px;flex:none;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:10px;font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;text-decoration:none}
+  .icon-btn:active{border-color:var(--acc)}
+
+  .scrim{position:fixed;inset:0;background:#000a;opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+  .scrim.open{opacity:1;pointer-events:auto}
+  aside.toc{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(320px,88vw);background:var(--tocbg);z-index:50;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .28s ease;box-shadow:-8px 0 30px #0008}
+  aside.toc.open{transform:none}
+  .toc-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
+  .toc-head b{color:var(--acc);flex:1;font-size:.95rem}
+  .toc-head .x{width:38px;height:38px;border:none;background:transparent;color:var(--dim);font-size:1.3rem;cursor:pointer;border-radius:8px}
+  .toc-search{padding:10px 14px;border-bottom:1px solid var(--line)}
+  .toc-search input{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.95rem;font-family:inherit}
+  nav.toc-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+  a.ti{display:block;padding:13px 16px;color:var(--ink);text-decoration:none;font-size:.95rem;border-bottom:1px solid var(--line);line-height:1.75;min-height:48px}
+  a.ti small{color:var(--dim);display:block;font-size:.74rem;margin-top:2px}
+  a.ti:active,a.ti.on{background:var(--hov)}
+  a.ti.on{border-inline-start:4px solid var(--acc);color:var(--acc)}
+  a.ti .tag{float:left;font-size:.62rem;padding:2px 8px;border-radius:10px;margin-top:6px;font-weight:700}
+  .tag.both{background:#2e7d5b22;color:#7ecfa8;border:1px solid #2e7d5b55}
+  .tag.gap{background:#b0563a22;color:#e0906f;border:1px solid #b0563a55}
+  .tag.many{background:#3d6b8e22;color:#7fb3d8;border:1px solid #3d6b8e66}
+
+  main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 150px}
+  .sec-title{font-size:1.3rem;color:var(--acc);margin-bottom:10px;line-height:1.6}
+  .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--dim);line-height:1.8}
+  .matn{font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify}
+  .blk{margin-bottom:18px}
+  .blk h3{font-size:.76rem;margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .blk h3 .pgn{font-size:.62rem;border:1px solid var(--line);border-radius:8px;padding:1px 7px;color:var(--dim)}
+  .blk.r h3{color:#e8c96a}
+  .blk.a h3{color:#7fb3d8}
+  .blk.a{background:var(--card);border:1px solid var(--line);border-inline-start:3px solid var(--acc3);border-radius:12px;padding:10px 14px}
+  .blk.a .matn{font-size:1.05rem}
+  .note{background:var(--card);border:1px dashed var(--warn);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--warn);line-height:1.8}
+  .rev{display:flex;gap:8px;padding:10px 14px;margin-bottom:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px}
+  .rev span{font-size:.72rem;color:var(--dim);flex:1}
+  .rev button{height:38px;min-width:80px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--ink);font-family:inherit;font-size:.82rem;cursor:pointer}
+  .rev button.ok.on{background:var(--acc2);color:#fff;border-color:var(--acc2)}
+  .rev button.no.on{background:var(--warn);color:#fff;border-color:var(--warn)}
+  .loading{color:var(--dim);text-align:center;padding:60px 20px}
+
+  .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:var(--bar);border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
+  .bnav .row{display:flex;gap:10px}
+  .bnav .row button{flex:1;height:50px;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:12px;font-size:.95rem;font-family:inherit;cursor:pointer}
+  .bnav button:active{border-color:var(--acc);background:var(--hov)}
+  .bnav button.dis{opacity:.3;pointer-events:none}
+  .bnav .pos{flex:none;align-self:center;color:var(--dim);font-size:.72rem;min-width:52px;text-align:center}
+
+  @media(min-width:860px){
+    body{flex-direction:row}
+    .top{display:none}
+    aside.toc{position:static;transform:none;width:320px;min-width:280px;box-shadow:none;border-inline-end:1px solid var(--line);flex:none}
+    .scrim{display:none}
+    .bnav{inset-inline-start:320px}
+    main{max-width:780px;margin:0 auto;padding:28px 30px 150px}
+  }
 </style>
 </head>
 <body>
-<header class="top"><a href="../">‹ بوابة العلوم</a><h1>الفهرس العابر — كتاب الطهارة على فهارس الكتابين</h1><button id="thB" aria-label="تبديل المظهر">☀</button></header>
 
-<div class="intro">
-<b>المحاذاة على فهارس الكتابين الحقيقية لا على تقطيعٍ مخترع:</b> العمود = فهرس الرسالة الحقيقي (أبواب الطهارة الستة كما قسمها المؤلف، باباً باباً بنصّه الكامل)، والأخضري يُعلَّق عليه بعناوينه الحقيقية هو — «فصل في الطهارة» و«الحيض» و«النفاس» و«التيمم» كما فهرسَته الشاملة — كل نص كامل بجمله التامة. حيث لا مقابل في الأخضري يظهر «بلا مقابل» صراحةً، وحيث يغطي فصلٌ واحدٌ منه أبواباً عدة يُذكر ذلك على البطاقة. جدول الأزواج هو حكمي المعروض للمراجعة بنقرة «صح/خطأ».
+<header class="top">
+  <button class="icon-btn" id="openToc" aria-label="الفهرس">☰</button>
+  <h1>الفهرس العابر — كتاب الطهارة</h1>
+  <a class="icon-btn" href="../" aria-label="البوابة">⌂</a>
+  <button class="icon-btn thb" aria-label="المظهر">☀</button>
+</header>
+
+<div class="scrim" id="scrim"></div>
+<aside class="toc" id="tocPane">
+  <div class="toc-head"><b>كتاب الطهارة — <span id="tocn">…</span> أبواب</b><button class="x thb" aria-label="المظهر">☀</button><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
+  <div class="toc-search"><input type="search" id="tq" placeholder="ابحث في الأبواب…"></div>
+  <nav class="toc-list" id="toc"></nav>
+</aside>
+
+<main id="art"><p class="loading">جارٍ التحميل…</p></main>
+
+<div class="bnav">
+  <div class="row">
+    <button id="prev">← السابق</button>
+    <span class="pos" id="pos"></span>
+    <button id="next">التالي →</button>
+  </div>
 </div>
-<div class="stats" id="stats"></div>
-<main id="msl"><p style="color:var(--dim);text-align:center;padding:40px">جارٍ التحميل…</p></main>
-<footer>فهرس عابر على فهارس الكتب — تجريبي<br>علم شرعي بفهرسه — باب المؤرشف</footer>
 
 <script>
-const thB=document.getElementById('thB');
-const setTh=l=>{document.body.classList.toggle('light',l);thB.textContent=l?'☾':'☀';try{localStorage.setItem('ulum-th',l?'l':'d')}catch(e){}};
+const pane=document.getElementById('tocPane'),scrim=document.getElementById('scrim');
+const thBs=[...document.querySelectorAll('.thb')];
+const setTh=l=>{document.body.classList.toggle('light',l);thBs.forEach(b=>b.textContent=l?'☾':'☀');try{localStorage.setItem('ulum-th',l?'l':'d')}catch(e){}};
 try{setTh(localStorage.getItem('ulum-th')==='l')}catch(e){setTh(false)}
-thB.onclick=()=>setTh(!document.body.classList.contains('light'));
+thBs.forEach(b=>b.onclick=()=>setTh(!document.body.classList.contains('light')));
+document.getElementById('openToc').onclick=()=>{pane.classList.add('open');scrim.classList.add('open')};
+const close=()=>{pane.classList.remove('open');scrim.classList.remove('open')};
+document.getElementById('closeToc').onclick=close; scrim.onclick=close;
 
-fetch('data.json').then(r=>r.json()).then(d=>{
-const msl=document.getElementById('msl');
-const esc=s=>s.replace(/</g,'&lt;');
-let html='';
-d.rows.forEach((row,i)=>{
-  const matched=row.a.length>0, many=row.a.length>1;
-  const badge=!matched?'<span class="tag gap">بلا مقابل</span>':many?'<span class="tag many">'+row.a.length+' عناوين</span>':'<span class="tag both">محاذىء</span>';
-  html+=`<div class="ms" id="m${i}">
-   <div class="ms-h"><h2>${row.spine.t}<small>${d.meta.r} — ص ${row.spine.p0}–${row.spine.p1}</small></h2>${badge}</div>
-   <div class="ms-body">
-    ${row.note?`<div class="note">${row.note}</div>`:''}
-    <div class="blk r"><h3>${d.meta.r} <span class="pgn">«${row.spine.t}»</span><span class="pgn">ص ${row.spine.p0}–${row.spine.p1}</span></h3><p>${esc(row.spine.text)}</p></div>
-    ${row.a.map(a=>`<div class="blk a"><h3>${d.meta.a} <span class="pgn">«${a.t}»</span><span class="pgn">ص ${a.p0}–${a.p1}</span></h3><p>${esc(a.text)}</p></div>`).join('')}
-    <div class="rev"><span>${matched?'هل هذه المحاذاة صحيحة؟':'هل «بلا مقابل» صحيح؟'} — الزوجان الحقيقيان معروضان كاملين للحكم</span><button class="ok" onclick="vote(${i},1)">صح ✓</button><button class="no" onclick="vote(${i},0)">خطأ ✗</button></div>
-   </div></div>`;
-});
-msl.innerHTML=html;
-msl.onclick=e=>{const h=e.target.closest('.ms-h'); if(h) h.parentElement.classList.toggle('open')};
-const both=d.rows.filter(r=>r.a.length).length;
-document.getElementById('stats').innerHTML=`<span class="chip"><b>${d.rows.length}</b> أبواب من فهرس الرسالة</span><span class="chip"><b>${both}</b> لها مقابل في الأخضري</span><span class="chip"><b>${d.rows.length-both}</b> بلا مقابل</span><span class="chip" style="border-color:#c9a227;color:var(--acc)"><b>${d.rows.reduce((n,r)=>n+r.a.length,0)}</b> زوجاً معروضاً للمراجعة</span>`;
-});
-function vote(i,v){const c=document.getElementById('m'+i);const ok=c.querySelector('.ok'),no=c.querySelector('.no');
+fetch('data.json').then(r=>r.json()).then(d=>{try{
+  const rows=d.rows, esc=s=>s.replace(/</g,'&lt;');
+  document.getElementById('tocn').textContent=rows.length;
+  const nav=document.getElementById('toc'),art=document.getElementById('art'),posEl=document.getElementById('pos');
+  const prevB=document.getElementById('prev'),nextB=document.getElementById('next');
+  let cur=0;
+
+  function drawNav(q){
+    nav.innerHTML=rows.map((r,i)=>({r,i})).filter(({r})=>!q||r.spine.t.includes(q))
+      .map(({r,i})=>{
+        const tag=!r.a.length?'<span class="tag gap">بلا مقابل</span>':r.a.length>1?'<span class="tag many">'+r.a.length+' فصولاً</span>':'<span class="tag both">محاذىء</span>';
+        return `<a class="ti" data-i="${i}" href="#">${r.spine.t}${tag}<small>الرسالة ص ${r.spine.p0}–${r.spine.p1}</small></a>`;
+      }).join('');
+  }
+  drawNav(); document.getElementById('tq').oninput=e=>drawNav(e.target.value.trim());
+
+  function show(i){
+    cur=i; const r=rows[i];
+    nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
+    const matched=r.a.length;
+    art.innerHTML=`<h2 class="sec-title">${r.spine.t}</h2>
+      <div class="meta-card">العمود = فهرس <b>${d.meta.r}</b> · ص ${r.spine.p0}–${r.spine.p1} · الباب ${i+1} من ${rows.length} · ${matched?matched+' عنواناً محاذياً من الأخضري':'بلا مقابل في الأخضري'}</div>
+      ${r.note?`<div class="note">${r.note}</div>`:''}
+      <div class="blk r"><h3>${d.meta.r} <span class="pgn">«${r.spine.t}»</span><span class="pgn">ص ${r.spine.p0}–${r.spine.p1}</span></h3><div class="matn">${esc(r.spine.text)}</div></div>
+      ${r.a.map(a=>`<div class="blk a"><h3>${d.meta.a} <span class="pgn">«${a.t}»</span><span class="pgn">ص ${a.p0}–${a.p1}</span></h3><div class="matn">${esc(a.text)}</div></div>`).join('')}
+      <div class="rev"><span>${matched?'هل هذه المحاذاة صحيحة؟':'هل «بلا مقابل» صحيح؟'} — النصّان كاملان للحكم</span><button class="ok" onclick="vote(this,1)">صح ✓</button><button class="no" onclick="vote(this,0)">خطأ ✗</button></div>`;
+    posEl.textContent=(i+1)+' / '+rows.length;
+    prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===rows.length-1);
+    art.scrollTop=0; history.replaceState(null,'','#'+i);
+    if(innerWidth<860) close();
+  }
+  nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
+  prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<rows.length-1)show(cur+1)};
+  addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
+  show(Math.min(+(location.hash.slice(1))||0,rows.length-1));
+}catch(e){document.getElementById('art').innerHTML='<p class="loading" style="color:#e08080">خطأ: '+e.message+'</p>';}});
+function vote(b,v){const r=b.parentElement,ok=r.querySelector('.ok'),no=r.querySelector('.no');
   if(v===1){ok.classList.toggle('on');no.classList.remove('on')}else{no.classList.toggle('on');ok.classList.remove('on')}}
 </script>
 </body>
