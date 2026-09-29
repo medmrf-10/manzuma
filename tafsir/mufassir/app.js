@@ -45,16 +45,19 @@ function groupLabel(g) {
 }
 
 /* ---------- tafsir panel ---------- */
-let panelSeq = 0;
+let curSurah = null, curIdx = -1;
 function openTafsir(d, verseKey) {
-  const v = d.verses.find((x) => x.k === verseKey);
-  if (!v) return;
+  const i = d.verses.findIndex((x) => x.k === verseKey);
+  if (i < 0) return;
+  curSurah = d; curIdx = i;
+  const v = d.verses[i];
   $("#panel-title").textContent = `سورة ${d.ar}`;
   $("#panel-ayah").textContent = v.t;
   $("#panel-body").innerHTML = "";
   $("#tafsir-overlay").classList.remove("hidden");
   $("#tafsir-panel").classList.remove("hidden");
   document.body.style.overflow = "hidden";
+  try { localStorage.setItem("mufassir-last", `${d.n}:${v.a}`); } catch (e) {}
   const g = d.groups[v.g];
   if (g) {
     $("#panel-title").textContent = `سورة ${d.ar} — ${groupLabel(g)}`;
@@ -62,7 +65,20 @@ function openTafsir(d, verseKey) {
   } else {
     $("#panel-body").innerHTML = `<div class="panel-loading">لا يغطي تفسير السعدي هذه الآية مستقلاً.</div>`;
   }
+  $("#panel-prev").disabled = i <= 0;
+  $("#panel-next").disabled = i >= d.verses.length - 1;
+  $("#panel-ayah").scrollTop = 0; $("#panel-body").scrollTop = 0;
 }
+function panelStep(step) {
+  const i = curIdx + step;
+  if (curSurah && i >= 0 && i < curSurah.verses.length) openTafsir(curSurah, curSurah.verses[i].k);
+}
+$("#panel-prev").addEventListener("click", () => panelStep(-1));
+$("#panel-next").addEventListener("click", () => panelStep(1));
+addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft" && !$("#tafsir-panel").classList.contains("hidden")) panelStep(-1);
+  if (e.key === "ArrowRight" && !$("#tafsir-panel").classList.contains("hidden")) panelStep(1);
+});
 function closeTafsir() {
   $("#tafsir-overlay").classList.add("hidden");
   $("#tafsir-panel").classList.add("hidden");
@@ -75,13 +91,28 @@ addEventListener("keydown", (e) => e.key === "Escape" && closeTafsir());
 /* ---------- home: surah grid ---------- */
 async function renderHome() {
   const idx = await surahsIndex();
+  let last = null;
+  try { last = (localStorage.getItem("mufassir-last") || "").split(":"); } catch (e) {}
+  const resume = last && last.length === 2 ? (() => {
+    const sn = idx.find((c) => c.n === +last[0]);
+    return sn ? `<a class="resume" href="#/s/${sn.n}/a/${+last[1]}">متابعة من آخر قراءة — سورة ${esc(sn.ar)} · الآية ${arNum(+last[1])} ←</a>` : "";
+  })() : "";
   app.innerHTML = header() + `
   <section class="hero">
     <h1>القرآن بـ<span class="accent">تفسير السعدي</span></h1>
     <p>اختر سورة، تصفّح آياتها قائمةً أو مصحفاً، وانقر أي آية تقرأ تفسيرها في لوحة جانبية — بلا مغادرة الصفحة.</p>
-    <input id="q" class="search" type="search" placeholder="ابحث عن سورة — بالاسم أو الرقم…" autocomplete="off">
+    <div class="quick">
+      <input id="q" class="search" type="search" placeholder="ابحث عن سورة — بالاسم أو الرقم…" autocomplete="off">
+      <input id="go" class="search goto" type="text" inputmode="numeric" placeholder="سورة:آية مثل 2:255">
+    </div>
+    ${resume}
   </section>
   <div class="surah-grid" id="grid"></div>` + footer;
+  $("#go").addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return;
+    const m = e.target.value.trim().match(/(\d{1,3})\s*[:\/\s]\s*(\d{1,3})/);
+    if (m) { const sn = +m[1], a = +m[2]; if (sn >= 1 && sn <= 114 && a >= 1) location.hash = `#/s/${sn}/a/${a}`; }
+  });
   const grid = $("#grid");
   const draw = (q) => {
     q = (q || "").trim().toLowerCase();
@@ -160,12 +191,14 @@ async function route() {
   const h = location.hash || "#/";
   let m;
   if ((m = h.match(/^#\/s\/(\d+)(?:\/(mushaf|a\/(\d+)))?/))) {
+    if (!m[3]) closeTafsir();
     const n = Math.min(114, Math.max(1, +m[1]));
     const ayah = m[3] ? +m[3] : null;
     renderSurah(n, m[2] === "mushaf" ? "mushaf" : "list", ayah).catch((e) => {
       app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer;
     });
   } else {
+    closeTafsir();
     renderHome().catch(() => {
       app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل الفهرس.</div>' + footer;
     });
