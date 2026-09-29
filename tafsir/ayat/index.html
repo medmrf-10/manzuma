@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
+<title>تفسير آية — السعدي | بوابة التفسير</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; padding: 32px 18px 60px; max-width: 760px; margin: 0 auto; }
+  h1 { color: #d4af37; font-size: 1.6rem; margin: 0 0 4px; text-align: center; }
+  .sub { color: #9a958c; text-align: center; font-size: .9rem; margin-bottom: 26px; }
+  .pick { display: flex; gap: 12px; margin-bottom: 22px; }
+  .pick > div { flex: 1; }
+  label { display: block; color: #9a958c; font-size: .82rem; margin-bottom: 6px; }
+  select { width: 100%; padding: 12px 14px; font-size: 1rem; font-family: inherit; background: #171a21; color: #e8e6e3; border: 1px solid #3a3e48; border-radius: 10px; cursor: pointer; }
+  select:focus { border-color: #d4af37; outline: none; }
+  #ayahSel { text-align: center; }
+  .card { background: #171a21; border: 1px solid #2a2e38; border-radius: 14px; padding: 22px; }
+  .ref { color: #d4af37; font-weight: 700; font-size: 1rem; margin-bottom: 14px; }
+  .tafsir { color: #d8d3c8; font-size: 1.05rem; line-height: 2.1; white-space: pre-wrap; }
+  .tafsir .qv { color: #d4af37; font-weight: 600; }
+  .empty { color: #6b675f; text-align: center; padding: 40px 0; font-size: .95rem; }
+  .loading { color: #9a958c; text-align: center; padding: 40px 0; }
+  .nav { margin-top: 14px; display: flex; justify-content: space-between; }
+  .nav button { background: #171a21; border: 1px solid #3a3e48; color: #e8e6e3; border-radius: 10px; padding: 10px 18px; font-size: .9rem; cursor: pointer; font-family: inherit; }
+  .nav button:hover { border-color: #d4af37; color: #d4af37; }
+  .nav button:disabled { opacity: .35; cursor: default; }
+  a.back { display: block; margin-top: 30px; color: #8f8a80; font-size: .85rem; text-decoration: none; text-align: center; }
+  a.back:hover { color: #d4af37; }
+  .book { color: #6b675f; font-size: .78rem; text-align: center; margin-top: 8px; }
+
+  body.light{background:#f5f3ef;color:#1f2430}
+  body.light h1{color:#8a6d1f}
+  body.light .sub,body.light label{color:#5d594f}
+  body.light select{background:#fff;color:#1f2430;border-color:#d5d0c2}
+  body.light .card{background:#fff;border-color:#e0dbc9}
+  body.light .ref{color:#8a6d1f}
+  body.light .tafsir{color:#33302a}
+  body.light .tafsir .qv{color:#8a6d1f}
+  body.light .nav button{background:#fff;color:#1f2430;border-color:#d5d0c2}
+  body.light .nav button:hover{border-color:#8a6d1f;color:#8a6d1f}
+  body.light a.back{color:#7a756a}
+  body.light a.back:hover{color:#8a6d1f}
+</style>
+</head>
+<body>
+<h1>تفسير آية</h1>
+<p class="sub">اختر السورة ثم الآية يظهر تفسيرها — التفسير المختار: تفسير السعدي</p>
+
+<div class="pick">
+  <div>
+    <label for="surahSel">السورة</label>
+    <select id="surahSel"></select>
+  </div>
+  <div>
+    <label for="ayahSel">الآية</label>
+    <select id="ayahSel"></select>
+  </div>
+</div>
+
+<div class="card">
+  <div class="ref" id="ref"></div>
+  <div class="tafsir" id="tafsir"><div class="empty">اختر سورة وآية ليظهر التفسير هنا.</div></div>
+</div>
+<div class="nav">
+  <button id="prev">الآية السابقة ←</button>
+  <button id="next">← الآية التالية</button>
+</div>
+<div class="book">المصدر: تفسير السعدي (تيسير الكريم الرحمن) — بيانات QUL/quran.com</div>
+<a class="back" href="../">← العودة إلى بوابة التفسير</a>
+
+<button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
+<script>
+(function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
+</script>
+<script>
+var SURAHS=null, cache={}, cur={s:1,a:1};
+var surahSel=document.getElementById('surahSel'), ayahSel=document.getElementById('ayahSel'),
+    tafsirEl=document.getElementById('tafsir'), refEl=document.getElementById('ref'),
+    prevB=document.getElementById('prev'), nextB=document.getElementById('next');
+
+fetch('data/chapters.json').then(function(r){return r.json()}).then(function(d){
+  SURAHS=d.chapters;
+  surahSel.innerHTML=SURAHS.map(function(c){return '<option value="'+c.id+'">'+c.id+'. '+c.name_arabic+'</option>'}).join('');
+  fillAyahs(1); loadTafsir(1,1);
+});
+
+function fillAyahs(s){
+  var n=SURAHS[s-1].verses_count;
+  ayahSel.innerHTML=''; for(var i=1;i<=n;i++){var o=document.createElement('option');o.value=i;o.textContent=i;ayahSel.appendChild(o);}
+}
+
+surahSel.onchange=function(){ fillAyahs(+surahSel.value); loadTafsir(+surahSel.value,1); ayahSel.value=1; };
+ayahSel.onchange=function(){ loadTafsir(+surahSel.value,+ayahSel.value); };
+
+function loadTafsir(s,a){
+  cur={s:s,a:a};
+  refEl.textContent=SURAHS[s-1].name_arabic+' — آية '+a;
+  tafsirEl.innerHTML='<div class="loading">جارٍ جلب التفسير…</div>';
+  navState();
+  if(cache[s]){show(cache[s],s,a);return;}
+  fetch('data/'+s+'.json').then(function(r){return r.json()}).then(function(d){
+    cache[s]=d; show(d,s,a);
+  }).catch(function(){ tafsirEl.innerHTML='<div class="empty">تعذر تحميل تفسير هذه السورة.</div>'; });
+}
+
+function show(d,s,a){
+  if(cur.s!==s||cur.a!==a)return;
+  var t=d[String(a)]||d[a];
+  tafsirEl.innerHTML=t?('<div class="tafsir">'+t+'</div>'):'<div class="empty">لا تفسير مسجلاً لهذه الآية في المصدر.</div>';
+}
+
+function navState(){
+  var s=cur.s,a=cur.a,n=SURAHS[s-1].verses_count;
+  prevB.disabled=(s===1&&a===1); nextB.disabled=(s===114&&a===n);
+}
+prevB.onclick=function(){ var s=cur.s,a=cur.a; if(a>1)a--; else if(s>1){s--;a=SURAHS[s-1].verses_count;} go(s,a); };
+nextB.onclick=function(){ var s=cur.s,a=cur.a,n=SURAHS[s-1].verses_count; if(a<n)a++; else if(s<114){s++;a=1;} go(s,a); };
+function go(s,a){ surahSel.value=s; fillAyahs(s); ayahSel.value=a; loadTafsir(s,a); }
+</script>
+</body>
+</html>

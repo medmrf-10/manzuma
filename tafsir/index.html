@@ -21,6 +21,9 @@
   .svc b { color: #e8e6e3; }
   .svc p { color: #9a958c; margin: 6px 0 0; font-size: .92rem; line-height: 1.7; }
   .svc code { color: #d4af37; font-size: .85rem; direction: ltr; display: inline-block; }
+  .svc a { color: #d4af37; text-decoration: none; }
+  .svc a:hover { text-decoration: underline; }
+  body.light .svc a { color: #8a6d1f; }
   .ayah { background: #171a21; border: 1px solid #2a2e38; border-right: 3px solid #d4af37; border-radius: 12px; padding: 18px; margin-bottom: 12px; }
   .ayah .txt { font-size: 1.25rem; line-height: 2; color: #e8e6e3; }
   .ayah .taf { margin-top: 12px; color: #b8b3a8; font-size: .95rem; line-height: 1.9; }
@@ -57,12 +60,12 @@
 
 <h2>الخدمتان الأساسيتان</h2>
 <div class="svc">
-  <b>تفسير آية</b>
-  <p>مدخل: سورة + رقم آية + كتاب تفسير ← مخرج: نص التفسير نظيفاً ومنسقاً. <code>tafsir?surah=2&amp;ayah=255&amp;book=tabari</code></p>
+  <b><a href="ayat/">تفسير آية — عاملة الآن</a></b>
+  <p>مدخل: سورة + رقم آية ← مخرج: نص التفسير نظيفاً ومنسقاً. المصدر: تفسير السعدي كاملاً (114 سورة). <a href="ayat/">افتح الخدمة ←</a></p>
 </div>
 <div class="svc">
   <b>آيات الموضوع</b>
-  <p>مدخل: موضوع أو مفهوم ← مخرج: قائمة الآيات المتعلقة به مرتبة بالسور. <code>topic?q=الصبر</code></p>
+  <p>مدخل: موضوع أو مفهوم ← مخرج: قائمة الآيات المتعلقة به مرتبة بالسور. قيد البناء. <code>topic?q=الصبر</code></p>
 </div>
 
 <h2>نموذج حي — آية الكرسي</h2>
