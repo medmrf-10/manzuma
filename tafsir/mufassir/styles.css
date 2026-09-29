@@ -1,0 +1,87 @@
+/* المفسِّر — ثيم المنظومة (داكن ذهبي + وضع فاتح) */
+:root {
+  --bg: #0f1115; --card: #171a21; --card2: #10141b; --line: #2a2e38; --line2: #3a3e48;
+  --ink: #e8e6e3; --ink2: #d8d3c8; --dim: #9a958c; --dimmer: #6b675f;
+  --gold: #d4af37;
+  --quran: "Amiri Quran", "Noto Naskh Arabic", serif;
+  --sans: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--sans); min-height: 100vh; }
+a { color: var(--gold); text-decoration: none; }
+
+.site-head { position: sticky; top: 0; z-index: 20; background: var(--card); border-bottom: 2px solid var(--gold); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-mark { width: 40px; height: 40px; border-radius: 12px; background: var(--gold); color: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; font-family: var(--quran); }
+.brand-txt { color: var(--ink); font-weight: 700; font-size: .95rem; line-height: 1.2; }
+.brand-txt small { color: var(--dim); font-weight: 400; font-size: .72rem; }
+.top-nav { display: flex; gap: 18px; font-size: .88rem; }
+.top-nav a:hover { text-decoration: underline; }
+
+.hero { max-width: 880px; margin: 0 auto; padding: 40px 24px 8px; text-align: center; }
+.hero h1 { font-size: 1.7rem; margin: 0 0 10px; font-weight: 700; }
+.hero .accent { color: var(--gold); }
+.hero p { color: var(--dim); margin: 0 0 20px; line-height: 1.9; }
+.search { width: 100%; max-width: 420px; padding: 12px 16px; font-size: 1rem; font-family: inherit; background: var(--card); color: var(--ink); border: 1px solid var(--line2); border-radius: 12px; }
+.search:focus { border-color: var(--gold); outline: none; }
+
+.surah-grid { max-width: 880px; margin: 0 auto; padding: 20px 24px 60px; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.surah-card { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; color: var(--ink); transition: border-color .15s, transform .12s; }
+.surah-card:hover { border-color: var(--gold); transform: translateY(-1px); }
+.surah-num { width: 36px; height: 36px; border: 1.5px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold); font-size: .9rem; flex-shrink: 0; }
+.names { flex: 1; }
+.surah-ar { display: block; font-family: var(--quran); font-size: 1.25rem; }
+.surah-en { color: var(--dimmer); font-size: .75rem; }
+.surah-meta { color: var(--dimmer); font-size: .72rem; text-align: left; }
+
+.surah-head { max-width: 880px; margin: 0 auto; padding: 22px 24px 10px; }
+.back-link { color: var(--dim); font-size: .85rem; }
+.back-link:hover { color: var(--gold); }
+.surah-title-row { text-align: center; margin: 14px 0 18px; }
+.surah-title { font-family: var(--quran); font-size: 2.6rem; margin: 0; color: var(--gold); }
+.surah-title-meta { color: var(--dim); font-size: .82rem; margin-top: 6px; }
+.mode-toggle { display: flex; justify-content: center; gap: 10px; margin-bottom: 8px; }
+.mode-toggle button { background: var(--card); border: 1px solid var(--line2); color: var(--ink); border-radius: 999px; padding: 8px 20px; font-family: inherit; font-size: .88rem; cursor: pointer; }
+.mode-toggle button.active { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
+.bismillah { text-align: center; font-family: var(--quran); font-size: 2rem; color: var(--gold); margin: 18px 0 6px; }
+
+.ayah-list { max-width: 880px; margin: 0 auto; padding: 10px 24px 30px; display: flex; flex-direction: column; gap: 12px; }
+.ayah-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: border-color .15s; }
+.ayah-card:hover { border-color: var(--gold); }
+.ayah-text { font-family: var(--quran); font-size: 1.5rem; line-height: 2.2; text-align: justify; }
+.ayah-marker { display: inline-flex; width: 1.9em; height: 1.9em; border: 1px solid var(--gold); border-radius: 50%; align-items: center; justify-content: center; color: var(--gold); font-size: .55em; font-family: var(--sans); margin: 0 8px; vertical-align: middle; }
+.ayah-foot { margin-top: 10px; text-align: left; }
+.tafsir-btn { background: none; border: 1px solid var(--line2); color: var(--gold); border-radius: 8px; padding: 6px 14px; font-size: .8rem; font-family: inherit; cursor: pointer; }
+.tafsir-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, .08); }
+
+.mushaf { max-width: 880px; margin: 0 auto; padding: 24px 26px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-top: 10px; margin-bottom: 30px; font-family: var(--quran); font-size: 1.6rem; line-height: 2.6; text-align: justify; }
+.m-ayah { cursor: pointer; border-radius: 6px; padding: 0 2px; }
+.m-ayah:hover { background: rgba(212, 175, 55, .14); }
+.m-ayah.active { background: rgba(212, 175, 55, .2); }
+
+.surah-nav { max-width: 880px; margin: 0 auto; padding: 0 24px 50px; display: flex; justify-content: space-between; }
+.site-foot { text-align: center; color: var(--dimmer); font-size: .74rem; padding: 20px 0 30px; }
+.page-loading { text-align: center; color: var(--dim); padding: 60px 0; }
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--line2); border-top-color: var(--gold); border-radius: 50%; animation: sp 1s linear infinite; vertical-align: middle; }
+@keyframes sp { to { transform: rotate(360deg); } }
+
+.overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, .5); z-index: 40; }
+.tafsir-panel { position: fixed; top: 0; bottom: 0; left: 0; width: min(440px, 94vw); background: var(--card2); border-right: 1px solid var(--line); border-left: 3px solid var(--gold); z-index: 41; display: flex; flex-direction: column; box-shadow: 0 0 40px rgba(0, 0, 0, .5); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--card); }
+.panel-title { color: var(--gold); font-weight: 700; font-size: 1rem; }
+.icon-btn { background: none; border: 1px solid var(--line2); color: var(--dim); border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: .9rem; }
+.icon-btn:hover { border-color: var(--gold); color: var(--gold); }
+.panel-ayah { font-family: var(--quran); font-size: 1.4rem; line-height: 2.1; color: var(--ink); padding: 16px 20px; border-bottom: 1px solid var(--line); }
+.panel-body { flex: 1; overflow-y: auto; padding: 18px 20px 40px; font-size: 1rem; line-height: 2.05; color: var(--ink2); white-space: pre-wrap; }
+.panel-loading { color: var(--dim); text-align: center; padding: 30px 0; }
+.hidden { display: none !important; }
+
+#lm { position: fixed; top: 12px; left: 12px; z-index: 30; background: var(--card); border: 1px solid var(--line2); color: var(--ink); border-radius: 999px; padding: 6px 14px; font-size: .78rem; cursor: pointer; font-family: inherit; }
+
+/* ---------- light ---------- */
+body.light { --bg: #f5f3ef; --card: #ffffff; --card2: #fdfaf3; --line: #e0dbc9; --line2: #d5d0c2; --ink: #1f2430; --ink2: #33302a; --dim: #5d594f; --dimmer: #7a756a; --gold: #8a6d1f; }
+body.light .overlay { background: rgba(60, 55, 40, .25); }
+body.light .tafsir-panel { box-shadow: 0 0 40px rgba(60, 55, 40, .15); }
+body.light .m-ayah:hover { background: #f0e6c8; }
+body.light .m-ayah.active { background: #ecd9a4; }
+body.light .tafsir-btn:hover { background: #f6efd9; }
