@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1419">
+<title>فتح الباري — شرح الحديث</title>
+<style>
+:root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--line:#2a3440;--hov:#22303d;--bar:#0f1419f2;--orn:#c9a22733}
+body.light{--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5;--hov:#efe9dc;--bar:#f6f2e9f2;--orn:#8a6d1c22}
+@media(prefers-color-scheme:light){body:not(.dark){--bg:#f6f2e9;--card:#fffdf7;--ink:#2a251a;--dim:#6d6657;--acc:#8a6d1c;--acc2:#1f6b4a;--line:#e0d8c5;--hov:#efe9dc;--bar:#f6f2e9f2;--orn:#8a6d1c22}}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9;min-height:100vh;padding-bottom:60px}
+.naskh{font-family:"Amiri","Scheherazade New","Noto Naskh Arabic","Traditional Arabic",serif}
+.bar{position:sticky;top:0;z-index:20;background:var(--bar);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top)}
+.bar-row{display:flex;align-items:center;gap:8px;max-width:720px;margin:0 auto;padding:8px 12px}
+.icon-btn{width:44px;height:44px;flex:none;border:1px solid var(--line);background:var(--card);color:var(--acc);border-radius:12px;font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:inherit;text-decoration:none;box-shadow:0 1px 4px #0002}
+.icon-btn:active{background:var(--hov);transform:scale(.96)}
+#ttl{flex:1;min-width:0;font-size:.95rem;color:var(--acc);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+main{max-width:720px;margin:0 auto;padding:16px 12px 40px}
+.babs{margin:14px 0 6px}
+.bab{background:var(--card);border:1px solid var(--line);border-right:3px solid var(--acc);border-radius:12px;padding:10px 14px;margin-bottom:8px;color:var(--dim);font-size:.82rem}
+.bab b{color:var(--acc)}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 18px}
+.meta span{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.74rem;color:var(--dim)}
+.sharh{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;font-size:1.16rem;line-height:2.3;white-space:pre-wrap}
+.sharh .q{color:var(--acc)}
+.src-note{color:var(--dim);font-size:.78rem;margin:14px 4px;border-top:1px dashed var(--line);padding-top:12px}
+.empty{text-align:center;color:var(--dim);padding:60px 0}
+</style>
+</head>
+<body>
+<div class="bar"><div class="bar-row">
+  <a class="icon-btn" href="../kul/" aria-label="رجوع">‹</a>
+  <div id="ttl">فتح الباري بشرح صحيح البخاري</div>
+  <button class="icon-btn" id="th" aria-label="الوضع">◑</button>
+</div></div>
+<main id="main"><div class="empty">…</div></main>
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const arNum=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+const th=localStorage.getItem('mnz-th');
+if(th)document.body.className=th;
+$('th').onclick=()=>{document.body.className=document.body.className==='light'?'dark':'light';localStorage.setItem('mnz-th',document.body.className)};
+const n=parseInt(new URLSearchParams(location.search).get('n')||'0');
+(async()=>{
+  if(!n){$('main').innerHTML='<div class="empty">لا رقم حديث.</div>';return}
+  let d;try{d=await(await fetch('data/'+n+'.json')).json()}catch(e){$('main').innerHTML='<div class="empty">لم يُفهرس شرح هذا الموضع بعد.</div>';return}
+  $('ttl').textContent='فتح الباري — الحديث '+arNum(n);
+  $('main').innerHTML=
+    `<div class="babs">${(d.babs||[]).map(b=>`<div class="bab">${esc(b.replace(/^\d+\s*-\s*/,''))}</div>`).join('')}</div>
+     <div class="meta"><span>الجزء ${arNum(d.part)}</span><span>الورقة ${arNum(d.seq)}</span><span>صحيح البخاري ${arNum(n)}</span></div>
+     <div class="sharh naskh">${esc(d.txt)}</div>
+     <div class="src-note">فتح الباري بشرح صحيح البخاري — ابن حجر العسقلاني (ت ٨٥٢هـ)، ط السلفية — النص كما ورد بلا قصّ، بحدود موضعه في الكتاب.</div>`;
+})();
+</script>
+</body>
+</html>

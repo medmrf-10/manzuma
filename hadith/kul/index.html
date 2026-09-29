@@ -60,6 +60,8 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 40px}
 .hd .src::before{content:'رواه:';color:var(--dim);font-size:.72rem;align-self:center}
 .hd .src span{border:1px solid var(--acc);border-radius:999px;padding:2px 11px;color:var(--dim);background:var(--orn)}
 .hd .src b{color:var(--acc);font-weight:600}
+.hd .src a{border:1px solid var(--acc2);border-radius:999px;padding:2px 11px;color:var(--dim);background:var(--orn);text-decoration:none;cursor:pointer}
+.hd .src a b{color:var(--acc2);font-weight:600}
 .hd details{margin-top:10px;font-size:.84rem;color:var(--dim);border-top:1px dashed var(--line);padding-top:8px}
 .hd summary{cursor:pointer;color:var(--acc);font-size:.84rem}
 .hd .tk-body{white-space:pre-wrap;margin-top:6px}
@@ -202,7 +204,7 @@ function renderHadiths(c,q){
   const main=$('main');
   const flt=q?c.node.hs.filter(h=>norm(h.t).includes(q)):c.node.hs;
   main.innerHTML=`<div class="sec">${esc(c.nm)} · ${c.node.hs.length} حديثاً${q?` · تطابق ${flt.length}`:''}</div>`+
-    (flt.map((h,i)=>`<div class="hd" style="animation-delay:${Math.min(i*40,400)}ms"><span class="hnum">حديث ${h.n}</span><div class="mtn naskh">${hi(h.t,q)}</div><div class="orn">۞</div><div class="src">${srcs(h).map(s=>`<span><b>${esc(s.nm)}</b> ${esc(s.num)}</span>`).join('')}</div><div class="tags">
+    (flt.map((h,i)=>`<div class="hd" style="animation-delay:${Math.min(i*40,400)}ms"><span class="hnum">حديث ${h.n}</span><div class="mtn naskh">${hi(h.t,q)}</div><div class="orn">۞</div><div class="src">${srcs(h).map(s=>s.nm.includes('بخاري')?`<a href="../fath/?n=${esc((s.num.match(/\d+/)||[''])[0])}" title="شرح فتح الباري"><b>${esc(s.nm)}</b> ${esc(s.num)} ← فتح الباري</a>`:`<span><b>${esc(s.nm)}</b> ${esc(s.num)}</span>`).join('')}</div><div class="tags">
       ${h.ref?`<span class="r">${esc(h.ref)}</span>`:''}
       ${h.h?`<span class="g">${esc(h.h)}</span>`:''}
       ${h.f?`<span>${esc(h.f)}</span>`:''}
