@@ -47,7 +47,14 @@
     </div>`;
     document.body.appendChild(ov);
     requestAnimationFrame(() => ov.classList.add("on"));
-    ov.addEventListener("click", (e) => { if (e.target === ov) close(); });
+    /* الإغلاق بنقرة الخلفية فقط إذا بدأت النقرة عليها —
+       نقرة رفع الضغطة المطولة (نزلت على الآية قبل فتح القائمة) لا تُغلق */
+    let ovDown = false;
+    ov.addEventListener("pointerdown", (e) => { ovDown = e.target === ov; });
+    ov.addEventListener("click", (e) => {
+      if (e.target === ov && ovDown) close();
+      ovDown = false;
+    });
     ov.querySelector(".ctx-x").addEventListener("click", () => close());
     ov.querySelectorAll(".ctx-item:not([disabled])").forEach((b) =>
       b.addEventListener("click", () => {
