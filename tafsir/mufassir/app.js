@@ -129,11 +129,25 @@ async function renderHome() {
   document.title = `المفسِّر — ${TAF_NAME}`;
 }
 
-/* ---------- surah page ---------- */
-async function renderSurah(n, mode, ayah) {
+/* ---------- surah page — paged like a mushaf ---------- */
+const PAGE = 15;
+function surahHash(n, mode, page) {
+  let h = `#/s/${n}`;
+  if (mode === "list") h += "/list";
+  if (page && page > 1) h += `/p/${page}`;
+  return h;
+}
+async function renderSurah(n, mode, page, ayah) {
   app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل السورة…</div>';
   const d = await surahData(n);
-  const bisLine = n === 9 || n === 1 ? "" : `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>`;
+  const total = d.verses.length;
+  const pages = Math.max(1, Math.ceil(total / PAGE));
+  if (ayah && !page) page = Math.ceil(ayah / PAGE);
+  page = Math.min(pages, Math.max(1, page || 1));
+  const from = (page - 1) * PAGE;
+  const slice = d.verses.slice(from, from + PAGE);
+  const lastA = slice[slice.length - 1].a;
+  const bisLine = page === 1 && n !== 9 && n !== 1 ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
   const prev = n > 1 ? `<a class="back-link" href="#/s/${n - 1}">→ السورة السابقة</a>` : "<span></span>";
   const next = n < 114 ? `<a class="back-link" href="#/s/${n + 1}" style="text-align:left">السورة التالية ←</a>` : "<span></span>";
   app.innerHTML = header() + `
@@ -141,23 +155,40 @@ async function renderSurah(n, mode, ayah) {
     <a class="back-link" href="#/">→ كل السور</a>
     <div class="surah-title-row">
       <h1 class="surah-title">${esc(d.ar)}</h1>
-      <div class="surah-title-meta">${d.place} · ${arNum(d.verses.length)} آية · ${TAF_NAME}</div>
+      <div class="surah-title-meta">${d.place} · ${arNum(total)} آية · ${TAF_NAME}</div>
     </div>
-    <div class="mode-toggle">
-      <button data-mode="list" class="${mode === "list" ? "active" : ""}">قائمة الآيات</button>
-      <button data-mode="mushaf" class="${mode === "mushaf" ? "active" : ""}">المصحف</button>
+    <div class="surah-tools">
+      <div class="mode-toggle">
+        <button data-mode="mushaf" class="${mode === "mushaf" ? "active" : ""}">المصحف</button>
+        <button data-mode="list" class="${mode === "list" ? "active" : ""}">قائمة الآيات</button>
+      </div>
+      <div class="jump">
+        <input id="jumpA" type="text" inputmode="numeric" placeholder="اذهب إلى الآية…" aria-label="اذهب إلى الآية">
+        <button id="jumpGo" class="nav-btn" style="flex:0;padding:8px 16px">اذهب</button>
+      </div>
     </div>
   </div>
   ${bisLine}
   <div id="surah-body"></div>
+  <div class="pager">
+    ${page > 1 ? `<a class="page-btn" href="${surahHash(n, mode, page - 1)}">‹ الصفحة السابقة</a>` : "<span></span>"}
+    <span class="page-info">صفحة ${arNum(page)} من ${arNum(pages)} · الآيات ${arNum(from + 1)}–${arNum(lastA)}</span>
+    ${page < pages ? `<a class="page-btn" href="${surahHash(n, mode, page + 1)}">الصفحة التالية ›</a>` : "<span></span>"}
+  </div>
   <div class="surah-nav">${prev}${next}</div>` + footer;
 
   document.querySelectorAll(".mode-toggle button").forEach((b) =>
-    b.addEventListener("click", () => { location.hash = `#/s/${n}${b.dataset.mode === "mushaf" ? "/mushaf" : ""}`; }));
+    b.addEventListener("click", () => { location.hash = surahHash(n, b.dataset.mode, 1); }));
+  const jump = () => {
+    const a = +$("#jumpA").value.trim();
+    if (a >= 1 && a <= total) location.hash = `#/s/${n}${mode === "list" ? "/list" : ""}/a/${a}`;
+  };
+  $("#jumpGo").addEventListener("click", jump);
+  $("#jumpA").addEventListener("keydown", (e) => { if (e.key === "Enter") jump(); });
 
   const body = $("#surah-body");
   if (mode === "mushaf") {
-    body.innerHTML = `<div class="mushaf">` + d.verses.map((v) =>
+    body.innerHTML = `<div class="mushaf">` + slice.map((v) =>
       `<span class="m-ayah" data-k="${v.k}" id="a-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span>`).join(" ") + `</div>`;
     body.querySelectorAll(".m-ayah").forEach((el) =>
       el.addEventListener("click", () => {
@@ -166,7 +197,7 @@ async function renderSurah(n, mode, ayah) {
         openTafsir(d, el.dataset.k);
       }));
   } else {
-    body.innerHTML = `<div class="ayah-list">` + d.verses.map((v) => `
+    body.innerHTML = `<div class="ayah-list">` + slice.map((v) => `
       <div class="ayah-card" id="a-${v.a}" data-k="${v.k}" role="button" tabindex="0">
         <div class="ayah-text">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></div>
         <div class="ayah-foot"><button class="tafsir-btn">قراءة التفسير</button></div>
@@ -180,7 +211,7 @@ async function renderSurah(n, mode, ayah) {
   if (ayah) {
     const el = $(`#a-${ayah}`);
     el?.scrollIntoView({ block: "center" });
-    if (mode !== "mushaf") setTimeout(() => openTafsir(d, `${n}:${ayah}`), 150);
+    setTimeout(() => openTafsir(d, `${n}:${ayah}`), 150);
   }
   document.title = `المفسِّر — سورة ${d.ar}`;
   idle(() => { prefetchSurah(n - 1); prefetchSurah(n + 1); });
@@ -189,12 +220,13 @@ async function renderSurah(n, mode, ayah) {
 /* ---------- router ---------- */
 async function route() {
   const h = location.hash || "#/";
-  let m;
-  if ((m = h.match(/^#\/s\/(\d+)(?:\/(mushaf|a\/(\d+)))?/))) {
-    if (!m[3]) closeTafsir();
+  const m = h.match(/^#\/s\/(\d+)/);
+  if (m) {
+    if (!/a\/\d+/.test(h)) closeTafsir();
     const n = Math.min(114, Math.max(1, +m[1]));
-    const ayah = m[3] ? +m[3] : null;
-    renderSurah(n, m[2] === "mushaf" ? "mushaf" : "list", ayah).catch((e) => {
+    const mode = /\/list/.test(h) ? "list" : "mushaf";
+    const pm = h.match(/\/p\/(\d+)/), am = h.match(/\/a\/(\d+)/);
+    renderSurah(n, mode, pm ? +pm[1] : null, am ? +am[1] : null).catch(() => {
       app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer;
     });
   } else {

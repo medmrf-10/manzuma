@@ -59,6 +59,14 @@ a { color: var(--gold); text-decoration: none; }
 .m-ayah:hover { background: rgba(212, 175, 55, .14); }
 .m-ayah.active { background: rgba(212, 175, 55, .2); }
 
+.surah-tools { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; align-items: center; margin-bottom: 8px; }
+.jump { display: flex; gap: 8px; }
+.jump input { width: 150px; padding: 8px 12px; font-size: .85rem; font-family: inherit; background: var(--card); color: var(--ink); border: 1px solid var(--line2); border-radius: 999px; text-align: center; }
+.jump input:focus { border-color: var(--gold); outline: none; }
+.pager { max-width: 880px; margin: 4px auto 0; padding: 16px 24px 20px; display: flex; justify-content: space-between; align-items: center; }
+.page-btn { background: var(--card); border: 1px solid var(--line2); color: var(--gold); border-radius: 10px; padding: 10px 18px; font-size: .85rem; font-weight: 600; text-decoration: none; }
+.page-btn:hover { border-color: var(--gold); }
+.page-info { color: var(--dim); font-size: .8rem; }
 .surah-nav { max-width: 880px; margin: 0 auto; padding: 0 24px 50px; display: flex; justify-content: space-between; }
 .site-foot { text-align: center; color: var(--dimmer); font-size: .74rem; padding: 20px 0 30px; }
 .page-loading { text-align: center; color: var(--dim); padding: 60px 0; }
