@@ -45,17 +45,16 @@
   .sec-title{font-size:1.3rem;color:var(--acc);margin-bottom:10px;line-height:1.6}
   .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--dim);line-height:1.8}
   .matn{font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify}
-  .blk{margin-bottom:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
-  .blk h3{font-size:.76rem;margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .blk h3 .pgn{font-size:.62rem;border:1px solid var(--line);border-radius:8px;padding:1px 7px;color:var(--dim)}
-  .blk.r{border-inline-start:3px solid var(--acc)} .blk.r h3{color:#e8c96a}
-  .blk.a{border-inline-start:3px solid var(--acc3)} .blk.a h3{color:#7fb3d8}
-  .blk.m{border-inline-start:3px solid var(--acc4)} .blk.m h3{color:#c79ad5}
-  .blk.a .matn,.blk.m .matn{font-size:1.05rem}
-  .blk .sub{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
-  .blk .sub:first-of-type{border-top:none;padding-top:0;margin-top:0}
-  .blk .sub h4{font-size:.68rem;color:var(--dim);margin-bottom:6px;font-weight:400}
-  .blk .sub h4 b{color:inherit}
+  .blk{margin-bottom:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+  .blk.r{border-inline-start:3px solid var(--acc)} .blk.a{border-inline-start:3px solid var(--acc3)} .blk.m{border-inline-start:3px solid var(--acc4)}
+  .bknm{font-size:.68rem;font-weight:700;margin-bottom:6px}
+  .blk.r .bknm{color:#e8c96a} .blk.a .bknm{color:#7fb3d8} .blk.m .bknm{color:#c79ad5}
+  .ttl{display:block;width:100%;text-align:start;background:var(--hov);border:1px solid var(--line);border-radius:10px;color:var(--ink);font-family:inherit;font-size:.9rem;line-height:1.7;padding:10px 12px;margin-bottom:6px;cursor:pointer;display:flex;gap:8px;align-items:center}
+  .ttl .pgn{font-size:.62rem;border:1px solid var(--line);border-radius:8px;padding:1px 7px;color:var(--dim);flex:none}
+  .ttl .caret{margin-inline-start:auto;color:var(--dim);font-size:.75rem;flex:none}
+  .ttl.on{border-color:var(--acc)}
+  .matn{display:none;font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify;padding:12px 14px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;background:var(--bg)}
+  .matn.open{display:block}
   .gapbox{background:var(--card);border:1px dashed var(--warn);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:.8rem;color:var(--warn)}
   .rev{display:flex;gap:8px;padding:10px 14px;margin-bottom:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px}
   .rev span{font-size:.72rem;color:var(--dim);flex:1}
@@ -138,8 +137,8 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   const blk=(key,items)=>{
     const nm=d.meta[key];
     if(!items.length) return `<div class="gapbox">${nm}: <b>بلا مقابل</b> — لا يغطيه فهرس هذا الكتاب</div>`;
-    return `<div class="blk ${BOOKS[key].cls}"><h3>${nm}</h3>`+
-      items.map(u=>`<div class="sub"><h4>«${esc(u.t)}» — ص ${u.p0}${u.p1!==u.p0?'–'+u.p1:''}</h4><div class="matn">${esc(u.text)}</div></div>`).join('')+`</div>`;
+    return `<div class="blk ${BOOKS[key].cls}"><div class="bknm">${nm} — ${items.length} عنواناً</div>`+
+      items.map((u,k)=>`<button class="ttl" data-b="${key}${k}">«${esc(u.t)}» <span class="pgn">ص ${u.p0}${u.p1!==u.p0?'–'+u.p1:''}</span><span class="caret">▾</span></button><div class="matn" id="tx-${key}${k}">${esc(u.text)}</div>`).join('')+`</div>`;
   };
 
   function show(i){
@@ -147,7 +146,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
     const n=r.r.length+r.a.length+r.m.length;
     art.innerHTML=`<h2 class="sec-title">${r.ut}</h2>
-      <div class="meta-card">الفهرس الموحد · العنوان ${i+1} من ${rows.length} · ${n} عنواناً حقيقياً من فهارس الكتب الثلاثة — كل نص كامل من أول عنوانه إلى آخر جملته</div>
+      <div class="meta-card">الفهرس الموحد · العنوان ${i+1} من ${rows.length} · ${n} عنواناً حقيقياً — اضغط عنوان كتاب فتظهر فقراته كاملة، واختر ما تشاء</div>
       <div class="legend"><span><span class="d r"></span>الرسالة</span><span><span class="d a"></span>الأخضري</span><span><span class="d m"></span>أسهل المسالك</span></div>
       ${blk('r',r.r)}${blk('a',r.a)}${blk('m',r.m)}
       <div class="rev"><span>هل المحاذاة صحيحة؟ العناوين المعروضة هي عناوين الكتب الحقيقية لا تقطيعاً مخترعاً</span><button class="ok" onclick="vote(this,1)">صح ✓</button><button class="no" onclick="vote(this,0)">خطأ ✗</button></div>`;
@@ -156,6 +155,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
     art.scrollTop=0; history.replaceState(null,'','#'+i);
     if(innerWidth<860) close();
   }
+  art.onclick=e=>{const b=e.target.closest('.ttl');if(b){const m=document.getElementById('tx-'+b.dataset.b);m.classList.toggle('open');b.classList.toggle('on',m.classList.contains('open'))}};
   nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
   prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<rows.length-1)show(cur+1)};
   addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
