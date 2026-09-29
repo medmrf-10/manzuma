@@ -63,7 +63,10 @@ a { color: var(--gold); text-decoration: none; }
 .frame-top { display: flex; justify-content: center; align-items: center; margin-bottom: 6px; }
 .frame-link { color: var(--dimmer); font-size: .75rem; font-family: var(--sans); margin-left: 76px; }
 .frame-link:hover { color: var(--gold); }
-.mushaf-text { flex: 1; overflow-y: auto; min-height: 0; }
+.mushaf-text { flex: 1; overflow: hidden; min-height: 0; }
+.mushaf-text .bismillah { font-size: 1.5em; margin: 2px 0 6px; }
+.mushaf-text .surah-banner { margin: 4px 0 8px; }
+.mushaf-text .surah-banner-name { font-size: 1.15em; }
 .frame-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 8px; }
 .page-num { color: var(--gold); font-weight: 700; font-size: 1rem; font-family: var(--sans); }
 .flip-btn { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; color: var(--gold); font-size: 1.1rem; text-decoration: none; }

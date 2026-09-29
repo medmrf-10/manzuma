@@ -211,6 +211,7 @@ async function renderMushafPage(k) {
       <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
     </div>
   </div>`;
+  fitText($("#mtext"));
   const mp = $("#mpage");
   document.body.style.overflow = "hidden";
   const mtext = $("#mtext");
@@ -234,6 +235,13 @@ async function renderMushafPage(k) {
   });
 }
 
+/* ---------- auto-fit: shrink text until the page fully fits — no scroll ever ---------- */
+function fitText(el) {
+  el.style.fontSize = "";
+  let fs = parseFloat(getComputedStyle(el).fontSize);
+  while (fs > 11 && el.scrollHeight > el.clientHeight) { fs -= 0.5; el.style.fontSize = fs + "px"; }
+}
+
 /* ---------- surah view (real page numbers) ---------- */
 async function renderSurah(n, ayah, pageK) {
   app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل السورة…</div>';
@@ -250,37 +258,27 @@ async function renderSurah(n, ayah, pageK) {
   const first = slice[0], last = slice[slice.length - 1];
   const pos = pages.indexOf(k);
   const bisLine = first.a === 1 && d.bismillah ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
-  const prev = n > 1 ? `<a class="back-link" href="#/s/${n - 1}">→ السورة السابقة</a>` : "<span></span>";
-  const next = n < 114 ? `<a class="back-link" href="#/s/${n + 1}" style="text-align:left">السورة التالية ←</a>` : "<span></span>";
-  app.innerHTML = header() + `
-  <div class="surah-head">
-    <div class="surah-title-row">
-      <h1 class="surah-title">${esc(d.ar)}</h1>
-      <div class="surah-title-meta">${d.place} · ${arNum(d.verses.length)} آية · صفحات ${arNum(pages[0])}–${arNum(pages[pages.length - 1])} · ${TAF_NAME}</div>
-    </div>
-    <div class="surah-tools">
-      <div class="jump">
-        <input id="jumpA" type="text" inputmode="numeric" placeholder="اذهب إلى الآية…" aria-label="اذهب إلى الآية">
-        <button id="jumpGo" class="nav-btn" style="flex:0;padding:8px 16px">اذهب</button>
+  app.innerHTML = `
+  <div class="mushaf-book">
+    <div class="mushaf-page" id="mpage">
+      <div class="mushaf-frame">
+        <div class="frame-top">
+          <span class="mushaf-part">سورة ${esc(d.ar)} · ${d.place}</span>
+        </div>
+        <div class="mushaf-text" id="mtext">${bisLine}${slice.map((v) =>
+          `<span class="m-ayah" data-k="${v.k}" id="a-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span>`).join(" ")}</div>
+        <div class="frame-bottom">
+          <a class="flip-btn" href="#/s/${n}/p/${k - 1}" ${pos <= 0 ? 'style="visibility:hidden"' : ""}>‹</a>
+          <span class="page-num">${arNum(k)}</span>
+          <a class="flip-btn" href="#/s/${n}/p/${k + 1}" ${pos >= pages.length - 1 ? 'style="visibility:hidden"' : ""}>›</a>
+        </div>
       </div>
-      <a class="nav-btn open-mushaf" href="#/m/${first.p}">افتح في المصحف — صفحة ${arNum(first.p)}</a>
+      <div class="flip-zone" data-dir="prev" aria-label="الصفحة السابقة"></div>
+      <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
     </div>
-  </div>
-  ${bisLine}
-  <div id="surah-body"><div class="mushaf" id="spage">${slice.map((v) =>
-    `<span class="m-ayah" data-k="${v.k}" id="a-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span>`).join(" ")}</div></div>
-  <div class="pager">
-    <a class="page-btn" href="#/s/${n}/p/${k - 1}" ${pos <= 0 ? 'style="visibility:hidden"' : ""}>‹ السابقة</a>
-    <span class="page-info">صفحة ${arNum(k)} · ${prev} ${next}</span>
-    <a class="page-btn" href="#/s/${n}/p/${k + 1}" ${pos >= pages.length - 1 ? 'style="visibility:hidden"' : ""}>التالية ›</a>
   </div>`;
-  const jump = () => {
-    const a = +$("#jumpA").value.trim();
-    if (a >= 1 && a <= d.verses.length) location.hash = `#/s/${n}/a/${a}`;
-  };
-  $("#jumpGo").addEventListener("click", jump);
-  $("#jumpA").addEventListener("keydown", (e) => { if (e.key === "Enter") jump(); });
-  const mp = $("#spage");
+  fitText($("#mtext"));
+  const mp = $("#mpage");
   mp.querySelectorAll(".m-ayah").forEach((el) =>
     el.addEventListener("click", () => {
       mp.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
@@ -288,11 +286,7 @@ async function renderSurah(n, ayah, pageK) {
       openTafsir(d, el.dataset.k);
     }));
   bindFlip(mp, () => { if (pos > 0) location.hash = `#/s/${n}/p/${k - 1}`; }, () => { if (pos < pages.length - 1) location.hash = `#/s/${n}/p/${k + 1}`; });
-  if (ayah) {
-    const el = $(`#a-${ayah}`);
-    el?.scrollIntoView({ block: "center" });
-    setTimeout(() => openTafsir(d, `${n}:${ayah}`), 150);
-  } else scrollTo(0, 0);
+  if (ayah) setTimeout(() => openTafsir(d, `${n}:${ayah}`), 150);
   document.title = `المفسِّر — سورة ${d.ar}`;
   idle(() => { prefetchSurah(n - 1); prefetchSurah(n + 1); });
 }
