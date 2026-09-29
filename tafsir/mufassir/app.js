@@ -49,7 +49,7 @@ async function surahPageList(s) {
 const header = () => `
 <header class="site-head">
   <a class="brand" href="#/"><span class="brand-mark">م</span><span class="brand-txt">المفسِّر<br><small>المصحف · ${TAF_NAME}</small></span></a>
-  <nav class="top-nav"><a href="#/">السور</a><a href="#/m/1">المصحف</a><a href="../">بوابة التفسير</a></nav>
+  <nav class="top-nav"><a href="#/">السور</a><a href="#/m/1">المصحف</a></nav>
 </header>`;
 const footer = `<footer class="site-foot">النص القرآني: Uthmani (QUL) · التفسير: ${TAF_NAME} «تيسير الكريم الرحمن» · بوابة التفسير — ساسي</footer>`;
 
@@ -231,7 +231,9 @@ async function renderSurah(n, ayah, pageK) {
   app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل السورة…</div>';
   const { d, pages } = await surahPageList(n);
   let k = null;
-  if (ayah) {
+  if (pageK) {
+    k = pageK;
+  } else if (ayah) {
     const v = d.verses.find((x) => x.a === ayah);
     k = v ? v.p : pages[0];
   } else if (pageK != null) k = pages.includes(pageK) ? pageK : pages[0];
@@ -260,11 +262,10 @@ async function renderSurah(n, ayah, pageK) {
   <div id="surah-body"><div class="mushaf" id="spage">${slice.map((v) =>
     `<span class="m-ayah" data-k="${v.k}" id="a-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span>`).join(" ")}</div></div>
   <div class="pager">
-    <a class="page-btn" href="#/s/${n}/p/${k - 1}" ${pos <= 0 ? 'style="visibility:hidden"' : ""}>‹ الصفحة السابقة</a>
-    <span class="page-info">صفحة ${arNum(k)} من المصحف · الآيات ${arNum(first.a)}–${arNum(last.a)}</span>
-    <a class="page-btn" href="#/s/${n}/p/${k + 1}" ${pos >= pages.length - 1 ? 'style="visibility:hidden"' : ""}>الصفحة التالية ›</a>
-  </div>
-  <div class="surah-nav">${prev}${next}</div>` + footer;
+    <a class="page-btn" href="#/s/${n}/p/${k - 1}" ${pos <= 0 ? 'style="visibility:hidden"' : ""}>‹ السابقة</a>
+    <span class="page-info">صفحة ${arNum(k)} · ${prev} ${next}</span>
+    <a class="page-btn" href="#/s/${n}/p/${k + 1}" ${pos >= pages.length - 1 ? 'style="visibility:hidden"' : ""}>التالية ›</a>
+  </div>`;
   const jump = () => {
     const a = +$("#jumpA").value.trim();
     if (a >= 1 && a <= d.verses.length) location.hash = `#/s/${n}/a/${a}`;
@@ -283,8 +284,7 @@ async function renderSurah(n, ayah, pageK) {
     const el = $(`#a-${ayah}`);
     el?.scrollIntoView({ block: "center" });
     setTimeout(() => openTafsir(d, `${n}:${ayah}`), 150);
-  }
-  window.scrollTo(0, 0);
+  } else scrollTo(0, 0);
   document.title = `المفسِّر — سورة ${d.ar}`;
   idle(() => { prefetchSurah(n - 1); prefetchSurah(n + 1); });
 }
@@ -304,7 +304,7 @@ async function route() {
       (async () => {
         const { pages } = await surahPageList(n);
         const k = +pm[1];
-        if (pages.includes(k)) renderSurahAt(n, k); else renderSurah(n, null);
+        if (pages.includes(k)) renderSurah(n, null, k); else renderSurah(n, null);
       })().catch(() => { app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل السورة.</div>' + footer; });
       return;
     }

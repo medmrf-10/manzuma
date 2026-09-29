@@ -54,15 +54,16 @@ a { color: var(--gold); text-decoration: none; }
 .tafsir-btn { background: none; border: 1px solid var(--line2); color: var(--gold); border-radius: 8px; padding: 6px 14px; font-size: .8rem; font-family: inherit; cursor: pointer; }
 .tafsir-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, .08); }
 
-.mushaf { max-width: 880px; margin: 0 auto; padding: 18px 22px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-top: 10px; margin-bottom: 30px; font-family: var(--quran); font-size: 1.3rem; line-height: 2.15; text-align: justify; }
+.mushaf { max-width: 880px; margin: 0 auto; padding: 18px 22px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-top: 6px; margin-bottom: 12px; font-family: var(--quran); font-size: 1.3rem; line-height: 2.15; text-align: justify; }
+#surah-body { padding-bottom: 84px; }
 .mushaf-book { position: fixed; inset: 0; z-index: 25; background: var(--bg); display: flex; align-items: stretch; justify-content: center; padding: 10px; }
 .mushaf-page { position: relative; display: flex; flex: 1; max-width: 780px; }
 .mushaf-part { color: var(--gold); font-weight: 700; font-size: .82rem; border: 1px solid var(--line); border-radius: 999px; padding: 3px 12px; }
 .mushaf-frame { position: relative; flex: 1; min-width: 0; background: var(--card); border: 1px solid var(--line); outline: 3px double var(--gold); outline-offset: -9px; border-radius: 10px; padding: 14px 22px 8px; font-family: var(--quran); font-size: 1.3rem; line-height: 2.15; text-align: justify; display: flex; flex-direction: column; box-shadow: 0 14px 50px rgba(0,0,0,.35); }
-.frame-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.frame-top { display: flex; justify-content: center; align-items: center; margin-bottom: 6px; }
 .frame-link { color: var(--dimmer); font-size: .75rem; font-family: var(--sans); margin-left: 76px; }
 .frame-link:hover { color: var(--gold); }
-.mushaf-text { flex: 1; overflow: hidden; }
+.mushaf-text { flex: 1; overflow-y: auto; min-height: 0; }
 .frame-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: auto; padding-top: 8px; }
 .page-num { color: var(--gold); font-weight: 700; font-size: 1rem; font-family: var(--sans); }
 .flip-btn { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 50%; color: var(--gold); font-size: 1.1rem; text-decoration: none; }
