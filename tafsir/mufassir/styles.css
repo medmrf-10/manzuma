@@ -48,13 +48,17 @@ a { color: var(--gold); text-decoration: none; }
 .ayah-list { max-width: 880px; margin: 0 auto; padding: 10px 24px 30px; display: flex; flex-direction: column; gap: 12px; }
 .ayah-card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; cursor: pointer; transition: border-color .15s; }
 .ayah-card:hover { border-color: var(--gold); }
-.ayah-text { font-family: var(--quran); font-size: 1.5rem; line-height: 2.2; text-align: justify; }
+.ayah-text { font-family: var(--quran); font-size: 1.35rem; line-height: 2.05; text-align: justify; }
 .ayah-marker { display: inline-flex; width: 1.9em; height: 1.9em; border: 1px solid var(--gold); border-radius: 50%; align-items: center; justify-content: center; color: var(--gold); font-size: .55em; font-family: var(--sans); margin: 0 8px; vertical-align: middle; }
 .ayah-foot { margin-top: 10px; text-align: left; }
 .tafsir-btn { background: none; border: 1px solid var(--line2); color: var(--gold); border-radius: 8px; padding: 6px 14px; font-size: .8rem; font-family: inherit; cursor: pointer; }
 .tafsir-btn:hover { border-color: var(--gold); background: rgba(212, 175, 55, .08); }
 
-.mushaf { max-width: 880px; margin: 0 auto; padding: 24px 26px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-top: 10px; margin-bottom: 30px; font-family: var(--quran); font-size: 1.6rem; line-height: 2.6; text-align: justify; }
+.mushaf { max-width: 880px; margin: 0 auto; padding: 18px 22px; background: var(--card); border: 1px solid var(--line); border-radius: 16px; margin-top: 10px; margin-bottom: 30px; font-family: var(--quran); font-size: 1.3rem; line-height: 2.15; text-align: justify; }
+.juz-row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; justify-content: center; margin-top: 18px; }
+.juz-lbl { color: var(--muted); font-size: .85rem; font-weight: 700; margin-left: 4px; }
+.juz-chip { min-width: 38px; height: 38px; padding: 0 8px; display: inline-flex; align-items: center; justify-content: center; background: var(--card); border: 1px solid var(--line); border-radius: 10px; color: var(--gold); font-weight: 700; font-size: .85rem; text-decoration: none; transition: .15s; }
+.juz-chip:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(212,175,55,.18); }
 .m-ayah { cursor: pointer; border-radius: 6px; padding: 0 2px; }
 .m-ayah:hover { background: rgba(212, 175, 55, .14); }
 .m-ayah.active { background: rgba(212, 175, 55, .2); }

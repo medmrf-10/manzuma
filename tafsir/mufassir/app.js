@@ -5,6 +5,7 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&
 const AR_D = "٠١٢٣٤٥٦٧٨٩";
 const arNum = (n) => String(n).replace(/\d/g, (d) => AR_D[+d]);
 const TAF_NAME = "تفسير السعدي";
+const JUZ_STARTS = [[1,1],[2,142],[2,253],[3,93],[4,24],[4,148],[5,82],[6,111],[7,88],[8,41],[9,93],[11,6],[12,53],[15,1],[17,1],[18,75],[21,1],[23,1],[25,21],[27,56],[29,46],[33,31],[36,28],[39,32],[41,47],[46,1],[51,31],[58,1],[67,1],[78,1]];
 
 /* ---------- theme (manzuma 'lm' convention) ---------- */
 (function () {
@@ -100,14 +101,17 @@ async function renderHome() {
   app.innerHTML = header() + `
   <section class="hero">
     <h1>القرآن بـ<span class="accent">تفسير السعدي</span></h1>
-    <p>اختر سورة، تصفّح آياتها قائمةً أو مصحفاً، وانقر أي آية تقرأ تفسيرها في لوحة جانبية — بلا مغادرة الصفحة.</p>
+    <p>اختر سورة، تصفّح آياتها صفحاتٍ كالمصحف، وانقر أي آية تقرأ تفسيرها في لوحة جانبية — بلا مغادرة الصفحة.</p>
     <div class="quick">
       <input id="q" class="search" type="search" placeholder="ابحث عن سورة — بالاسم أو الرقم…" autocomplete="off">
       <input id="go" class="search goto" type="text" inputmode="numeric" placeholder="سورة:آية مثل 2:255">
     </div>
     ${resume}
+    <div class="juz-row" id="juz"><span class="juz-lbl">تصفّح بالأجزاء:</span></div>
   </section>
   <div class="surah-grid" id="grid"></div>` + footer;
+  $("#juz").insertAdjacentHTML("beforeend", JUZ_STARTS.map(([s, a], i) =>
+    `<a class="juz-chip" href="#/s/${s}/a/${a}" title="الجزء ${arNum(i + 1)} — يبدأ ${esc(idx.find(c => c.n === s)?.ar || s)} ${arNum(a)}">${arNum(i + 1)}</a>`).join(""));
   $("#go").addEventListener("keydown", (e) => {
     if (e.key !== "Enter") return;
     const m = e.target.value.trim().match(/(\d{1,3})\s*[:\/\s]\s*(\d{1,3})/);
@@ -130,7 +134,17 @@ async function renderHome() {
 }
 
 /* ---------- surah page — paged like a mushaf ---------- */
-const PAGE = 15;
+const PAGE = 15;           // list mode
+const PAGE_CHARS = 1400;   // mushaf mode: ~what fits one screen
+function buildPages(verses, budget) {
+  const pages = [[]];
+  let len = 0;
+  for (const v of verses) {
+    if (len + v.t.length > budget && pages[pages.length - 1].length) { pages.push([]); len = 0; }
+    pages[pages.length - 1].push(v); len += v.t.length + 1;
+  }
+  return pages;
+}
 function surahHash(n, mode, page) {
   let h = `#/s/${n}`;
   if (mode === "list") h += "/list";
@@ -141,11 +155,12 @@ async function renderSurah(n, mode, page, ayah) {
   app.innerHTML = header() + '<div class="page-loading"><span class="spinner"></span> يُحمَّل السورة…</div>';
   const d = await surahData(n);
   const total = d.verses.length;
-  const pages = Math.max(1, Math.ceil(total / PAGE));
-  if (ayah && !page) page = Math.ceil(ayah / PAGE);
+  const pagesArr = mode === "list" ? Array.from({ length: Math.ceil(total / PAGE) }, (_, i) => d.verses.slice(i * PAGE, i * PAGE + PAGE)) : buildPages(d.verses, PAGE_CHARS);
+  const pages = pagesArr.length;
+  if (ayah && !page) page = pagesArr.findIndex((pg) => pg.some((v) => v.a === ayah)) + 1 || 1;
   page = Math.min(pages, Math.max(1, page || 1));
-  const from = (page - 1) * PAGE;
-  const slice = d.verses.slice(from, from + PAGE);
+  const slice = pagesArr[page - 1];
+  const from = d.verses.indexOf(slice[0]);
   const lastA = slice[slice.length - 1].a;
   const bisLine = page === 1 && n !== 9 && n !== 1 ? `<div class="bismillah">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</div>` : "";
   const prev = n > 1 ? `<a class="back-link" href="#/s/${n - 1}">→ السورة السابقة</a>` : "<span></span>";
