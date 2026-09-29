@@ -33,6 +33,9 @@ const load = (url) => {
 const surahData = (n) => load(`data/surah/${n}.json`);
 const pagesData = () => load("data/pages.json");
 const ahzabData = () => load("data/ahzab.json");
+const tafsirSurah = (id, n) => load(`data/tafsir/${id}/${n}.json`);
+let tafBooksCache = null;
+const tafsirBooks = async () => { if (!tafBooksCache) tafBooksCache = await load("data/tafsir/books.json"); return tafBooksCache; };
 let indexCache = null;
 const surahsIndex = async () => { if (!indexCache) indexCache = await load("data/index.json"); return indexCache; };
 const prefetchSurah = (n) => { if (n >= 1 && n <= 114) surahData(n).catch(() => {}); };
@@ -45,6 +48,45 @@ async function pageOf(s, a) {
 
 /* ---------- tafsir panel ---------- */
 let curSurah = null, curIdx = -1;
+let curBook = "saadi";
+try { curBook = localStorage.getItem("mufassir-book") || "saadi"; } catch (e) {}
+
+async function renderTafBody(d, v) {
+  const bid = curBook;
+  if (bid === "saadi") {
+    const g = d.groups[v.g];
+    $("#panel-title").textContent = g ? `سورة ${d.ar} — ${groupLabel(g)} · السعدي` : `سورة ${d.ar} — الآية ${arNum(v.a)} · السعدي`;
+    $("#panel-body").innerHTML = g ? "" : `<div class="panel-loading">لا يغطي تفسير السعدي هذه الآية مستقلاً.</div>`;
+    if (g) $("#panel-body").textContent = g.x;
+    return;
+  }
+  const books = await tafsirBooks();
+  const bk = books.find((b) => b.id === bid) || { ar: "التفسير" };
+  $("#panel-title").textContent = `سورة ${d.ar} — الآية ${arNum(v.a)} · ${bk.ar}`;
+  $("#panel-body").innerHTML = `<div class="panel-loading">…</div>`;
+  try {
+    const t = await tafsirSurah(bid, d.n);
+    if (bid !== curBook) return;
+    const x = t[String(v.a)];
+    $("#panel-body").textContent = x || "لا يغطي هذا التفسير هذه الآية.";
+  } catch (e) {
+    if (bid === curBook) $("#panel-body").innerHTML = `<div class="panel-loading">تعذّر تحميل التفسير.</div>`;
+  }
+}
+
+async function renderTafBooks() {
+  const books = await tafsirBooks();
+  const box = $("#taf-books");
+  box.innerHTML = books.map((b) => `<button class="taf-chip${b.id === curBook ? " on" : ""}" data-id="${b.id}" title="${esc(b.desc)}">${esc(b.ar)}</button>`).join("");
+  box.querySelectorAll(".taf-chip").forEach((c) =>
+    c.addEventListener("click", () => {
+      curBook = c.dataset.id;
+      try { localStorage.setItem("mufassir-book", curBook); } catch (e) {}
+      box.querySelectorAll(".taf-chip").forEach((x) => x.classList.toggle("on", x === c));
+      if (curSurah && curIdx >= 0) renderTafBody(curSurah, curSurah.verses[curIdx]);
+    }));
+}
+
 function openTafsir(d, verseKey) {
   const i = d.verses.findIndex((x) => x.k === verseKey);
   if (i < 0) return;
@@ -56,13 +98,8 @@ function openTafsir(d, verseKey) {
   $("#tafsir-panel").classList.remove("hidden");
   if (wasClosed) { try { history.pushState({ mufassirPanel: 1 }, ""); } catch (e) {} }
   try { localStorage.setItem("mufassir-last", `${d.n}:${v.a}`); } catch (e) {}
-  const g = d.groups[v.g];
-  if (g) {
-    $("#panel-title").textContent = `سورة ${d.ar} — ${groupLabel(g)}`;
-    $("#panel-body").textContent = g.x;
-  } else {
-    $("#panel-body").innerHTML = `<div class="panel-loading">لا يغطي تفسير السعدي هذه الآية مستقلاً.</div>`;
-  }
+  renderTafBooks().catch(() => {});
+  renderTafBody(d, v);
   $("#panel-prev").disabled = i <= 0;
   $("#panel-next").disabled = i >= d.verses.length - 1;
   $("#panel-ayah").scrollTop = 0; $("#panel-body").scrollTop = 0;
