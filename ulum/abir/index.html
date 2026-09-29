@@ -10,10 +10,10 @@
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../../icons/icon-192.png">
-<title>الفهرس العابر — الرسالة كاملةً × الأخضري</title>
+<title>الفهرس الموحد العابر — الرسالة × الأخضري × أسهل المسالك</title>
 <style>
-  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#2a3440;--bar:#0f1419f2;--tocbg:#11171d;--hov:#22303d;--fncbg:#16202a}
-  body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecf2;--tocbg:#f6f3ec;--hov:#efe9dc;--fncbg:#fdfcf8}
+  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--acc4:#8e5a9e;--warn:#b0563a;--line:#2a3440;--bar:#0f1419f2;--tocbg:#11171d;--hov:#22303d}
+  body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--acc4:#8e5a9e;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecf2;--tocbg:#f6f3ec;--hov:#efe9dc}
   *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
@@ -28,38 +28,45 @@
   aside.toc{position:fixed;top:0;bottom:0;inset-inline-start:0;width:min(320px,88vw);background:var(--tocbg);z-index:50;display:flex;flex-direction:column;transform:translateX(110%);transition:transform .28s ease;box-shadow:-8px 0 30px #0008}
   aside.toc.open{transform:none}
   .toc-head{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}
-  .toc-head b{color:var(--acc);flex:1;font-size:.95rem}
+  .toc-head b{color:var(--acc);flex:1;font-size:.95rem;line-height:1.5}
   .toc-head .x{width:38px;height:38px;border:none;background:transparent;color:var(--dim);font-size:1.3rem;cursor:pointer;border-radius:8px}
   .toc-search{padding:10px 14px;border-bottom:1px solid var(--line)}
   .toc-search input{width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.95rem;font-family:inherit}
   nav.toc-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-  a.ti{display:block;padding:13px 16px;color:var(--ink);text-decoration:none;font-size:.95rem;border-bottom:1px solid var(--line);line-height:1.75;min-height:48px}
-  a.ti small{color:var(--dim);display:block;font-size:.74rem;margin-top:2px}
+  a.ti{display:block;padding:12px 16px;color:var(--ink);text-decoration:none;font-size:.92rem;border-bottom:1px solid var(--line);line-height:1.7;min-height:48px}
   a.ti:active,a.ti.on{background:var(--hov)}
   a.ti.on{border-inline-start:4px solid var(--acc);color:var(--acc)}
-  a.ti .tag{float:left;font-size:.62rem;padding:2px 8px;border-radius:10px;margin-top:6px;font-weight:700}
-  .tag.both{background:#2e7d5b22;color:#7ecfa8;border:1px solid #2e7d5b55}
-  .tag.gap{background:#b0563a22;color:#e0906f;border:1px solid #b0563a55}
-  .tag.many{background:#3d6b8e22;color:#7fb3d8;border:1px solid #3d6b8e66}
+  a.ti .dots{display:flex;gap:5px;margin-top:4px}
+  a.ti .d{width:8px;height:8px;border-radius:50%;border:1px solid var(--line)}
+  a.ti .d.r{background:var(--acc)}a.ti .d.a{background:var(--acc3)}a.ti .d.m{background:var(--acc4)}
+  a.ti .d.off{background:transparent;opacity:.4}
 
   main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 150px}
   .sec-title{font-size:1.3rem;color:var(--acc);margin-bottom:10px;line-height:1.6}
   .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--dim);line-height:1.8}
   .matn{font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify}
-  .blk{margin-bottom:18px}
+  .blk{margin-bottom:16px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
   .blk h3{font-size:.76rem;margin-bottom:8px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
   .blk h3 .pgn{font-size:.62rem;border:1px solid var(--line);border-radius:8px;padding:1px 7px;color:var(--dim)}
-  .blk.r h3{color:#e8c96a}
-  .blk.a h3{color:#7fb3d8}
-  .blk.a{background:var(--card);border:1px solid var(--line);border-inline-start:3px solid var(--acc3);border-radius:12px;padding:10px 14px}
-  .blk.a .matn{font-size:1.05rem}
-  .note{background:var(--card);border:1px dashed var(--warn);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--warn);line-height:1.8}
+  .blk.r{border-inline-start:3px solid var(--acc)} .blk.r h3{color:#e8c96a}
+  .blk.a{border-inline-start:3px solid var(--acc3)} .blk.a h3{color:#7fb3d8}
+  .blk.m{border-inline-start:3px solid var(--acc4)} .blk.m h3{color:#c79ad5}
+  .blk.a .matn,.blk.m .matn{font-size:1.05rem}
+  .blk .sub{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+  .blk .sub:first-of-type{border-top:none;padding-top:0;margin-top:0}
+  .blk .sub h4{font-size:.68rem;color:var(--dim);margin-bottom:6px;font-weight:400}
+  .blk .sub h4 b{color:inherit}
+  .gapbox{background:var(--card);border:1px dashed var(--warn);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:.8rem;color:var(--warn)}
   .rev{display:flex;gap:8px;padding:10px 14px;margin-bottom:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px}
   .rev span{font-size:.72rem;color:var(--dim);flex:1}
   .rev button{height:38px;min-width:80px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--ink);font-family:inherit;font-size:.82rem;cursor:pointer}
   .rev button.ok.on{background:var(--acc2);color:#fff;border-color:var(--acc2)}
   .rev button.no.on{background:var(--warn);color:#fff;border-color:var(--warn)}
   .loading{color:var(--dim);text-align:center;padding:60px 20px}
+  .legend{display:flex;gap:12px;padding:0 0 14px;flex-wrap:wrap}
+  .legend span{font-size:.7rem;color:var(--dim);display:flex;align-items:center;gap:5px}
+  .legend .d{width:9px;height:9px;border-radius:50%;border:1px solid var(--line)}
+  .legend .d.r{background:var(--acc)}.legend .d.a{background:var(--acc3)}.legend .d.m{background:var(--acc4)}
 
   .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:var(--bar);border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
   .bnav .row{display:flex;gap:10px}
@@ -74,7 +81,7 @@
     aside.toc{position:static;transform:none;width:320px;min-width:280px;box-shadow:none;border-inline-end:1px solid var(--line);flex:none}
     .scrim{display:none}
     .bnav{inset-inline-start:320px}
-    main{max-width:780px;margin:0 auto;padding:28px 30px 150px}
+    main{max-width:820px;margin:0 auto;padding:28px 30px 150px}
   }
 </style>
 </head>
@@ -82,15 +89,15 @@
 
 <header class="top">
   <button class="icon-btn" id="openToc" aria-label="الفهرس">☰</button>
-  <h1>الفهرس العابر — الرسالة × الأخضري</h1>
+  <h1>الفهرس الموحد العابر — الرسالة × الأخضري × أسهل المسالك</h1>
   <a class="icon-btn" href="../" aria-label="البوابة">⌂</a>
   <button class="icon-btn thb" aria-label="المظهر">☀</button>
 </header>
 
 <div class="scrim" id="scrim"></div>
 <aside class="toc" id="tocPane">
-  <div class="toc-head"><b>فهرس الرسالة — <span id="tocn">…</span> باباً</b><button class="x thb" aria-label="المظهر">☀</button><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
-  <div class="toc-search"><input type="search" id="tq" placeholder="ابحث في الأبواب…"></div>
+  <div class="toc-head"><b>الفهرس الموحد — <span id="tocn">…</span> عنواناً</b><button class="x thb" aria-label="المظهر">☀</button><button class="x" id="closeToc" aria-label="إغلاق">✕</button></div>
+  <div class="toc-search"><input type="search" id="tq" placeholder="ابحث في العناوين…"></div>
   <nav class="toc-list" id="toc"></nav>
 </aside>
 
@@ -114,6 +121,7 @@ document.getElementById('openToc').onclick=()=>{pane.classList.add('open');scrim
 const close=()=>{pane.classList.remove('open');scrim.classList.remove('open')};
 document.getElementById('closeToc').onclick=close; scrim.onclick=close;
 
+const BOOKS={r:{cls:'r'},a:{cls:'a'},m:{cls:'m'}};
 fetch('data.json').then(r=>r.json()).then(d=>{try{
   const rows=d.rows, esc=s=>s.replace(/</g,'&lt;');
   document.getElementById('tocn').textContent=rows.length;
@@ -122,24 +130,27 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   let cur=0;
 
   function drawNav(q){
-    nav.innerHTML=rows.map((r,i)=>({r,i})).filter(({r})=>!q||r.spine.t.includes(q))
-      .map(({r,i})=>{
-        const tag=!r.a.length?'<span class="tag gap">بلا مقابل</span>':r.a.length>1?'<span class="tag many">'+r.a.length+' فصولاً</span>':'<span class="tag both">محاذىء</span>';
-        return `<a class="ti" data-i="${i}" href="#">${r.spine.t}${tag}<small>الرسالة ص ${r.spine.p0}–${r.spine.p1}</small></a>`;
-      }).join('');
+    nav.innerHTML=rows.map((r,i)=>({r,i})).filter(({r})=>!q||r.ut.includes(q))
+      .map(({r,i})=>`<a class="ti" data-i="${i}" href="#">${r.ut}<span class="dots"><span class="d r${r.r.length?'':' off'}"></span><span class="d a${r.a.length?'':' off'}"></span><span class="d m${r.m.length?'':' off'}"></span></span></a>`).join('');
   }
   drawNav(); document.getElementById('tq').oninput=e=>drawNav(e.target.value.trim());
+
+  const blk=(key,items)=>{
+    const nm=d.meta[key];
+    if(!items.length) return `<div class="gapbox">${nm}: <b>بلا مقابل</b> — لا يغطيه فهرس هذا الكتاب</div>`;
+    return `<div class="blk ${BOOKS[key].cls}"><h3>${nm}</h3>`+
+      items.map(u=>`<div class="sub"><h4>«${esc(u.t)}» — ص ${u.p0}${u.p1!==u.p0?'–'+u.p1:''}</h4><div class="matn">${esc(u.text)}</div></div>`).join('')+`</div>`;
+  };
 
   function show(i){
     cur=i; const r=rows[i];
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
-    const matched=r.a.length;
-    art.innerHTML=`<h2 class="sec-title">${r.spine.t}</h2>
-      <div class="meta-card">العمود = فهرس <b>${d.meta.r}</b> · ص ${r.spine.p0}–${r.spine.p1} · الباب ${i+1} من ${rows.length} · ${matched?matched+' عنواناً محاذياً من الأخضري':'بلا مقابل — الأخضري لا يغطي هذا الباب (متنه في العبادات فقط)'}</div>
-      ${r.note?`<div class="note">${r.note}</div>`:''}
-      <div class="blk r"><h3>${d.meta.r} <span class="pgn">«${r.spine.t}»</span><span class="pgn">ص ${r.spine.p0}–${r.spine.p1}</span></h3><div class="matn">${esc(r.spine.text)}</div></div>
-      ${r.a.map(a=>`<div class="blk a"><h3>${d.meta.a} <span class="pgn">«${a.t}»</span><span class="pgn">ص ${a.p0}–${a.p1}</span></h3><div class="matn">${esc(a.text)}</div></div>`).join('')}
-      <div class="rev"><span>${matched?'هل هذه المحاذاة صحيحة؟':'هل «بلا مقابل» صحيح؟'} — النصّان كاملان للحكم</span><button class="ok" onclick="vote(this,1)">صح ✓</button><button class="no" onclick="vote(this,0)">خطأ ✗</button></div>`;
+    const n=r.r.length+r.a.length+r.m.length;
+    art.innerHTML=`<h2 class="sec-title">${r.ut}</h2>
+      <div class="meta-card">الفهرس الموحد · العنوان ${i+1} من ${rows.length} · ${n} عنواناً حقيقياً من فهارس الكتب الثلاثة — كل نص كامل من أول عنوانه إلى آخر جملته</div>
+      <div class="legend"><span><span class="d r"></span>الرسالة</span><span><span class="d a"></span>الأخضري</span><span><span class="d m"></span>أسهل المسالك</span></div>
+      ${blk('r',r.r)}${blk('a',r.a)}${blk('m',r.m)}
+      <div class="rev"><span>هل المحاذاة صحيحة؟ العناوين المعروضة هي عناوين الكتب الحقيقية لا تقطيعاً مخترعاً</span><button class="ok" onclick="vote(this,1)">صح ✓</button><button class="no" onclick="vote(this,0)">خطأ ✗</button></div>`;
     posEl.textContent=(i+1)+' / '+rows.length;
     prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===rows.length-1);
     art.scrollTop=0; history.replaceState(null,'','#'+i);
