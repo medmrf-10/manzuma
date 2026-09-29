@@ -11,7 +11,9 @@ const ASSETS = [
   '/manzuma/ulum/',
   '/manzuma/core/',
   '/manzuma/core/articles/',
-  '/manzuma/core/articles/read.html'
+  '/manzuma/core/articles/read.html',
+  '/manzuma/core/vocab/',
+  '/manzuma/core/vocab/words.js'
 ];
 
 self.addEventListener('install', e => {

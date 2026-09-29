@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f1115">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="../../manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../../icons/icon-192.png">
+<title>قاعدة الكلمات — ما أعرفه</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; margin: 0; padding: 16px 14px 60px; }
+  .wrap { max-width: 680px; margin: 0 auto; }
+  h1 { color: #d4af37; font-size: 1.35rem; margin: 8px 0 4px; }
+  .sub { color: #9a958c; font-size: .82rem; margin-bottom: 14px; }
+  .stats { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .stat { background: #171a21; border: 1px solid #2a2e38; border-radius: 999px; padding: 6px 14px; font-size: .8rem; color: #b9b4ab; }
+  .stat b { color: #a5d66f; }
+  .bar { height: 8px; background: #1a1d26; border-radius: 999px; overflow: hidden; margin-bottom: 16px; }
+  .bar i { display: block; height: 100%; background: linear-gradient(90deg,#4c7a1e,#a5d66f); width: 0; transition: width .3s; }
+  .row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .row input[type=search] { flex: 1; min-width: 140px; background: #171a21; border: 1px solid #2a2e38; color: #e8e6e3; border-radius: 10px; padding: 10px 12px; font-size: .9rem; font-family: inherit; }
+  .row input:focus { outline: none; border-color: #d4af37; }
+  .fbtn { background: #171a21; border: 1px solid #2a2e38; color: #b9b4ab; border-radius: 10px; padding: 10px 14px; font-size: .8rem; cursor: pointer; font-family: inherit; }
+  .fbtn.on { border-color: #d4af37; color: #d4af37; }
+  .grid { display: flex; flex-wrap: wrap; gap: 8px; direction: ltr; }
+  .w { background: #171a21; border: 1px solid #2a2e38; color: #d9d4cb; border-radius: 10px; padding: 9px 13px; font-size: .92rem; cursor: pointer; user-select: none; }
+  .w.k { background: #1d2a16; border-color: #4c7a1e; color: #a5d66f; }
+  .more { width: 100%; margin-top: 18px; background: #171a21; border: 1px solid #2a2e38; color: #d4af37; border-radius: 10px; padding: 12px; font-size: .9rem; cursor: pointer; font-family: inherit; }
+  .db { display: flex; gap: 8px; margin-top: 22px; flex-wrap: wrap; }
+  .db button, .db label { flex: 1; min-width: 140px; text-align: center; background: #171a21; border: 1px solid #3a3e48; color: #e8e6e3; border-radius: 10px; padding: 11px; font-size: .85rem; cursor: pointer; font-family: inherit; }
+  .db button:hover, .db label:hover { border-color: #d4af37; color: #d4af37; }
+  a.back { display: inline-block; margin-top: 26px; color: #8f8a80; font-size: .85rem; text-decoration: none; }
+  a.back:hover { color: #d4af37; }
+  body.light { background: #f5f3ef; color: #1f2430; }
+  body.light h1 { color: #8a6d1f; }
+  body.light .sub, body.light .stat { color: #5d594f; }
+  body.light .stat b { color: #4c7a1e; }
+  body.light .stat, body.light .w, body.light .fbtn, body.light .more, body.light .db button, body.light .db label, body.light .row input[type=search] { background: #fffdf8; border-color: #ddd6c8; color: #1f2430; }
+  body.light .w.k { background: #e9f2dd; border-color: #8fbf6a; color: #4c7a1e; }
+  body.light .fbtn.on { border-color: #8a6d1f; color: #8a6d1f; }
+  body.light .bar { background: #e4ded1; }
+  body.light a.back { color: #7a756a; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>قاعدة الكلمات — ما أعرفه</h1>
+<p class="sub">أكثر 2000 كلمة إنجليزية تكراراً — انقر الكلمة التي تعرفها فتدخل قاعدتك. الترتيب من الأشيع للأندر.</p>
+<div class="stats">
+  <span class="stat"><b id="kn">0</b> معروفة</span>
+  <span class="stat"><b id="tt">2000</b> كلمة</span>
+  <span class="stat">التغطية <b id="pc">0%</b></span>
+</div>
+<div class="bar"><i id="fill"></i></div>
+<div class="row">
+  <input type="search" id="q" placeholder="ابحث عن كلمة…" dir="ltr">
+  <button class="fbtn on" data-f="all">الكل</button>
+  <button class="fbtn" data-f="k">المعروفة</button>
+  <button class="fbtn" data-f="u">غير المعروفة</button>
+</div>
+<div class="grid" id="g"></div>
+<button class="more" id="more">أظهر 250 كلمة إضافية</button>
+<div class="db">
+  <button id="exp">تنزيل قاعدة البيانات (JSON)</button>
+  <label>استيراد قاعدة<input type="file" id="imp" accept=".json,application/json" style="display:none"></label>
+</div>
+<a class="back" href="../">← بوابة المركزي</a>
+</div>
+<button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
+<script src="words.js"></script>
+<script>
+var KEY='vocab.known.v1', known={}, shown=250, filt='all', q='';
+try { known = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch(e) {}
+var g = document.getElementById('g');
+
+function save() { try { localStorage.setItem(KEY, JSON.stringify(known)); } catch(e) {} }
+function count() { var n=0; for (var w in known) if (known[w]) n++; return n; }
+function stats() {
+  var n = count();
+  document.getElementById('kn').textContent = n;
+  document.getElementById('pc').textContent = Math.round(n/WORDS.length*100) + '%';
+  document.getElementById('fill').style.width = (n/WORDS.length*100) + '%';
+}
+function draw() {
+  g.innerHTML = '';
+  var lim = Math.min(shown, WORDS.length), added = 0;
+  for (var i = 0; i < lim; i++) {
+    var w = WORDS[i];
+    if (q && w.indexOf(q) === -1) continue;
+    if (filt === 'k' && !known[w]) continue;
+    if (filt === 'u' && known[w]) continue;
+    var d = document.createElement('div');
+    d.className = 'w' + (known[w] ? ' k' : '');
+    d.textContent = w;
+    d.dataset.w = w;
+    g.appendChild(d); added++;
+  }
+  if (!added) g.innerHTML = '<div style="color:#6d6960;font-size:.85rem">لا نتائج هنا — وسّع النطاق أو غيّر الفلتر</div>';
+  document.getElementById('more').style.display = (shown < WORDS.length) ? '' : 'none';
+}
+g.addEventListener('click', function(e) {
+  var w = e.target.dataset && e.target.dataset.w;
+  if (!w) return;
+  known[w] = !known[w];
+  if (!known[w]) delete known[w];
+  e.target.classList.toggle('k', !!known[w]);
+  save(); stats();
+});
+document.getElementById('more').onclick = function() { shown += 250; draw(); };
+document.getElementById('q').addEventListener('input', function(e) { q = e.target.value.trim().toLowerCase(); draw(); });
+document.querySelectorAll('.fbtn').forEach(function(b) {
+  b.onclick = function() {
+    document.querySelectorAll('.fbtn').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on'); filt = b.dataset.f; draw();
+  };
+});
+document.getElementById('exp').onclick = function() {
+  var db = { v: 1, learner: 'محمد', updated: new Date().toISOString(), known: Object.keys(known).sort() };
+  var blob = new Blob([JSON.stringify(db, null, 1)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'vocab-known.json';
+  a.click();
+};
+document.getElementById('imp').addEventListener('change', function(e) {
+  var f = e.target.files[0]; if (!f) return;
+  var r = new FileReader();
+  r.onload = function() {
+    try {
+      var d = JSON.parse(r.result);
+      (d.known || []).forEach(function(w){ known[w] = true; });
+      save(); stats(); draw();
+    } catch(err) { alert('ملف غير صالح'); }
+  };
+  r.readAsText(f);
+});
+stats(); draw();
+
+(function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
+</script>
+</body>
+</html>
