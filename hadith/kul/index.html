@@ -160,6 +160,15 @@ function render(){
   if(ks.length)html+=`<div class="sec">${LBL[c.lv]} · ${ks.length}</div>`;
   const flt=q?ks.filter(x=>norm(x.nm).includes(q)):ks;
   html+=flt.map((x,i)=>row(x,i,c.lv==='root'?i+1:'')).join('')||'<div class="empty">لا نتائج في هذا المستوى.</div>';
+  let combos=[];
+  if(c.lv==='root'&&!q){
+    const comb={};
+    BOOK.forEach(m=>m.units.forEach(u=>u.babs.forEach(b=>b.hs.forEach(h=>{
+      const key=[...new Set(srcs(h).map(s=>s.nm))].join(' و');(comb[key]=comb[key]||[]).push(h);
+    }))));
+    combos=Object.entries(comb).sort((a,b)=>b[1].length-a[1].length);
+    html+=`<div class="sec">الورود · ${combos.length} مجموعة</div>`+combos.map(([k2,hs],i)=>`<div class="row cb" data-i="${i}"><span class="nm"><b>${esc(k2)}${k2.includes(' و')?'':' فقط'}</b><small>${hs.length} حديثاً</small></span><span class="go">‹</span></div>`).join('');
+  }
   if(q&&ks[0]?.lv!=='bab'){
     const hits=[...allBabs()].filter(x=>norm(x.bab.nm).includes(q));
     if(hits.length)html+=`<div class="sec">أبواب الكتاب المطابقة · ${hits.length}</div>`+hits.slice(0,40).map((x,i)=>`<div class="row g" data-i="${i}"><span class="nm"><b>${esc(x.bab.nm)}</b><small class="pth">${esc(x.path)} · ${x.bab.hs.length} حديثاً</small></span><span class="go">‹</span></div>`).join('');
@@ -169,7 +178,8 @@ function render(){
     return;
   }
   main.innerHTML=html;
-  main.querySelectorAll('.row').forEach(el=>el.onclick=()=>{const x=descend(flt[+el.dataset.i]);go({lv:x.lv,nm:x.nm,node:x.node})});
+  main.querySelectorAll('.row.cb').forEach(el=>el.onclick=()=>{const [k2,hs]=combos[+el.dataset.i];go({lv:'bab',nm:k2+(k2.includes(' و')?'':' فقط'),node:{hs}})});
+  main.querySelectorAll('.row:not(.cb)').forEach(el=>el.onclick=()=>{const x=descend(flt[+el.dataset.i]);go({lv:x.lv,nm:x.nm,node:x.node})});
 }
 function srcs(h){
   const f=(h.fn&&h.fn[0]&&h.fn[0].footnotes)||'';
