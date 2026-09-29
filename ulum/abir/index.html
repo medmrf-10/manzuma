@@ -10,10 +10,10 @@
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../../icons/icon-192.png">
-<title>الفهرس الموحد العابر — الرسالة × الأخضري × أسهل المسالك</title>
+<title>الفهرس الموحد العابر — أربعة متون مالكية</title>
 <style>
-  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--acc4:#8e5a9e;--warn:#b0563a;--line:#2a3440;--bar:#0f1419f2;--tocbg:#11171d;--hov:#22303d}
-  body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--acc4:#8e5a9e;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecf2;--tocbg:#f6f3ec;--hov:#efe9dc}
+  :root{--bg:#0f1419;--card:#1a222b;--ink:#e8e2d4;--dim:#9a9384;--acc:#c9a227;--acc2:#2e7d5b;--acc3:#3d6b8e;--acc4:#8e5a9e;--acc5:#b08830;--warn:#b0563a;--line:#2a3440;--bar:#0f1419f2;--tocbg:#11171d;--hov:#22303d}
+  body.light{--bg:#f6f3ec;--card:#fdfcf8;--ink:#2a2620;--dim:#6b6357;--acc:#8a6d14;--acc2:#2e7d5b;--acc3:#3d6b8e;--acc4:#8e5a9e;--acc5:#8a6a10;--warn:#b0563a;--line:#e0d9c9;--bar:#f6f3ecf2;--tocbg:#f6f3ec;--hov:#efe9dc}
   *{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
   html,body{height:100%}
   body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;display:flex;flex-direction:column;overflow:hidden}
@@ -38,7 +38,7 @@
   a.ti.on{border-inline-start:4px solid var(--acc);color:var(--acc)}
   a.ti .dots{display:flex;gap:5px;margin-top:4px}
   a.ti .d{width:8px;height:8px;border-radius:50%;border:1px solid var(--line)}
-  a.ti .d.r{background:var(--acc)}a.ti .d.a{background:var(--acc3)}a.ti .d.m{background:var(--acc4)}
+  a.ti .d.r{background:var(--acc)}a.ti .d.a{background:var(--acc3)}a.ti .d.m{background:var(--acc4)}a.ti .d.k{background:var(--acc5)}
   a.ti .d.off{background:transparent;opacity:.4}
 
   main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 150px}
@@ -46,9 +46,9 @@
   .meta-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:.78rem;color:var(--dim);line-height:1.8}
   .matn{font-size:1.13rem;line-height:2.35;white-space:pre-wrap;text-align:justify}
   .blk{margin-bottom:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
-  .blk.r{border-inline-start:3px solid var(--acc)} .blk.a{border-inline-start:3px solid var(--acc3)} .blk.m{border-inline-start:3px solid var(--acc4)}
+  .blk.r{border-inline-start:3px solid var(--acc)} .blk.a{border-inline-start:3px solid var(--acc3)} .blk.m{border-inline-start:3px solid var(--acc4)} .blk.k{border-inline-start:3px solid var(--acc5)}
   .bknm{font-size:.68rem;font-weight:700;margin-bottom:6px}
-  .blk.r .bknm{color:#e8c96a} .blk.a .bknm{color:#7fb3d8} .blk.m .bknm{color:#c79ad5}
+  .blk.r .bknm{color:#e8c96a} .blk.a .bknm{color:#7fb3d8} .blk.m .bknm{color:#c79ad5} .blk.k .bknm{color:#dab95e}
   .ttl{display:block;width:100%;text-align:start;background:var(--hov);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-family:inherit;font-size:1.05rem;line-height:1.8;padding:14px 14px;margin-bottom:8px;cursor:pointer;display:flex;gap:10px;align-items:center;min-height:56px}
   .ttl .pgn{font-size:.66rem;border:1px solid var(--line);border-radius:8px;padding:2px 8px;color:var(--dim);flex:none}
   .ttl .caret{margin-inline-start:auto;color:var(--acc);font-size:1rem;flex:none}
@@ -65,7 +65,7 @@
   .legend{display:flex;gap:12px;padding:0 0 14px;flex-wrap:wrap}
   .legend span{font-size:.7rem;color:var(--dim);display:flex;align-items:center;gap:5px}
   .legend .d{width:9px;height:9px;border-radius:50%;border:1px solid var(--line)}
-  .legend .d.r{background:var(--acc)}.legend .d.a{background:var(--acc3)}.legend .d.m{background:var(--acc4)}
+  .legend .d.r{background:var(--acc)}.legend .d.a{background:var(--acc3)}.legend .d.m{background:var(--acc4)}.legend .d.k{background:var(--acc5)}
 
   .bnav{position:fixed;bottom:0;inset-inline:0;display:flex;flex-direction:column;gap:8px;padding:10px 12px;background:var(--bar);border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom));backdrop-filter:blur(8px);z-index:30}
   .bnav .row{display:flex;gap:10px}
@@ -88,7 +88,7 @@
 
 <header class="top">
   <button class="icon-btn" id="openToc" aria-label="الفهرس">☰</button>
-  <h1>الفهرس الموحد العابر — الرسالة × الأخضري × أسهل المسالك</h1>
+  <h1>الفهرس الموحد العابر — الرسالة · الأخضري · أسهل المسالك · مختصر خليل</h1>
   <a class="icon-btn" href="../" aria-label="البوابة">⌂</a>
   <button class="icon-btn thb" aria-label="المظهر">☀</button>
 </header>
@@ -120,7 +120,7 @@ document.getElementById('openToc').onclick=()=>{pane.classList.add('open');scrim
 const close=()=>{pane.classList.remove('open');scrim.classList.remove('open')};
 document.getElementById('closeToc').onclick=close; scrim.onclick=close;
 
-const BOOKS={r:{cls:'r'},a:{cls:'a'},m:{cls:'m'}};
+const BOOKS={r:{cls:'r'},a:{cls:'a'},m:{cls:'m'},k:{cls:'k'}};
 fetch('data.json').then(r=>r.json()).then(d=>{try{
   const rows=d.rows, esc=s=>s.replace(/</g,'&lt;');
   document.getElementById('tocn').textContent=rows.length;
@@ -130,7 +130,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
 
   function drawNav(q){
     nav.innerHTML=rows.map((r,i)=>({r,i})).filter(({r})=>!q||r.ut.includes(q))
-      .map(({r,i})=>`<a class="ti" data-i="${i}" href="#">${r.ut}<span class="dots"><span class="d r${r.r.length?'':' off'}"></span><span class="d a${r.a.length?'':' off'}"></span><span class="d m${r.m.length?'':' off'}"></span></span></a>`).join('');
+      .map(({r,i})=>`<a class="ti" data-i="${i}" href="#">${r.ut}<span class="dots"><span class="d r${r.r.length?'':' off'}"></span><span class="d a${r.a.length?'':' off'}"></span><span class="d m${r.m.length?'':' off'}"></span><span class="d k${r.k&&r.k.length?'':' off'}"></span></span></a>`).join('');
   }
   drawNav(); document.getElementById('tq').oninput=e=>drawNav(e.target.value.trim());
 
@@ -144,11 +144,11 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   function show(i){
     cur=i; const r=rows[i];
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
-    const n=r.r.length+r.a.length+r.m.length;
+    const n=r.r.length+r.a.length+r.m.length+(r.k?r.k.length:0);
     art.innerHTML=`<h2 class="sec-title">${r.ut}</h2>
       <div class="meta-card">الفهرس الموحد · العنوان ${i+1} من ${rows.length} · ${n} عنواناً حقيقياً — اضغط عنوان كتاب لتقرأ نصّه كاملاً</div>
-      <div class="legend"><span><span class="d r"></span>الرسالة</span><span><span class="d a"></span>الأخضري</span><span><span class="d m"></span>أسهل المسالك</span></div>
-      ${blk('r',r.r)}${blk('a',r.a)}${blk('m',r.m)}
+      <div class="legend"><span><span class="d r"></span>الرسالة</span><span><span class="d a"></span>الأخضري</span><span><span class="d m"></span>أسهل المسالك</span><span><span class="d k"></span>مختصر خليل</span></div>
+      ${blk('r',r.r)}${blk('a',r.a)}${blk('m',r.m)}${blk('k',r.k||[])}
       <div class="rev"><span>هل المحاذاة صحيحة؟ العناوين المعروضة هي عناوين الكتب الحقيقية لا تقطيعاً مخترعاً</span><button class="ok" onclick="vote(this,1)">صح ✓</button><button class="no" onclick="vote(this,0)">خطأ ✗</button></div>`;
     posEl.textContent=(i+1)+' / '+rows.length;
     prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===rows.length-1);
