@@ -146,8 +146,8 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   const fnify=(b,ri)=>b.replace(/([^\s<>()]+)\s*\(¬([0-9٠-٩]+)\)/g,'<u class="fn" data-p="'+ri+'" data-n="$2">$1</u><span class="fnm" data-p="'+ri+'" data-n="$2">¬$2</span>');
   const fnNote=(pg,n)=>((pg.f||'').split(/[\r\n]+/).find(l=>l.startsWith('(¬'+n+')'))||'').trim();
   document.getElementById('fncX').onclick=()=>fnc.classList.remove('open');
-  function setMode(m){mode=m;for(const k in segB)segB[k].classList.toggle('on',k===m);show(cur)}
-  segB.matn.onclick=()=>setMode('matn'); segB.sharh.onclick=()=>setMode('sharh'); segB.hashiya.onclick=()=>setMode('hashiya');
+  function setMode(m,push){mode=m;for(const k in segB)segB[k].classList.toggle('on',k===m);show(cur,push)}
+  segB.matn.onclick=()=>setMode('matn',true); segB.sharh.onclick=()=>setMode('sharh',true); segB.hashiya.onclick=()=>setMode('hashiya',true);
 
   function drawNav(q){
     nav.innerHTML=secs.map((s,i)=>({s,i})).filter(({s})=>!q||s.t.includes(q))
@@ -155,7 +155,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
   }
   drawNav(); document.getElementById('tq').oninput=e=>drawNav(e.target.value.trim());
 
-  function show(i){
+  function show(i,push){
     cur=i; const s=secs[i];
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
     let title=s.t, meta=`${d.meta.t} — ${d.meta.a} (ت. ${d.meta.d}) · الباب ${i+1} من ${secs.length} · ص ${s.first}${s.last!==s.first?'–'+s.last:''} من ${d.meta.pages}`,
@@ -164,7 +164,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
       const ld=store[mode], mm=mode;
       if(!ld){
         art.innerHTML='<p class="loading">يحمّل '+L[mm].label+'…</p>';
-        fetchL(mm).then(()=>{if(mode===mm)show(i)});
+        fetchL(mm).then(()=>{if(mode===mm)show(i,false)});
         posEl.textContent=(i+1)+' / '+secs.length;
         prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
         return;
@@ -180,22 +180,23 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
     fnc.classList.remove('open');
     posEl.textContent=(i+1)+' / '+secs.length;
     prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===secs.length-1);
-    art.scrollTop=0; history.replaceState(null,'','#'+i+(mode==='sharh'?'s':mode==='hashiya'?'h':''));
+    art.scrollTop=0; history[push?'pushState':'replaceState']({i,m:mode},'','#'+i+(mode==='sharh'?'s':mode==='hashiya'?'h':''));
     if(innerWidth<860) close();
   }
-  nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
+  nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i,true)}};
   art.onclick=e=>{const u=e.target.closest('u.fn,span.fnm');if(!u)return;
     const pg=curPages[+u.dataset.p]; if(!pg)return;
     const note=fnNote(pg,u.dataset.n);
     document.getElementById('fncT').textContent='فائدة التتائي (¬'+u.dataset.n+') — ص '+pg.n;
     document.getElementById('fncB').textContent=note||'لا نص محفوظاً لهذه الفائدة في هذه الصفحة.';
     fnc.classList.add('open');fnc.scrollTop=0;};
-  prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<secs.length-1)show(cur+1)};
+  prevB.onclick=()=>{if(cur>0)show(cur-1,true)}; nextB.onclick=()=>{if(cur<secs.length-1)show(cur+1,true)};
   addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
+  addEventListener('popstate',e=>{const s=e.state;if(!s)return;if(s.m&&s.m!==mode){mode=s.m;for(const k in segB)segB[k].classList.toggle('on',k===mode)}show(s.i||0,false)});
   const hm=(location.hash.slice(1).match(/^(\d+)([sh]?)$/)||[]);
   if(hm[2]==='s')mode='sharh'; else if(hm[2]==='h')mode='hashiya';
   if(mode!=='matn'){segB[mode].classList.add('on');segB.matn.classList.remove('on');}
-  show(hm[1]?Math.min(+hm[1],secs.length-1):0);
+  show(hm[1]?Math.min(+hm[1],secs.length-1):0,false);
 }catch(e){document.getElementById('art').innerHTML='<p class="loading" style="color:#e08080">خطأ: '+e.message+'</p>';}});
 </script>
 </body>

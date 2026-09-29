@@ -53,7 +53,6 @@
   .ttl .pgn{font-size:.66rem;border:1px solid var(--line);border-radius:8px;padding:2px 8px;color:var(--dim);flex:none}
   .ttl .caret{margin-inline-start:auto;color:var(--acc);font-size:1rem;flex:none}
   .ttl:active{border-color:var(--acc);background:var(--card)}
-  .back{display:flex;align-items:center;gap:8px;width:100%;text-align:start;background:var(--card);border:1px solid var(--acc);border-radius:12px;color:var(--acc);font-family:inherit;font-size:1rem;padding:13px 16px;margin-bottom:14px;cursor:pointer;min-height:52px}
   .matn{font-size:1.15rem;line-height:2.4;white-space:pre-wrap;text-align:justify;padding:14px 16px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--card)}
   .gapbox{background:var(--card);border:1px dashed var(--warn);border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:.8rem;color:var(--warn)}
   .rev{display:flex;gap:8px;padding:10px 14px;margin-bottom:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:12px}
@@ -89,7 +88,6 @@
 <header class="top">
   <button class="icon-btn" id="openToc" aria-label="الفهرس">☰</button>
   <h1>الفهرس الموحد العابر — الرسالة · الأخضري · أسهل المسالك · مختصر خليل</h1>
-  <a class="icon-btn" href="../" aria-label="البوابة">⌂</a>
   <button class="icon-btn thb" aria-label="المظهر">☀</button>
 </header>
 
@@ -141,7 +139,7 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
       items.map((u,k)=>`<button class="ttl" data-b="${key}${k}">«${esc(u.t)}» <span class="pgn">ص ${u.p0}${u.p1!==u.p0?'–'+u.p1:''}</span><span class="caret">◂</span></button>`).join('')+`</div>`;
   };
 
-  function show(i){
+  function show(i,push){
     cur=i; const r=rows[i];
     nav.querySelectorAll('a.ti').forEach(el=>el.classList.toggle('on',+el.dataset.i===i));
     const n=r.r.length+r.a.length+r.m.length+(r.k?r.k.length:0);
@@ -152,24 +150,23 @@ fetch('data.json').then(r=>r.json()).then(d=>{try{
       <div class="rev"><span>هل المحاذاة صحيحة؟ العناوين المعروضة هي عناوين الكتب الحقيقية لا تقطيعاً مخترعاً</span><button class="ok" onclick="vote(this,1)">صح ✓</button><button class="no" onclick="vote(this,0)">خطأ ✗</button></div>`;
     posEl.textContent=(i+1)+' / '+rows.length;
     prevB.classList.toggle('dis',i===0); nextB.classList.toggle('dis',i===rows.length-1);
-    art.scrollTop=0; history.replaceState(null,'','#'+i);
+    art.scrollTop=0; history[push?'pushState':'replaceState']({v:'t',i},'','#'+i);
     if(innerWidth<860) close();
   }
-  function showText(key,k){
+  function showText(key,k,push){
     const u=rows[cur][key][k],nm=d.meta[key];
-    art.innerHTML=`<button class="back" id="bck">→ رجوع إلى عناوين الكتب</button>
-      <div class="meta-card">${nm} · ${r_ut()} · ص ${u.p0}${u.p1!==u.p0?'–'+u.p1:''} — نص العنوان كاملاً من أوله إلى آخر جملته</div>
+    art.innerHTML=`<div class="meta-card">${nm} · ${r_ut()} · ص ${u.p0}${u.p1!==u.p0?'–'+u.p1:''} — نص العنوان كاملاً من أوله إلى آخر جملته</div>
       <h2 class="sec-title">${esc(u.t)}</h2>
       <div class="matn open">${esc(u.text)}</div>`;
-    document.getElementById('bck').onclick=()=>show(cur);
-    art.scrollTop=0; history.replaceState(null,'','#'+cur+key+k);
+    art.scrollTop=0; history[push?'pushState':'replaceState']({v:'x',i:cur,key,k},'','#'+cur+key+k);
   }
   const r_ut=()=>rows[cur].ut;
-  art.onclick=e=>{const b=e.target.closest('.ttl');if(b)showText(b.dataset.b[0],+b.dataset.b.slice(1))};
-  nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i)}};
-  prevB.onclick=()=>{if(cur>0)show(cur-1)}; nextB.onclick=()=>{if(cur<rows.length-1)show(cur+1)};
+  art.onclick=e=>{const b=e.target.closest('.ttl');if(b)showText(b.dataset.b[0],+b.dataset.b.slice(1),true)};
+  nav.onclick=e=>{const a=e.target.closest('a.ti');if(a){e.preventDefault();show(+a.dataset.i,true)}};
+  prevB.onclick=()=>{if(cur>0)show(cur-1,true)}; nextB.onclick=()=>{if(cur<rows.length-1)show(cur+1,true)};
   addEventListener('keydown',e=>{if(e.key==='ArrowLeft')nextB.onclick();if(e.key==='ArrowRight')prevB.onclick()});
-  show(Math.min(parseInt(location.hash.slice(1))||0,rows.length-1));
+  addEventListener('popstate',e=>{const s=e.state;if(!s)return;if(s.v==='x'){cur=s.i||0;showText(s.key,s.k,false)}else show(s.i||0,false)});
+  show(Math.min(parseInt(location.hash.slice(1))||0,rows.length-1),false);
 }catch(e){document.getElementById('art').innerHTML='<p class="loading" style="color:#e08080">خطأ: '+e.message+'</p>';}});
 function vote(b,v){const r=b.parentElement,ok=r.querySelector('.ok'),no=r.querySelector('.no');
   if(v===1){ok.classList.toggle('on');no.classList.remove('on')}else{no.classList.toggle('on');ok.classList.remove('on')}}

@@ -13,8 +13,6 @@ body.light{--bg:#f6f7f9;--card:#ffffff;--card2:#f0f2f5;--ink:#1a2330;--mut:#5b6a
 body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh;padding-bottom:76px}
 header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;gap:10px}
 h1{font-size:19px;flex:1;line-height:1.4}
-.back{display:none;background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 14px;font-size:15px;cursor:pointer}
-.back.on{display:inline-block}
 .thb{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:16px;cursor:pointer;color:var(--ink)}
 main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .lead{color:var(--mut);font-size:14px;margin:4px 0 14px;line-height:1.8}
@@ -53,14 +51,13 @@ main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 </head>
 <body>
 <header>
-  <button class="back" id="back" onclick="back()">‹ رجوع</button>
   <h1 id="h1">التراث الكلي — النسخة</h1>
   <button class="thb" id="thb" onclick="tog()">☀</button>
 </header>
 <main id="app"><div class="hint">…يحمّل فهرس الأقسام</div></main>
 <div id="sv"><button onclick="save()">حفظ التعديلات</button><div class="n" id="svn"></div></div>
 <script>
-const app=document.getElementById('app'),h1=document.getElementById('h1'),bk=document.getElementById('back');
+const app=document.getElementById('app'),h1=document.getElementById('h1');
 let IDX=null,CUR=null,LV='cats',CAT=null,BK=null,PREFS={},SRV={},DIRTY=false;
 const LVLS=[{k:1,n:'مرغوب جدا'},{k:2,n:'مرغوب'},{k:3,n:'محايد'},{k:4,n:'غير مرغوب'},{k:5,n:'ممنوع'}];
 const LVC={1:'#2ea36b',2:'#5da85a',3:'#7d8894',4:'#d1923f',5:'#c94f4f'};
@@ -85,10 +82,9 @@ function updN(){
   const n=Object.keys(PREFS).length,srvn=Object.keys(SRV).length;
   document.getElementById('svn').innerHTML=DIRTY?`<b style="color:var(--acc2)">${n.toLocaleString('ar-EG')} تعديل</b><br>غير مثبّت بالموقع`:`${srvn.toLocaleString('ar-EG')} مثبّت${n?' · '+n.toLocaleString('ar-EG')+' محلي':''}`;
 }
-function back(){if(LV==='book'){LV='books';render()}else if(LV==='books'){LV='cats';CAT=null;render()}}
+window.onpopstate=e=>{LV=(e.state&&e.state.lv)||'cats';if((LV==='books'&&!CUR)||(LV==='book'&&!BK))LV='cats';render()};
 function crumb(t){return t?`<div class="crumb">${esc(t)}</div>`:''}
 async function render(){
-  bk.classList.toggle('on',LV!=='cats');
   if(LV==='cats'){
     h1.textContent='التراث الكلي — النسخة (قيد التعديل)';
     app.innerHTML=`<div class="lead">أربعون قسماً و ${IDX.total.toLocaleString('ar-EG')} كتاباً — اضغط القسم لترى كتبه؛ تحت كل كتاب خمس درجات تختار منها، ثم «حفظ التعديلات» ينتج ملف اختياراتك لتسلّمه لي فأثبّته هنا</div>`+
@@ -123,9 +119,9 @@ async function openCat(i){
   CAT=IDX.cats[i];
   app.innerHTML='<div class="hint">…يحمّل كتب القسم</div>';
   CUR=await (await fetch('data/'+CAT.f)).json();
-  LV='books';render();
+  LV='books';history.pushState({lv:'books'},'');render();
 }
-function openBook(id){BK=CUR.books.find(b=>b.i===id);LV='book';render()}
+function openBook(id){BK=CUR.books.find(b=>b.i===id);LV='book';history.pushState({lv:'book'},'');render()}
 async function save(){
   const payload=JSON.stringify({saved_at:new Date().toISOString(),prefs:PREFS},null,1);
   try{await navigator.clipboard.writeText(payload)}catch(e){}
@@ -135,7 +131,7 @@ async function save(){
 (async()=>{
   IDX=await (await fetch('data/index.json')).json();
   try{SRV=(await (await fetch('data/prefs.json')).json()).prefs||{}}catch(e){SRV={}}
-  PREFS=Object.assign({},SRV,PREFS);render();
+  PREFS=Object.assign({},SRV,PREFS);history.replaceState({lv:'cats'},'');render();
 })();
 </script>
 </body>

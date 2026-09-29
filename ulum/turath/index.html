@@ -13,8 +13,6 @@ body.light{--bg:#f6f7f9;--card:#ffffff;--card2:#f0f2f5;--ink:#1a2330;--mut:#5b6a
 body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}
 header{position:sticky;top:0;z-index:5;background:var(--card);border-bottom:1px solid var(--line);padding:10px 14px;display:flex;align-items:center;gap:10px}
 h1{font-size:19px;flex:1;line-height:1.4}
-.back{display:none;background:var(--card2);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:8px 14px;font-size:15px;cursor:pointer}
-.back.on{display:inline-block}
 .thb{background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:16px;cursor:pointer;color:var(--ink)}
 main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .lead{color:var(--mut);font-size:14px;margin:4px 0 14px;line-height:1.8}
@@ -35,21 +33,19 @@ main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 </head>
 <body>
 <header>
-  <button class="back" id="back" onclick="back()">‹ رجوع</button>
   <h1 id="h1">التراث الكلي</h1>
   <button class="thb" id="thb" onclick="tog()">☀</button>
 </header>
 <main id="app"><div class="hint">…يحمّل فهرس الأقسام</div></main>
 <script>
-const app=document.getElementById('app'),h1=document.getElementById('h1'),bk=document.getElementById('back');
+const app=document.getElementById('app'),h1=document.getElementById('h1');
 let IDX=null,CUR=null,LV='cats',CAT=null,BK=null;
 try{if(localStorage.getItem('ulum-th')==='l'){document.body.classList.add('light');document.getElementById('thb').textContent='☾'}}catch(e){}
 function tog(){const l=document.body.classList.toggle('light');document.getElementById('thb').textContent=l?'☾':'☀';try{localStorage.setItem('ulum-th',l?'l':'d')}catch(e){}}
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function back(){if(LV==='book'){LV='books';render()}else if(LV==='books'){LV='cats';CAT=null;render()}}
+window.onpopstate=e=>{LV=(e.state&&e.state.lv)||'cats';if((LV==='books'&&!CUR)||(LV==='book'&&!BK))LV='cats';render()};
 function crumb(t){return t?`<div class="crumb">${esc(t)}</div>`:''}
 async function render(){
-  bk.classList.toggle('on',LV!=='cats');
   if(LV==='cats'){
     h1.textContent='التراث الكلي — كل الكتب في كل الأقسام';
     app.innerHTML=`<div class="lead">أربعون قسماً و ${IDX.total.toLocaleString('ar-EG')} كتاباً — اضغط القسم لترى كتبه منظمة بوفاة مؤلفها</div>`+
@@ -58,7 +54,7 @@ async function render(){
     h1.textContent=CUR.n;
     const bs=CUR.books;
     app.innerHTML=crumb('الأقسام ‹ '+CUR.n)+`<input class="q" id="q" placeholder="ابحث بعنوان كتاب أو اسم مؤلف…" oninput="filt(this.value)"><div id="lst"></div>`;
-    draw(bs);document.getElementById('q').focus();
+    draw(bs);
   }else{
     h1.textContent=BK.t;
     const d=BK;
@@ -85,10 +81,10 @@ async function openCat(i){
   CAT=IDX.cats[i];
   app.innerHTML='<div class="hint">…يحمّل كتب القسم</div>';
   CUR=await (await fetch('data/'+CAT.f)).json();
-  LV='books';render();
+  LV='books';history.pushState({lv:'books'},'');render();
 }
-function openBook(id){BK=CUR.books.find(b=>b.i===id);LV='book';render()}
-(async()=>{IDX=await (await fetch('data/index.json')).json();render()})();
+function openBook(id){BK=CUR.books.find(b=>b.i===id);LV='book';history.pushState({lv:'book'},'');render()}
+(async()=>{IDX=await (await fetch('data/index.json')).json();history.replaceState({lv:'cats'},'');render()})();
 </script>
 </body>
 </html>
