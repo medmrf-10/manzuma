@@ -56,6 +56,10 @@ main{max-width:720px;margin:0 auto;padding:16px 12px 40px}
 .hd .tags span{border:1px solid var(--line);border-radius:999px;padding:1px 10px;background:var(--bg)}
 .hd .tags .r{color:var(--acc);border-color:var(--acc)}
 .hd .tags .g{color:var(--acc2);border-color:var(--acc2)}
+.hd .src{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;font-size:.78rem}
+.hd .src::before{content:'رواه:';color:var(--dim);font-size:.72rem;align-self:center}
+.hd .src span{border:1px solid var(--acc);border-radius:999px;padding:2px 11px;color:var(--dim);background:var(--orn)}
+.hd .src b{color:var(--acc);font-weight:600}
 .hd details{margin-top:10px;font-size:.84rem;color:var(--dim);border-top:1px dashed var(--line);padding-top:8px}
 .hd summary{cursor:pointer;color:var(--acc);font-size:.84rem}
 .hd .tk-body{white-space:pre-wrap;margin-top:6px}
@@ -170,11 +174,28 @@ function render(){
   main.innerHTML=html;
   main.querySelectorAll('.row').forEach(el=>el.onclick=()=>{const x=descend(flt[+el.dataset.i]);go({lv:x.lv,nm:x.nm,node:x.node})});
 }
+function srcs(h){
+  const f=(h.fn&&h.fn[0]&&h.fn[0].footnotes)||'';
+  const out=[];const seen={};let m;
+  const re=/([^()\u066B،؛.]{1,60}?)\s*\((\d+(?:\s*[-ـ]\s*\d+)*)\)/g;
+  while((m=re.exec(f))){
+    let seg=m[1].replace(/^[\s"«،,؛.]+/,'').trim();
+    let nm=seg.includes(' في ')?seg.split(' في ').pop():seg.split(/\s+/).slice(-3).join(' ');
+    nm=nm.replace(/^(رواه|وأخرج|أخرج|في|ثم|عن|لدى|له)\s+/,'');
+    nm=nm.replace(/^و(?=\S)/,'').replace(/^(و|ف)\s+/,'');
+    nm=nm.replace(/ واللفظ.*$/,'').replace(/ والرواية.*$/,'');
+    nm=nm.replace(/^"+|"+\s*$/g,'').replace(/[ً-ٟ]+$/,'').trim();
+    if(!nm||/^(له|لها|عليه|بها|فيه|فيهم|لهن|لنا|عنه|عنها|منه|الرواية|اللفظ)$/.test(nm))continue;
+    if(nm==='أحمد'||nm==='مسنده')nm='مسند أحمد';
+    if(seen[nm]!==undefined){out[seen[nm]].num+='، '+m[2].trim()}else{seen[nm]=out.length;out.push({nm,num:m[2].trim()})}
+  }
+  return out;
+}
 function renderHadiths(c,q){
   const main=$('main');
   const flt=q?c.node.hs.filter(h=>norm(h.t).includes(q)):c.node.hs;
   main.innerHTML=`<div class="sec">${esc(c.nm)} · ${c.node.hs.length} حديثاً${q?` · تطابق ${flt.length}`:''}</div>`+
-    (flt.map((h,i)=>`<div class="hd" style="animation-delay:${Math.min(i*40,400)}ms"><span class="hnum">حديث ${h.n}</span><div class="mtn naskh">${hi(h.t,q)}</div><div class="orn">۞</div><div class="tags">
+    (flt.map((h,i)=>`<div class="hd" style="animation-delay:${Math.min(i*40,400)}ms"><span class="hnum">حديث ${h.n}</span><div class="mtn naskh">${hi(h.t,q)}</div><div class="orn">۞</div><div class="src">${srcs(h).map(s=>`<span><b>${esc(s.nm)}</b> ${esc(s.num)}</span>`).join('')}</div><div class="tags">
       ${h.ref?`<span class="r">${esc(h.ref)}</span>`:''}
       ${h.h?`<span class="g">${esc(h.h)}</span>`:''}
       ${h.f?`<span>${esc(h.f)}</span>`:''}
