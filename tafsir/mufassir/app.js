@@ -212,6 +212,14 @@ async function renderMushafPage(k) {
     </div>
   </div>`;
   const mp = $("#mpage");
+  document.body.style.overflow = "hidden";
+  const mtext = $("#mtext");
+  const frame = mp.querySelector(".mushaf-frame");
+  let fs = 1.3;
+  while (fs > 0.62 && (mtext.scrollHeight > mtext.clientHeight || mtext.scrollWidth > mtext.clientWidth)) {
+    fs -= 0.02;
+    frame.style.fontSize = fs + "rem";
+  }
   mp.querySelectorAll(".m-ayah").forEach((el) =>
     el.addEventListener("click", () => {
       mp.querySelectorAll(".m-ayah.active").forEach((x) => x.classList.remove("active"));
@@ -292,6 +300,7 @@ async function renderSurah(n, ayah, pageK) {
 /* ---------- router ---------- */
 async function route() {
   const h = location.hash || "#/";
+  if (!/^#\/m\//.test(h)) document.body.style.overflow = "";
   let m = h.match(/^#\/m\/(\d+)/);
   if (m) { closeTafsir(); renderMushafPage(+m[1]).catch(() => { app.innerHTML = header() + '<div class="page-loading">تعذّر تحميل الصفحة.</div>' + footer; }); return; }
   m = h.match(/^#\/s\/(\d+)/);
