@@ -186,23 +186,25 @@ async function renderMushafPage(k) {
       html += `<span class="m-ayah" data-s="${s}" data-k="${v.k}" id="a-${s}-${v.a}">${v.t}<span class="ayah-marker">${arNum(v.a)}</span></span> `;
     }
   }
-  app.innerHTML = header() + `
-  <div class="mushaf-wrap">
-    <div class="mushaf-top">
-      <span class="mushaf-part">الجزء ${arNum(juz ?? "")}</span>
-      <a class="back-link" href="#/">→ فهرس السور</a>
-    </div>
+  app.innerHTML = `
+  <div class="mushaf-book">
     <div class="mushaf-page" id="mpage">
+      <div class="mushaf-frame">
+        <div class="frame-top">
+          <a class="frame-link" href="#/">فهرس</a>
+          <span class="mushaf-part">الجزء ${arNum(juz ?? "")}</span>
+        </div>
+        <div class="mushaf-text" id="mtext">${html}</div>
+        <div class="frame-bottom">
+          <a class="flip-btn" href="#/m/${k - 1}" ${k <= 1 ? 'style="visibility:hidden"' : ""}>‹</a>
+          <span class="page-num">${arNum(k)}</span>
+          <a class="flip-btn" href="#/m/${k + 1}" ${k >= TOTAL_PAGES ? 'style="visibility:hidden"' : ""}>›</a>
+        </div>
+      </div>
       <div class="flip-zone" data-dir="prev" aria-label="الصفحة السابقة"></div>
-      <div class="mushaf-frame">${html}</div>
       <div class="flip-zone" data-dir="next" aria-label="الصفحة التالية"></div>
     </div>
-    <div class="pager">
-      <a class="page-btn" href="#/m/${k - 1}" ${k <= 1 ? 'style="visibility:hidden"' : ""}>‹ السابقة</a>
-      <span class="page-info">${arNum(k)}</span>
-      <a class="page-btn" href="#/m/${k + 1}" ${k >= TOTAL_PAGES ? 'style="visibility:hidden"' : ""}>التالية ›</a>
-    </div>
-  </div>` + footer;
+  </div>`;
   const mp = $("#mpage");
   mp.querySelectorAll(".m-ayah").forEach((el) =>
     el.addEventListener("click", () => {
