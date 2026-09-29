@@ -1,97 +1,63 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0f1115">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#f6f4ef">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f1115">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="manifest" href="../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
 <link rel="apple-touch-icon" href="../icons/icon-192.png">
-<title>بوابة التفسير — المنظومة</title>
+<title>بوابة التفسير</title>
 <style>
-  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; min-height: 100vh; padding: 40px 20px; max-width: 720px; margin: 0 auto; }
-  h1 { color: #d4af37; font-size: 2rem; margin-bottom: 8px; text-align: center; }
-  .desc { color: #9a958c; line-height: 1.8; text-align: center; margin-bottom: 32px; }
-  h2 { color: #d4af37; font-size: 1.15rem; margin: 32px 0 12px; border-bottom: 1px solid #2a2e38; padding-bottom: 8px; }
-  .svc { background: #171a21; border: 1px solid #2a2e38; border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
-  .svc b { color: #e8e6e3; }
-  .svc p { color: #9a958c; margin: 6px 0 0; font-size: .92rem; line-height: 1.7; }
-  .svc code { color: #d4af37; font-size: .85rem; direction: ltr; display: inline-block; }
-  .svc a { color: #d4af37; text-decoration: none; }
-  .open { display: block; text-align: center; background: #d4af37; color: #0f1115; font-weight: 700; font-size: 1.05rem; padding: 15px 18px; border-radius: 12px; text-decoration: none; margin: 18px 0 6px; }
-  .open:hover { filter: brightness(1.08); }
-  .svc a:hover { text-decoration: underline; }
-  body.light .svc a { color: #8a6d1f; }
-  .ayah { background: #171a21; border: 1px solid #2a2e38; border-right: 3px solid #d4af37; border-radius: 12px; padding: 18px; margin-bottom: 12px; }
-  .ayah .txt { font-size: 1.25rem; line-height: 2; color: #e8e6e3; }
-  .ayah .taf { margin-top: 12px; color: #b8b3a8; font-size: .95rem; line-height: 1.9; }
-  .ayah .src { margin-top: 10px; color: #6b675f; font-size: .78rem; }
-  .badge { display: inline-block; font-size: .8rem; padding: 4px 14px; border-radius: 999px; background: #2a2410; color: #d4af37; border: 1px solid #4a4020; }
-  .status { text-align: center; margin: 8px 0 28px; }
-  ul.plan { color: #9a958c; line-height: 2; padding-right: 20px; }
-  ul.plan li::marker { color: #d4af37; }
-  a.back { display: block; margin-top: 36px; color: #8f8a80; font-size: .85rem; text-decoration: none; text-align: center; }
-  a.back:hover { color: #d4af37; }
-  a.lib { color: #9aa7c7; }
-  a.lib:hover { color: #d4af37; }
+  :root{--bg:#0f1115;--card:#171a21;--ink:#e8e6e3;--dim:#9a958c;--acc:#d4af37;--line:#2a2e38}
+  *{box-sizing:border-box;margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.9;min-height:100vh}
+  header{text-align:center;padding:48px 16px 24px;border-bottom:2px solid var(--acc)}
+  h1{font-size:2rem;color:var(--acc);margin-bottom:8px}
+  .sub{color:var(--dim);font-size:1rem}
+  .wrap{max-width:760px;margin:0 auto;padding:32px 16px 60px}
+  .gate{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px;text-decoration:none;color:var(--ink);transition:border-color .15s}
+  .gate:hover{border-color:var(--acc)}
+  .gate h2{font-size:1.2rem;color:var(--acc);margin-bottom:6px}
+  .gate p{font-size:.9rem;color:var(--dim)}
+  .badge{display:inline-block;font-size:.72rem;color:var(--bg);background:var(--acc);border-radius:6px;padding:2px 8px;margin-right:8px;vertical-align:middle}
+  .badge.off{background:#3a3e48;color:var(--dim)}
+  .soon{opacity:.55;pointer-events:none}
+  .back{display:inline-block;margin-top:24px;color:var(--dim);font-size:.85rem;text-decoration:none}
+  .back:hover{color:var(--acc)}
 
-  body.light{background:#f5f3ef;color:#1f2430}
-  body.light h1,body.light h2{color:#8a6d1f}
-  body.light .desc,body.light .svc p,body.light ul.plan{color:#5d594f}
-  body.light h2{border-color:#e0dbc9}
-  body.light .svc,body.light .ayah{background:#ffffff;border-color:#e0dbc9}
-  body.light .ayah{border-right-color:#8a6d1f}
-  body.light .svc b,body.light .ayah .txt{color:#1f2430}
-  body.light .ayah .taf{color:#4d4a42}
-  body.light .ayah .src{color:#8a857a}
-  body.light .badge{background:#f6ecd0;color:#8a6d1f;border-color:#e0d3ac}
-  body.light a.back{color:#7a756a}
-  body.light a.back:hover{color:#8a6d1f}
-  body.light a.lib{color:#4a5d8a}
-  body.light a.lib:hover{color:#8a6d1f}
+  body.light{--bg:#f5f3ef;--card:#ffffff;--ink:#1f2430;--dim:#5d594f;--acc:#8a6d1f;--line:#e0dbc9}
+  body.light .badge.off{background:#e0dbc9;color:#5d594f}
 </style>
 </head>
 <body>
-<h1>بوابة التفسير</h1>
-<p class="desc">بنية التفسير التحتية: آية + كتاب تفسير ← نص تفسيرها · موضوع ← آياته. المالك: ساسي.</p>
-<p class="status"><span class="badge">المرحلة 1 — النواة والعرض</span></p>
-<a class="open" href="mufassir/">افتح موقع التفسير — المفسِّر (القرآن + تفسير السعدي) ←</a>
+<header>
+  <h1>بوابة التفسير</h1>
+  <p class="sub">آية + كتاب تفسير ← نص تفسيرها · موضوع ← آياته — المالك: ساسي</p>
+</header>
+<div class="wrap">
 
-<h2>الخدمتان الأساسيتان</h2>
-<div class="svc">
-  <b><a href="mufassir/">المفسِّر — الموقع الرئيسي (عامل)</a></b>
-  <p>مصحف كامل بتفسير السعدي: شبكة السور، قائمة آيات / نص مصحف متصل، لوحة تفسير جانبية لكل آية أو نطاق آياتها، وضع فاتح/داكن، روابط عميقة. <a href="mufassir/">افتح المفسِّر ←</a></p>
-</div>
-<div class="svc">
-  <b><a href="ayat/">تفسير آية — نسخة خفيفة</a></b>
-  <p>منتقى بسيط: سورة + آية ← تفسير السعدي فوراً. <a href="ayat/">افتح الخدمة ←</a></p>
-</div>
-<div class="svc">
-  <b>آيات الموضوع</b>
-  <p>مدخل: موضوع أو مفهوم ← مخرج: قائمة الآيات المتعلقة به مرتبة بالسور. قيد البناء. <code>topic?q=الصبر</code></p>
-</div>
+  <a class="gate" href="mufassir/">
+    <h2>المفسِّر — موقع التفسير <span class="badge">يعمل</span></h2>
+    <p>القرآن كاملاً بتفسير السعدي: شبكة السور الـ114 بالبحث، صفحة سورةٍ آياتُها قائمةً أو مصحفاً متصلاً، ونقرة الآية تفتح لوحة تفسيرها المخصصة — مع روابط عميقة لكل آية.</p>
+  </a>
 
-<h2>نموذج حي — آية الكرسي</h2>
-<div class="ayah">
-  <div class="txt">﴿اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ﴾</div>
-  <div class="taf">«الحيّ القيّوم»: الحيّ الذي له كمال الحياة، القيّوم القائم بنفسه المقيم لشؤون خلقه. «لا تأخذه سنة ولا نوم»: لا يعتريه نعاس ولا نوم. «وسع كرسيه السماوات والأرض»: الكرسي موضع القدمين، ووسعه إثبات عظمة سلطانه. «ولا يئوده حفظهما»: لا يثقله ولا يصعب عليه حفظ السماوات والأرض.</div>
-  <div class="src">البقرة 255 — مختصر من تفسير ابن كثير</div>
+  <a class="gate" href="ayat/">
+    <h2>تفسير آية — النسخة الخفيفة <span class="badge">يعمل</span></h2>
+    <p>الوصول السريع: اختر السورة والآية فيظهر تفسير السعدي فوراً في مقطع خاص، مع تنقل بين الآيات — بلا أي خدمات أخرى.</p>
+  </a>
+
+  <a class="gate soon" href="#">
+    <h2>آيات الموضوع <span class="badge off">قيد البناء</span></h2>
+    <p>استعلام موضوعي: اختر موضوعاً أو مفهوماً فتظهر آياته كلها مرتبةً بالسور — البنية جاهزة في قاعدة المفسِّر.</p>
+  </a>
+
+  <a class="back" href="../">← العودة إلى البوابة الأم</a>
 </div>
-
-<h2>خطة البناء</h2>
-<ul class="plan">
-  <li>جرد مصادر التفسير الرقمية النظيفة (ابن كثير، الطبري، السعدي، التحرير والتنوير) — استكمالاً لبحث جرد شروح الحديث الرقمية.</li>
-  <li>قاعدة آية↔تفسير بفهرسة سورة/آية، ثم فهرس موضوعات.</li>
-  <li>واجهة قراءة تربط النص القرآني بتفسيره المختار مع توافق الوضع الفاتح.</li>
-  <li>ربط البحث: تقارير التعلم بالمنظومة في <a class="lib" href="../research/">مكتبة الأبحاث</a>.</li>
-</ul>
-
-<a class="back" href="../">← العودة إلى البوابة الأم</a>
-<button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
+<button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
 <script>
 (function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
 </script>
