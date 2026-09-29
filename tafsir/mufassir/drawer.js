@@ -88,7 +88,7 @@
         const r = e.target.closest(".drw-row");
         if (!r) return;
         e.preventDefault();
-        close();
+        close(true);
         if (r.dataset.a) location.hash = `#/m/${r.dataset.p}/a/${r.dataset.a}`;
         else M().goPage(+r.dataset.p);
       });
