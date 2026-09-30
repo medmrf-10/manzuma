@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>تتبع التفريغات — المنجز والقادم والمنتهي</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;background:#0e1218;color:#e8ecf2;min-height:100vh;padding-bottom:40px}
+header{padding:18px 16px 10px;text-align:center}
+h1{font-size:20px;font-weight:800}
+.sub{color:#8b96a7;font-size:13px;margin-top:6px}
+.upd{color:#5c8a5c;font-size:12px;margin-top:4px}
+.cols{display:flex;flex-direction:column;gap:14px;padding:14px}
+@media(min-width:760px){.cols{flex-direction:row;align-items:flex-start}.col{flex:1}}
+.col{background:#161d27;border:1px solid #24303f;border-radius:14px;overflow:hidden}
+.col h2{font-size:15px;padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #24303f}
+.col h2 .n{font-size:12px;background:#24303f;border-radius:99px;padding:1px 9px;color:#aebdd2}
+.done h2{color:#7fd494}.prog h2{color:#f0c869}.next h2{color:#8fb4e8}
+.card{padding:10px 14px;border-bottom:1px solid #1d2733}
+.card:last-child{border-bottom:none}
+.card .t{font-size:14px;font-weight:700;line-height:1.5}
+.card .m{font-size:12px;color:#8b96a7;margin-top:3px}
+.bar{height:5px;background:#24303f;border-radius:99px;margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:#4caf7d;border-radius:99px}
+.empty{padding:26px 14px;text-align:center;color:#5d6b7e;font-size:13px}
+footer{text-align:center;color:#546276;font-size:11px;padding:14px}
+a{color:#8fb4e8;text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+  <h1 id="ttl">تتبع التفريغات</h1>
+  <div class="sub">المنجز · القادم · المنتهي — يُحدَّث بعد كل رفع سلسلة</div>
+  <div class="upd" id="upd"></div>
+</header>
+<div class="cols">
+  <div class="col prog"><h2>جارٍ / منجز جزئياً <span class="n" id="n-p">0</span></h2><div id="c-p"></div></div>
+  <div class="col done"><h2>منتهي <span class="n" id="n-d">0</span></h2><div id="c-d"></div></div>
+  <div class="col next"><h2>قادم <span class="n" id="n-n">0</span></h2><div id="c-n"></div></div>
+</div>
+<footer>المصدر: me/old/ — <a href="https://github.com/medmrf-10/me/tree/main/old">مستودع التفريغات</a></footer>
+<script>
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+fetch('data.json?v='+Date.now()).then(r=>r.json()).then(d=>{
+  document.getElementById('ttl').textContent=d.title||'تتبع التفريغات';
+  document.getElementById('upd').textContent=d.updated?('آخر تحديث: '+d.updated):'';
+  const rows={p:[],d:[],n:[]};
+  (d.series||[]).forEach(s=>{
+    const tot=s.total||0, dn=s.done||0;
+    const st=s.status||(tot&&dn>=tot?'منتهي':dn>0?'جارٍ':'قادم');
+    (st==='منتهي'?rows.d:st==='قادم'?rows.n:rows.p).push(s);
+  });
+  const fill=(id,arr)=>{
+    const el=document.getElementById(id);
+    if(!arr.length){el.innerHTML='<div class="empty">— لا شيء بعد —</div>';return;}
+    el.innerHTML=arr.map(s=>{
+      const tot=s.total||0,dn=s.done||0,pct=tot?Math.round(dn*100/tot):0;
+      return `<div class="card"><div class="t">${esc(s.title||s.id)}</div>
+        <div class="m">${dn?dn+' من '+tot+' حلقة':(tot?tot+' حلقة':(s.note?esc(s.note):''))}${s.link?` · <a href="${esc(s.link)}">رابط</a>`:''}</div>
+        ${tot?`<div class="bar"><i style="width:${pct}%"></i></div>`:''}</div>`;
+    }).join('');
+  };
+  fill('c-p',rows.p);fill('c-d',rows.d);fill('c-n',rows.n);
+  document.getElementById('n-p').textContent=rows.p.length;
+  document.getElementById('n-d').textContent=rows.d.length;
+  document.getElementById('n-n').textContent=rows.n.length;
+}).catch(()=>{document.getElementById('upd').textContent='تعذر تحميل data.json'});
+</script>
+</body>
+</html>
