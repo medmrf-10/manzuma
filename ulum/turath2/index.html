@@ -17,7 +17,12 @@ h1{font-size:19px;flex:1;line-height:1.4}
 main{padding:12px 14px 60px;max-width:760px;margin:0 auto}
 .lead{color:var(--mut);font-size:14px;margin:4px 0 14px;line-height:1.8}
 .q{width:100%;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:17px;padding:13px 16px;margin-bottom:12px}
-.it{display:block;width:100%;text-align:right;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px;cursor:pointer;color:var(--ink);font-family:inherit;border-right:5px solid transparent}
+.it{display:block;width:100%;text-align:right;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px;cursor:pointer;color:var(--ink);font-family:inherit;border-right:5px solid transparent;position:relative}
+.cpb{position:absolute;left:12px;top:14px;background:var(--card2);border:1px solid var(--line);border-radius:10px;color:var(--acc2);font-family:inherit;font-size:13px;font-weight:800;padding:8px 12px;cursor:pointer}
+.cpb:active{transform:scale(.95)}
+.qrow{display:flex;gap:8px;margin-bottom:12px}
+.qrow .q{flex:1;margin-bottom:0}
+.qrow .cpb{position:static;flex:none}
 .it:active{background:var(--card2)}
 .it .tt{font-size:19px;font-weight:700;line-height:1.55;display:block}
 .it .ss{font-size:14px;color:var(--mut);margin-top:6px;display:block;line-height:1.6}
@@ -105,10 +110,10 @@ async function render(){
   if(LV==='cats'){
     h1.textContent='التراث الكلي — النسخة (قيد التعديل)';
     app.innerHTML=`<div class="lead">أربعون قسماً و ${IDX.total.toLocaleString('ar-EG')} كتاباً — اضغط القسم لترى كتبه؛ تحت كل كتاب خمس درجات تختار منها، ثم «حفظ التعديلات» ينتج ملف اختياراتك لتسلّمه لي فأثبّته هنا</div>`+
-      IDX.cats.map((c,i)=>`<button class="it" onclick="openCat(${i})"><span class="tt">${esc(c.n)}</span><span class="cnt">${c.c.toLocaleString('ar-EG')} كتاب</span></button>`).join('');
+      IDX.cats.map((c,i)=>`<div class="it" onclick="openCat(${i})"><span class="tt">${esc(c.n)}</span><span class="cnt">${c.c.toLocaleString('ar-EG')} كتاب</span><button class="cpb" onclick="cpCat(event,${i})">نسخ</button></div>`).join('');
   }else if(LV==='books'){
     h1.textContent=CUR.n;
-    app.innerHTML=crumb('الأقسام ‹ '+CUR.n)+`<input class="q" id="q" placeholder="ابحث بعنوان كتاب أو اسم مؤلف…" oninput="filt(this.value)"><div id="lst"></div>`;
+    app.innerHTML=crumb('الأقسام ‹ '+CUR.n)+`<div class="qrow"><input class="q" id="q" placeholder="ابحث بعنوان كتاب أو اسم مؤلف…" oninput="filt(this.value)"><button class="cpb" onclick="cpCur(this)">نسخ القائمة</button></div><div id="lst"></div>`;
     draw(CUR.books);
   }else{
     h1.textContent=BK.t;
@@ -131,6 +136,18 @@ function filt(v){
   v=v.trim();
   const bs=v?CUR.books.filter(b=>b.t.includes(v)||(b.a&&b.a.includes(v))):CUR.books;
   draw(bs);
+}
+async function cpCat(ev,i){
+  ev.stopPropagation();const b=ev.currentTarget,o=b.textContent;b.textContent='…';
+  try{
+    const d=await (await fetch('data/'+IDX.cats[i].f)).json();
+    await navigator.clipboard.writeText(d.books.map(x=>x.t).join('\n'));
+    b.textContent='✓ نُسخت';setTimeout(()=>b.textContent=o,1400);
+  }catch(e){b.textContent='تعذّر';setTimeout(()=>b.textContent=o,1400)}
+}
+async function cpCur(b){
+  const o=b.textContent;b.textContent='…';
+  try{await navigator.clipboard.writeText(CUR.books.map(x=>x.t).join('\n'));b.textContent='✓ نُسخت';setTimeout(()=>b.textContent=o,1400)}catch(e){b.textContent='تعذّر';setTimeout(()=>b.textContent=o,1400)}
 }
 async function openCat(i){
   CAT=IDX.cats[i];
