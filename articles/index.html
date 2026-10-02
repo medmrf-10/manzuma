@@ -39,10 +39,10 @@
 <div class="wrap">
 <header class="hero">
   <h1>المقالات</h1>
-  <p>كل مقالات المنظومة وأبحاثها الموثقة في مكان واحد — تقارير السرب، أبحاث Gemini العميقة، وتقارير باب المركزي</p>
+  <p>كل مقالات المنظومة وأبحاثها الموثقة في مكان واحد — ملخصات التسليم، تقارير السرب، أبحاث Gemini العميقة، وتقارير باب المركزي</p>
   <div class="stats">
-    <span class="stat"><b>36</b> مقالاً</span>
-    <span class="stat"><b>3</b> مجموعات</span>
+    <span class="stat"><b id="cnt"></b> مادة</span>
+    <span class="stat"><b id="grp"></b> مجموعات</span>
   </div>
 </header>
 <input class="search" id="q" type="search" placeholder="ابحث في عناوين المقالات…">
@@ -51,6 +51,11 @@
 </div>
 <script>
 const GROUPS = [
+  { name: "ملخصات التسليم للوكيل الجديد", tag: "ملخص أين وصلنا — بأمر محمد", items: [
+    ["الملخص العام — أين وصلنا في كل الأمور","research/handover/00-overview.md"],
+    ["خدمة الحديث — ملخص التسليم","research/handover/hadith.md"],
+    ["ملخص خدمة التفسير — أين وصلنا","research/handover/tafsir.md"]
+  ]},
   { name: "مقالات السرب", tag: "مقال سرب — me/articles", items: [
     ["مطابقة تصميم مجلس المهام لنتائج أبحاث العمق — تحليل مقارن","articles/me/board-design-vs-dr.md"],
     ["معمارية الفهرسة الموضوعية الموحدة لمدونات التراث الإسلامي","articles/me/deep-research-01.md"],
@@ -95,6 +100,8 @@ const GROUPS = [
   ]}
 ];
 const lib = document.getElementById('lib');
+document.getElementById('cnt').textContent = GROUPS.reduce((n,g)=>n+g.items.length,0);
+document.getElementById('grp').textContent = GROUPS.length;
 GROUPS.forEach(g => {
   const sec = document.createElement('section');
   sec.className = 'domain';

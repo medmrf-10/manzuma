@@ -48,3 +48,10 @@
 | نمذجة المتعلم وتتبع الأخطاء | [فتح](https://gemini.google.com/app/4e61c539cc27eb15) |
 | النوم وترسيخ الذاكرة | [فتح](https://gemini.google.com/app/0b96a7cc0e5b6fb7) |
 | الدافع والانتباه والتركيز | [فتح](https://gemini.google.com/app/2284c3dff9a3d2d7) |
+
+## مجلدات إضافية
+
+- `handover/` — ملخصات التسليم للوكيل الجديد (تُحدَّث من me/team/shared/handover/)
+- مقالات السرب تقيم في `articles/me/` (من me/articles)
+
+كل ما هنا يُتصفح عبر مكتبة المقالات: `articles/` (بوابة «المقالات» في الصفحة الأم).

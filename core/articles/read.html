@@ -42,11 +42,14 @@
 
 </div>
 <script>
-const f = new URLSearchParams(location.search).get('f');
+const params = new URLSearchParams(location.search);
+const f = params.get('f');
+const tt = params.get('t');
 const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const pretty = f => decodeURIComponent(f||'').replace(/\.md$/,'').split('-').slice(1).join('-') || 'تقرير';
 
 function render(text) {
+  text = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
   // LaTeX-ish math → styled span
   const math = s => s.replace(/\$([^$]{1,60})\$/g, '<span class="math">$1</span>');
   const raw = esc(text);
@@ -95,14 +98,15 @@ function renderFlow(raw, math) {
 
 async function go() {
   const art = document.getElementById('a');
-  document.getElementById('t').textContent = pretty(f);
-  document.getElementById('m').textContent = 'تقرير بحث عميق — Gemini Deep Research · ' + (f||'');
+  const title = tt || pretty(f);
+  document.getElementById('t').textContent = title;
+  document.getElementById('m').textContent = 'مادة مكتبة المنظومة · ' + decodeURIComponent(f||'');
   if (!f) { art.innerHTML = '<div class="err">لا تقرير محدداً</div>'; return; }
   try {
     const r = await fetch(f);
     if (!r.ok) throw 0;
     art.innerHTML = render(await r.text());
-    document.title = pretty(f) + ' — المنظومة';
+    document.title = title + ' — المنظومة';
   } catch { art.innerHTML = '<div class="err">تعذر تحميل التقرير</div>'; }
 }
 go();

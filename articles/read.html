@@ -65,12 +65,16 @@ const TITLES = {
 "research/bcaf6b6bb6109ab1-التعلم-بالتعليم-والتلميذ-الافتراضي.md":"التعلم بالتعليم ونمذجة التلميذ الافتراضي",
 "research/db52d9d02b62f3d5-القراءة-الممتدة.md":"القراءة الممتدة",
 "research/dec2e7499bf16ea6-مزامنة-الصوت-والنص.md":"مزامنة الصوت والنص",
-"research/f393f939f42a841a-أخطاء-العربية-في-الإنجليزية.md":"أخطاء العربية في الإنجليزية"
+"research/f393f939f42a841a-أخطاء-العربية-في-الإنجليزية.md":"أخطاء العربية في الإنجليزية",
+"research/handover/00-overview.md":"الملخص العام — أين وصلنا في كل الأمور",
+"research/handover/hadith.md":"خدمة الحديث — ملخص التسليم",
+"research/handover/tafsir.md":"ملخص خدمة التفسير — أين وصلنا"
 };
-const ok = f => /^(research|core\/articles|articles\/me)\/[^/]+\.md$/.test(f||'');
+const ok = f => /^(research|core\/articles|articles\/me)(\/[^/]+)?\/[^/]+\.md$/.test(f||'');
 const pretty = f => TITLES[f] || decodeURIComponent((f||'').split('/').pop()||'').replace(/\.md$/,'').replace(/^[0-9a-f]{16}-/,'').split('-').join(' ') || 'مقال';
 
 function render(text) {
+  text = text.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
   // LaTeX-ish math → styled span
   const math = s => s.replace(/\$([^$]{1,60})\$/g, '<span class="math">$1</span>');
   const raw = esc(text);
