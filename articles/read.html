@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f1115">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-web-app-capable" content="yes">
+<link rel="manifest" href="../manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="../icons/icon-192.png">
+<link rel="apple-touch-icon" href="../icons/icon-192.png">
+<title>قارئ المقالات — المنظومة</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Tahoma, Arial, sans-serif; background: #0f1115; color: #e8e6e3; margin: 0; }
+  #bar { position: fixed; top: 0; right: 0; height: 3px; background: #d4af37; width: 0; z-index: 9; transition: width .1s; }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 42px 20px 80px; }
+  .head { margin-bottom: 26px; }
+  .head h1 { color: #d4af37; font-size: 1.5rem; line-height: 1.5; margin: 0 0 8px; }
+  .head .meta { color: #6d6960; font-size: .78rem; }
+  article { font-size: 1.06rem; line-height: 2.05; color: #ddd8cf; text-align: justify; }
+  article h2 { color: #d4af37; font-size: 1.22rem; margin: 34px 0 12px; border-bottom: 1px solid #2a2e38; padding-bottom: 8px; }
+  article h3 { color: #c9a94e; font-size: 1.05rem; margin: 26px 0 8px; }
+  article p { margin: 0 0 16px; }
+  article table { width: 100%; border-collapse: collapse; font-size: .82rem; margin: 16px 0 22px; }
+  article th, article td { border: 1px solid #2a2e38; padding: 8px 10px; text-align: right; vertical-align: top; line-height: 1.7; }
+  article th { background: #1a1d26; color: #d4af37; font-weight: 600; }
+  article .math { direction: ltr; unicode-bidi: embed; font-family: "Consolas", monospace; background: #1a1d26; padding: 1px 7px; border-radius: 6px; font-size: .85em; color: #a5d66f; }
+  article ul { padding-right: 22px; }
+  article li { margin-bottom: 8px; }
+  .foot { margin-top: 40px; display: flex; gap: 18px; }
+  a.back { color: #8f8a80; font-size: .85rem; text-decoration: none; }
+  a.back:hover { color: #d4af37; }
+  .err { text-align: center; color: #e07878; padding: 60px 20px; }
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div class="wrap">
+<div class="head"><h1 id="t"></h1><div class="meta" id="m"></div></div>
+<article id="a">… جارٍ التحميل</article>
+<div class="foot"><a class="back" href="./">→ كل المقالات</a></div>
+</div>
+<script>
+const f = new URLSearchParams(location.search).get('f');
+const esc = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const TITLES = {
+"articles/me/board-design-vs-dr.md":"مطابقة تصميم مجلس المهام لنتائج أبحاث العمق",
+"articles/me/deep-research-01.md":"معمارية الفهرسة الموضوعية الموحدة لمدونات التراث الإسلامي",
+"articles/me/deep-research-02-pitfalls.md":"رصانة المعمارية البرمجية لوكلاء الذكاء الاصطناعي — تشريح المزالق",
+"articles/me/deep-research-03-swe-skills.md":"هندسة المهارات والتعليمات البرمجية لوكلاء الذكاء الاصطناعي",
+"articles/me/deep-research-04-oss-agent-projects.md":"مشاريع مهارات وأدوات وكلاء البرمجة مفتوحة المصدر — تقرير تحليلي",
+"articles/me/dr-best-services.md":"دراسة مقارنة لمنصات القرآن الكريم وتفاسيره والحديث النبوي الشريف",
+"articles/me/dr-exercise-bank.md":"الهندسة المعرفية والتقنية لبنوك التمارين الشرعية المؤتمتة",
+"articles/me/dr-synthesis-swarm.md":"خلاصة تقاطعية — ماذا تعني تقارير البحث العميق الثلاثة لسربنا",
+"articles/me/recall-index-rejected-skills.md":"فهرس الاستدعاء — المهارات المحذوفة بشروط إعادة الإدخال",
+"articles/me/skill-acceptance-rubric.md":"مسطرة قبول المهارات — معيار فحص لأي مهارة مقترحة مستقبلاً",
+"research/067163337f6f71c7-عمق-المفردات.md":"عمق المفردات",
+"research/0d59f565cc65a02b-المدخل-المفهوم.md":"المدخل المفهوم",
+"research/33fb6c66f86ddbd7-بنك-تمارين-العلوم-الشرعية.md":"بنك تمارين العلوم الشرعية",
+"research/718b7723beb39476-شروح-الحديث-الرقمية.md":"شروح الحديث الرقمية",
+"research/7c6edb3fa22772a8-الإنتاج-مقابل-الترجمة.md":"الإنتاج مقابل الترجمة",
+"research/8fbc3fe08c961482-مصفوفات-الفقه-المقارن.md":"مصفوفات الفقه المقارن",
+"research/a7c7023533a10ac0-تقييم-منصات-القرآن-والحديث.md":"تقييم منصات القرآن والحديث الرقمية",
+"research/bcaf6b6bb6109ab1-التعلم-بالتعليم-والتلميذ-الافتراضي.md":"التعلم بالتعليم ونمذجة التلميذ الافتراضي",
+"research/db52d9d02b62f3d5-القراءة-الممتدة.md":"القراءة الممتدة",
+"research/dec2e7499bf16ea6-مزامنة-الصوت-والنص.md":"مزامنة الصوت والنص",
+"research/f393f939f42a841a-أخطاء-العربية-في-الإنجليزية.md":"أخطاء العربية في الإنجليزية"
+};
+const ok = f => /^(research|core\/articles|articles\/me)\/[^/]+\.md$/.test(f||'');
+const pretty = f => TITLES[f] || decodeURIComponent((f||'').split('/').pop()||'').replace(/\.md$/,'').replace(/^[0-9a-f]{16}-/,'').split('-').join(' ') || 'مقال';
+
+function render(text) {
+  // LaTeX-ish math → styled span
+  const math = s => s.replace(/\$([^$]{1,60})\$/g, '<span class="math">$1</span>');
+  const raw = esc(text);
+  const lines = raw.split(/\r?\n/);
+  const hasMd = lines.some(l => /^\s*#{1,6}\s/.test(l)) || lines.some(l => (l.match(/\|/g)||[]).length > 1);
+  if (hasMd) return renderMd(lines, math);
+  return renderFlow(raw, math);
+}
+
+function renderMd(lines, math) {
+  let html = '', inTable = false, tbuf = [];
+  const flush = () => {
+    if (!tbuf.length) return;
+    const rows = tbuf.map(r => r.split('|').map(c => c.trim()).filter((c,i,a)=>!(c===''&&(i===0||i===a.length-1))));
+    html += '<table>' + rows.map((r,i)=>'<tr>'+r.map(c=>i===0?`<th>${math(c)}</th>`:`<td>${math(c)}</td>`).join('')+'</tr>').join('') + '</table>';
+    tbuf = [];
+  };
+  for (const l of lines) {
+    if ((l.match(/\|/g)||[]).length > 1) { tbuf.push(l); continue; }
+    flush();
+    const h = l.match(/^\s*(#{1,6})\s+(.*)/);
+    if (h) { html += `<h${Math.min(h[1].length+1,3)}>${math(h[2])}</h${Math.min(h[1].length+1,3)}>`; continue; }
+    if (l.trim()) html += `<p>${math(l.trim())}</p>`;
+  }
+  flush();
+  return html;
+}
+
+function renderFlow(raw, math) {
+  // blob: split to sentences on '. ' '؟ ' '! ' '؛ ' boundaries, group ~3 per paragraph
+  const parts = raw.replace(/\s+/g,' ').split(/(?<=[.؟!؟])\s+/);
+  let html = '', buf = [], size = 0;
+  const flush = () => { if (buf.length) { html += `<p>${buf.map(s=>math(s)).join(' ')}</p>`; buf=[]; size=0; } };
+  for (let s of parts) {
+    s = s.trim();
+    if (!s) continue;
+    // short colon-ended fragment → likely a heading/label
+    if (s.length < 60 && /[:：]$/.test(s)) { flush(); html += `<h3>${math(s.replace(/[:：]$/,''))}</h3>`; continue; }
+    buf.push(s);
+    size += s.length;
+    if (buf.length >= 3 || size > 520) flush();
+  }
+  flush();
+  return html;
+}
+
+async function go() {
+  const art = document.getElementById('a');
+  document.getElementById('t').textContent = pretty(f);
+  document.getElementById('m').textContent = (f||'');
+  if (!ok(f)) { art.innerHTML = '<div class="err">لا مقال محدداً</div>'; return; }
+  try {
+    const r = await fetch('../'+f);
+    if (!r.ok) throw 0;
+    art.innerHTML = render(await r.text());
+    document.title = pretty(f) + ' — المنظومة';
+  } catch { art.innerHTML = '<div class="err">تعذر تحميل المقال</div>'; }
+}
+go();
+addEventListener('scroll', () => {
+  const h = document.documentElement;
+  document.getElementById('bar').style.width = (h.scrollTop/(h.scrollHeight-h.clientHeight)*100||0)+'%';
+});
+</script>
+<style>
+body.light{background:#f5f3ef}
+body.light .head h1,body.light article h2{color:#8a6d1f}
+body.light article h3{color:#7a5f1a}
+body.light .head .meta{color:#8a857a}
+body.light article{color:#2a2f3a}
+body.light article h2{border-color:#ddd6c8}
+body.light article th{background:#f0ead9;color:#8a6d1f;border-color:#ddd6c8}
+body.light article td{border-color:#ddd6c8}
+body.light article .math{background:#f0ead9;color:#5a7a1a}
+body.light #bar{background:#8a6d1f}
+body.light a.back{color:#7a756a}
+body.light a.back:hover{color:#8a6d1f}
+</style>
+<button id="lm" style="position:fixed;top:12px;left:12px;z-index:99;background:#171a21;border:1px solid #3a3e48;color:#e8e6e3;border-radius:999px;padding:6px 14px;font-size:.78rem;cursor:pointer;font-family:inherit">☀ فاتح</button>
+<script>
+(function(){var b=document.getElementById('lm'),L=function(l){document.body.classList.toggle('light',l);b.textContent=l?'🌙 داكن':'☀ فاتح';try{localStorage.setItem('lm',l?'1':'0')}catch(e){}};var s=null;try{s=localStorage.getItem('lm')}catch(e){};L(s==='1'||(s===null&&matchMedia('(prefers-color-scheme: light)').matches));b.onclick=function(){L(!document.body.classList.contains('light'))};})();
+</script>
+</body>
+</html>
